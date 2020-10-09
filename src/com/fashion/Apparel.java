@@ -8,8 +8,12 @@ package com.fashion;
  */
 public class Apparel {
 	
+	/**
+	 * Instance variables.
+	 */
 	private String itemName;
 	private String brandName;
+	private String color;
 	private int itemID;
 	private int stock;
 	
@@ -19,12 +23,14 @@ public class Apparel {
 	 * 
 	 * @param name
 	 * @param brand
+	 * @param color
 	 * @param id
 	 * @param stock
 	 */
-	public Apparel(String name, String brand, int id, int stock) {
+	public Apparel(String name, String brand, String color, int id, int stock) {
 		this.itemName = name;
 		this.brandName = brand;
+		this.color = color;
 		this.itemID = id;
 		this.stock = stock;
 	}
@@ -45,6 +51,9 @@ public class Apparel {
 		return this.brandName;
 	}
 	
+	public String getColor() {
+		return this.color;
+	}
 	/**
 	 * 
 	 * @return item ID

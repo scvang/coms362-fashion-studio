@@ -9,6 +9,10 @@ import java.util.ArrayList;
  *
  */
 public class Studio {
+	
+	/**
+	 * Instance variables.
+	 */
 	private String name;
 	private String address;
 	private String phoneNum;
@@ -33,15 +37,48 @@ public class Studio {
 		apparel = new ArrayList<>();
 	}
 	
-	public void addEmployee(String name, String jobTitle, int salary, String phoneNum) {
-		Employee e = new Employee(name, jobTitle, salary, phoneNum);
-		employees.add(e);
+	/**
+	 * 
+	 * @return studio name
+	 */
+	public String getName() {
+		return this.name;
 	}
 	
+	/**
+	 * 
+	 * @return studio address
+	 */
+	public String getAddress() {
+		return this.address;
+	}
+	
+	/**
+	 * 
+	 * @return studio phone number
+	 */
+	public String getPhoneNum() {
+		return this.phoneNum;
+	}
+	
+	/**
+	 * Adds an employee to the studio.
+	 * @param name
+	 * @param jobTitle
+	 * @param salary
+	 * @param phoneNum
+	 */
+	public void addEmployee(String name, String title, int salary, String phone) {
+		employees.add(new Employee(name,title,salary,phone));
+	}
+	
+	/**
+	 * Lists the employees information.
+	 */
 	public void getEmployees() {
 		for(Employee e : employees) {
 			System.out.println(
-			"Name: " + e.getName() + "\n" + 
+			"Employee Name: " + e.getName() + "\n" + 
 			"Job title: " + e.getJobTitle() + "\n" +
 			String.format("Salary: $" + "%,d", e.getSalary()) + "\n" +
 			"Phone: " + e.getPhoneNum()
@@ -49,15 +86,22 @@ public class Studio {
 		}
 	}
 	
-	public void getApparelName() {
-		for(Apparel n : apparel) n.getItemName();
+	public void addApparel(String name, String brand, String color, int id, int stock) {
+		apparel.add(new Apparel(name,brand,color,id,stock));
 	}
 	
-	public void getApparelBrandName() {
-		for(Apparel b : apparel) b.getBrandName();
-	}
-		
-	public void getApparelID() {
-		for(Apparel i : apparel) i.getItemID();
+	/**
+	 * Lists the apparel in stock.
+	 */
+	public void getApparel() {
+		for(Apparel a : apparel) {
+			System.out.println(
+			"Item name: " + a.getItemName() + "\n" +
+			"Brand name: " + a.getBrandName() + "\n" +
+			"Color: " + a.getColor() + "\n" +
+			"ID: " + a.getItemID() + "\n" +
+			"In-stock: " + a.getStock()
+			);
+		}
 	}
 }

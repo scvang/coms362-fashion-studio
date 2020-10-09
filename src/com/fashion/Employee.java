@@ -7,6 +7,10 @@ package com.fashion;
  * 
  */
 public class Employee {
+	
+	/**
+	 * Instance variables.
+	 */
 	private String name;
 	private String jobTitle;
 	private int salary;
