@@ -1,0 +1,29 @@
+package com.fashion;
+import java.util.HashMap;
+import java.util.Random;
+
+/**
+ * @author Sebastian Vang
+ * 
+ * Generic Events are hosted by the studio.
+ * 
+ */
+public class Event {
+	
+	/**
+	 * Instance variables.
+	 */
+	private String name;
+	private String date;
+	private String time;
+
+	/**
+	 * Constructor for the event.
+	 * @param name
+	 */
+	public Event(String name, String date, String time) {
+		this.name = name;
+		this.date = date;
+		this.time = time;
+	}
+}

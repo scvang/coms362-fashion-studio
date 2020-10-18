@@ -17,8 +17,16 @@ public class Studio {
 	private String address;
 	private String phoneNum;
 	
-	ArrayList<Employee> employees;
-	ArrayList<Apparel> apparel;
+	private ArrayList<Employee> employees;
+	private ArrayList<Apparel> apparel;
+	
+	private String eventName;
+	private String date;
+	private String time;
+	
+	private Event showing;
+	private Event party;
+	private Event dining;
 	
 	/**
 	 * 
@@ -35,6 +43,19 @@ public class Studio {
 		
 		employees = new ArrayList<>();
 		apparel = new ArrayList<>();
+		
+		// Probably will change this later to be extensible and add more events.
+		date = "10-15-20";
+		time = "4:10PM";
+		
+		eventName = "FasionCon 2020";
+		showing = new Showing(eventName,date,time);
+		
+		eventName = "Company Party 2020";
+		//party = new Party(eventName,date,time);
+		
+		eventName = "Company Dining 2020";
+		dining = new Dining(eventName,date,time);
 	}
 	
 	/**
@@ -59,6 +80,30 @@ public class Studio {
 	 */
 	public String getPhoneNum() {
 		return this.phoneNum;
+	}
+	
+	/**
+	 * 
+	 * @return party event
+	 */
+	public Event getPartyEvent() {
+		return this.party;
+	}
+	
+	/**
+	 * 
+	 * @return showing event
+	 */
+	public Event getShowingEvent() {
+		return this.showing;
+	}
+	
+	/**
+	 * 
+	 * @return dining event
+	 */
+	public Event getDiningEvent() {
+		return this.dining;
 	}
 	
 	/**
@@ -103,5 +148,25 @@ public class Studio {
 			"In-stock: " + a.getStock()
 			);
 		}
+	}
+	
+	/**
+	 * Displays the available seats.
+	 */
+	public void displaySeats(Event e) {
+		((Showing) e).displaySeats();
+		System.out.println("Available seats: " + ((Showing) e).getOpenSeats() + "\n");
+	}
+
+	/**
+	 * Reserves a seat for the customer.
+	 * @param e event
+	 * @param s seatNum
+	 * @param c customerName
+	 * @param d date
+	 */
+	public void reserveSeat(Event e, String s, String c, String d) {
+		((Showing) e).reserveSeat(s,c,d);
+		
 	}
 }
