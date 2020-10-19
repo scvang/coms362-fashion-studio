@@ -1,7 +1,4 @@
 package com.fashion;
-import java.util.HashMap;
-import java.util.Random;
-
 /**
  * @author Sebastian Vang
  * 

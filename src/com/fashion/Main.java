@@ -74,7 +74,14 @@ public class Main {
 		studio.addModel(modelName, modNum, audNum);
 		studio.getEmployees();
 		
-		
+		// Go to main screen.
+		mainScreen();
+	}
+	
+	/**
+	 * The main screen that prompts first.
+	 */
+	public static void mainScreen() {
 		String choice = "";
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
@@ -107,7 +114,6 @@ public class Main {
 				break;
 				
 				case 5:
-					System.out.println("Go to advertisement Screen");
 					advertisementScreen();
 				break;
 			}
@@ -139,7 +145,8 @@ public class Main {
 			"Select an event ('q' to exit): \n" +
 			"1) Showing \n" +
 			"2) Dining \n" +
-			"3) Party \n"
+			"3) Party \n" +
+			"4) Go back \n"
 			);
 			
 			choice = in.next();
@@ -157,6 +164,9 @@ public class Main {
 				case 3:
 					partyScreen();
 				break;
+				
+				case 4:
+					mainScreen();
 			}
 		}
 		in.close();
@@ -175,7 +185,8 @@ public class Main {
 			"1) Display available seats \n" +
 			"2) Reserve a seat \n" +
 			"3) Check a seat \n" +
-			"3) Refund \n"
+			"4) Refund \n" +
+			"5) Go back \n"
 			);
 			
 			choice = in.next();
@@ -188,7 +199,8 @@ public class Main {
 				
 				case 2:
 					Scanner in2 = new Scanner (System.in);
-					
+					System.out.println("Enter your customer name: ");
+					String customerName = in2.next();
 					System.out.println("Enter your desired seat (A1~I9): ");
 					String seat = in2.next();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
@@ -196,7 +208,58 @@ public class Main {
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
 					String time = in2.next();
 					
-					studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,date,time);
+					studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,customerName,date,time);
+				break;
+				
+				case 3:
+					
+				break;
+				
+				case 4:
+				
+				break;
+				
+				case 5:
+					eventScreen();
+				break;
+			}
+		}
+		in.close();
+	}
+	
+	public static void diningScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+			"Select a choice ('q' to exit): \n" +
+			"1) Display available tables \n" +
+			"2) Reserve a table \n" +
+			"3) Check a table \n" +
+			"4) Refund \n" +
+			"5) Go back \n"
+			);
+			
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+			
+			switch(Integer.parseInt(choice)){
+				case 1:
+					studio.displaySeats(studio.getEvent("Fashion Dining 2020"));
+				break;
+				
+				case 2:
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("Enter your customer name: ");
+					String customerName = in2.next();
+					System.out.println("Enter your desired table (1~20): ");
+					String table = in2.next();
+					System.out.println("Enter your desired date (mm-dd-yy): ");
+					String date = in2.next();
+					System.out.println("Enter your desired time (hh:mm am/pm): ");
+					String time = in2.next();
+					
+					studio.reserveSeat(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time);
 				break;
 				
 				case 3:
@@ -206,13 +269,13 @@ public class Main {
 				case 4:
 					
 				break;
+				
+				case 5:
+					eventScreen();
+				break;
 			}
 		}
 		in.close();
-	}
-	
-	public static void diningScreen() {
-		
 	}
 	
 	public static void partyScreen() {

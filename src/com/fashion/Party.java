@@ -1,10 +1,20 @@
 package com.fashion;
 
-public class Party extends Event {
+import java.util.HashMap;
 
+public class Party extends Event {
+	
+	HashMap<Badge,Integer> whitelist = new HashMap<>();
+	int attendees;
+	
 	public Party(String name, String date, String time) {
 		super(name, date, time);
-		// TODO Auto-generated constructor stub
+		
+		attendees = 0;
+	}
+	
+	public void reserveBadge(Badge id, String customer, String date, String time) {
+		
 	}
 
 }

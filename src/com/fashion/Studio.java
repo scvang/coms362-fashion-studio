@@ -165,8 +165,8 @@ public class Studio {
 	 * @param c customerName
 	 * @param d date
 	 */
-	public void reserveSeat(Event e, String s, String c, String d) {
-		((Showing) e).reserveSeat(s,c,d);
+	public void reserveSeat(Event e, String s, String c, String d, String t) {
+		((Showing) e).reserveSeat(s,c,d,t);
 		
 	}
 	

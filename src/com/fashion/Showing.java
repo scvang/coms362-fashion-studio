@@ -15,7 +15,7 @@ public class Showing extends Event{
 	 */
 	private int openSeats;
 	private Seat[][] seat = new Seat[9][9];
-	private HashMap<String,Integer> oracle = new HashMap<>();
+	private HashMap<String,Integer> whitelist = new HashMap<>();
 	
 	/**
 	 * Constructor for the showing event.
@@ -61,10 +61,10 @@ public class Showing extends Event{
 				String letter = isle[row];
 				String s = letter + num;
 				
-				if(!oracle.containsKey(s)) {
+				if(!whitelist.containsKey(s)) {
 					seat[row][col].num = "RR";
 					seat[row][col].customer = "customer" + new Random().nextInt(99)+1;
-					oracle.put(s,1);
+					whitelist.put(s,1);
 				}
 			}
 		}
@@ -107,7 +107,13 @@ public class Showing extends Event{
         }
 	}
 
-	public void reserveSeat(String seatNum, String customer, String date) {
+	/**
+	 * Reserves a seat for the showing event.
+	 * @param seatNum
+	 * @param customer
+	 * @param date
+	 */
+	public void reserveSeat(String seatNum, String customer, String date, String time) {
 		// Convert to upper case before processing.
 		seatNum = seatNum.toUpperCase();
 		
@@ -118,7 +124,7 @@ public class Showing extends Event{
 				){
 			
 			// Checks if the seat is already reserved.
-			if(oracle.containsKey(seatNum)) {
+			if(whitelist.containsKey(seatNum)) {
 				System.out.println(seatNum);
 				System.out.println("That seat is already reserved.");
 				return;
@@ -130,12 +136,14 @@ public class Showing extends Event{
 	            	if(seatNum.equals(seat[row][col].num)) {
 	            		seat[row][col].num = "RR";
 	            		seat[row][col].customer = customer;
+	            		seat[row][col].date = date;
+	            		seat[row][col].time = time;
 	            	}
 	            }
 	        }
 			
 			// Places the reserved seat into memory.
-			oracle.put(seatNum,1);
+			whitelist.put(seatNum,1);
 		}
 		else {
 			System.out.println("Not a valid seat number.");

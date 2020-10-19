@@ -13,9 +13,9 @@ public class Dining extends Event{
 	 * Instance variables.
 	 */
 	
-	private int openSeats;
-	private Table[][] table = new Table[4][4];
-	private HashMap<String,Integer> oracle = new HashMap<>();
+	private int openTables;
+	private Table[] table = new Table[20];
+	private HashMap<String,Integer> whitelist = new HashMap<>();
 	
 	/**
 	 * Constructor for the dining event.
@@ -26,93 +26,81 @@ public class Dining extends Event{
 	public Dining(String name, String date, String time) {
 		super(name, date, time);
 		
-		// Initializes empty seats.
-		String[] isle = {"A","B","C","D","E","F","G","H","I"};
-		int num = 1;
-		
-		for(int row = 0; row < table.length; ++row) {
-			for(int col = 0; col < table[0].length; ++col) {
-				String tableNum = isle[row] + num;
-				table[row][col] = new Table(tableNum,"",date,time);
-				
-				++num;
-				if(col == 8) num = 1;
-			}
+		// Initializes empty tables.
+		int tableNum = 1;
+		for(int i = 0; i < table.length; ++i) {
+			table[i] = new Table(Integer.toString(tableNum),"","","");
+			++tableNum;
 		}
-		
-		//fillSeats();
-		openSeats = countSeats();
+		openTables = countTables();
 	}
 	
 	/**
 	 * Gets number of available seats.
 	 * @return number of open seats
 	 */
-	public int countSeats() {
+	public int countTables() {
 		int count = 0;
 		for(int i = 0; i < table.length; ++i){
-			for(int j = 0; j < table[0].length; ++j) {
-				if(!table[i][j].num.equals("RR")) ++count;
-			}
+			if(table[i].customer == "") ++count;
 		}
 		return count;
 	}
 	
 	/**
 	 * 
-	 * @return open seats
+	 * @return open tables
 	 */
-	public int getOpenSeats() {
-		return openSeats;
+	public int getOpenTables() {
+		return openTables;
 	}
 	
 	/**
-	 * Displays the available seats.
+	 * Displays the available tables.
 	 */
-	public void displaySeats() {
-		System.out.println("+--+--+--+--+--+--+--+--+--+");
-        for(int row = 0; row < table.length; ++row) {
-            System.out.print("|");
-            for(int col = 0; col < table[0].length; ++col) {
-                System.out.print(table[row][col].num+"|");
-            }
-            System.out.println();
-            System.out.println("+--+--+--+--+--+--+--+--+--+");
+	public void displayTables() {
+        for(int i = 0; i < table.length; ++i) {
+        	System.out.print(table[i].num + " ");
+        	if(i == 5) System.out.println("");
         }
 	}
 
-	public void reserveSeat(String seatNum, String customer, String date) {
+	/**
+	 * Reserves a table for the dining event.
+	 * @param num
+	 * @param customer
+	 * @param date
+	 * @param time
+	 */
+	public void reserveTable(String num, String customer, String date, String time) {
 		// Convert to upper case before processing.
-		seatNum = seatNum.toUpperCase();
+		int tableNum = Integer.parseInt(num);
 		
-		// Checks if the seat is in range A1 to I9.
-		if(seatNum.length() !=2 || seatNum.charAt(0) >= 'A' && seatNum.charAt(0) <= 'I'
-				&& Integer.parseInt(String.valueOf(seatNum.charAt(1))) >= 1
-				&& Integer.parseInt(String.valueOf(seatNum.charAt(1))) <= 9
-				){
+		// Checks if the seat is in range 1 to 20.
+		if(tableNum < 1 || tableNum > 20){
 			
-			if(oracle.containsKey(seatNum)) {
-				System.out.println(seatNum);
-				System.out.println("That seat is already reserved.");
+			if(whitelist.containsKey(num)) {
+				System.out.println("Table " + num + " is already reserved.");
 				return;
 			}
 			
-			for(int row = 0; row < table.length; ++row) {
-	            for(int col = 0; col < table[0].length; ++col) {
-	            	if(seatNum.equals(table[row][col].num)) {
-	            		table[row][col].num = "RR";
-	            		table[row][col].customer = customer;
-	            	}
+			// Finds the table to reserve.
+			for(int i = 0; i < table.length; ++i) {
+	            	if(num == table[i].num) {
+	            		table[i].num = "RR";
+	            		table[i].customer = customer;
+	            		table[i].date = date;
+	            		table[i].time = time;
 	            }
 	        }
-			oracle.put(seatNum,1);
+			whitelist.put(Integer.toString(tableNum),1);
 		}
 		else {
-			System.out.println("Not a valid seat number.");
+			System.out.println("Not a valid table number.");
 			return;
 		}
 		
-		// Update number of open seats.
-		openSeats = countSeats();
+		// Update number of open tables.
+		openTables = countTables();
 	}
 }
