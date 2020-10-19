@@ -165,9 +165,17 @@ public class Studio {
 	 * @param c customerName
 	 * @param d date
 	 */
-	public void reserveSeat(Event e, String s, String c, String d, String t) {
-		((Showing) e).reserveSeat(s,c,d,t);
+	public void reserveSeat(Event e, String n, String c, String d, String t) {
+		((Showing) e).reserveSeat(n,c,d,t);
 		
+	}
+	
+	public void displayTables(Event e) {
+		((Dining)e).displayTables();
+		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
+	}
+	public void reserveTable(Event e, String n, String c, String d, String t) {
+		((Dining)e).reserveTable(n,c,d,t);
 	}
 	
 	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {

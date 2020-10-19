@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * The studio hosts showing event.
+ * Showing is the information expert that knows about seats.
  * @author Sebastian Vang
  *
  */

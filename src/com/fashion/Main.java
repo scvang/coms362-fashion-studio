@@ -245,7 +245,7 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displaySeats(studio.getEvent("Fashion Dining 2020"));
+					studio.displayTables(studio.getEvent("Fashion Dining 2020"));
 				break;
 				
 				case 2:
@@ -259,7 +259,7 @@ public class Main {
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
 					String time = in2.next();
 					
-					studio.reserveSeat(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time);
+					studio.reserveTable(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time);
 				break;
 				
 				case 3:

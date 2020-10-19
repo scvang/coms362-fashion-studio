@@ -3,7 +3,7 @@ package com.fashion;
 import java.util.HashMap;
 
 /**
- * The studio hosts dining events.
+ * Dining is the information expert that knows about tables.
  * @author Sebastian Vang
  *
  */
@@ -29,7 +29,7 @@ public class Dining extends Event{
 		// Initializes empty tables.
 		int tableNum = 1;
 		for(int i = 0; i < table.length; ++i) {
-			table[i] = new Table(Integer.toString(tableNum),"","","");
+			table[i] = new Table(String.format("%02d",tableNum),"","","");
 			++tableNum;
 		}
 		openTables = countTables();
@@ -61,8 +61,8 @@ public class Dining extends Event{
 	public void displayTables() {
         for(int i = 0; i < table.length; ++i) {
         	System.out.print(table[i].num + " ");
-        	if(i == 5) System.out.println("");
         }
+        System.out.println("");
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class Dining extends Event{
 		int tableNum = Integer.parseInt(num);
 		
 		// Checks if the seat is in range 1 to 20.
-		if(tableNum < 1 || tableNum > 20){
+		if(tableNum >= 1 || tableNum <= 20){
 			
 			if(whitelist.containsKey(num)) {
 				System.out.println("Table " + num + " is already reserved.");
@@ -86,7 +86,7 @@ public class Dining extends Event{
 			
 			// Finds the table to reserve.
 			for(int i = 0; i < table.length; ++i) {
-	            	if(num == table[i].num) {
+	            	if(num.equals(table[i].num)) {
 	            		table[i].num = "RR";
 	            		table[i].customer = customer;
 	            		table[i].date = date;
@@ -94,6 +94,7 @@ public class Dining extends Event{
 	            }
 	        }
 			whitelist.put(Integer.toString(tableNum),1);
+			System.out.println("Table was reserved successfully.\n");
 		}
 		else {
 			System.out.println("Not a valid table number.");
