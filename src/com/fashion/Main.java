@@ -106,7 +106,7 @@ public class Main {
 					eventScreen();
 				break;
 				
-				case 4:
+				case 5:
 					System.out.println("Go to advertisement Screen");
 					advertisementScreen();
 				break;

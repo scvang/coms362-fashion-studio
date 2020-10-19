@@ -168,7 +168,8 @@ public class Studio {
 	public void reserveSeat(Event e, String s, String c, String d) {
 		((Showing) e).reserveSeat(s,c,d);
 		
-
+	}
+	
 	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {
 		ad.add(new Advertisement(eid, eventName, loc, time, contactInfo));
 	}
@@ -197,7 +198,7 @@ public class Studio {
 	
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
-		employees.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
+		employee.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
 
 	}
 }
