@@ -117,12 +117,14 @@ public class Showing extends Event{
 				&& Integer.parseInt(String.valueOf(seatNum.charAt(1))) <= 9
 				){
 			
+			// Checks if the seat is already reserved.
 			if(oracle.containsKey(seatNum)) {
 				System.out.println(seatNum);
 				System.out.println("That seat is already reserved.");
 				return;
 			}
 			
+			// Finds the seat to reserve.
 			for(int row = 0; row < seat.length; ++row) {
 	            for(int col = 0; col < seat[0].length; ++col) {
 	            	if(seatNum.equals(seat[row][col].num)) {
@@ -131,6 +133,8 @@ public class Showing extends Event{
 	            	}
 	            }
 	        }
+			
+			// Places the reserved seat into memory.
 			oracle.put(seatNum,1);
 		}
 		else {

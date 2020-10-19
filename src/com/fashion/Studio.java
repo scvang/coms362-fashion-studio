@@ -17,16 +17,9 @@ public class Studio {
 	private String address;
 	private String phoneNum;
 	
-	private ArrayList<Employee> employees;
+	private ArrayList<Employee> employee;
 	private ArrayList<Apparel> apparel;
-	
-	private String eventName;
-	private String date;
-	private String time;
-	
-	private Event showing;
-	private Event party;
-	private Event dining;
+	private ArrayList<Event> event;
 	
 	/**
 	 * 
@@ -41,21 +34,9 @@ public class Studio {
 		this.address = address;
 		this.phoneNum = phoneNum;
 		
-		employees = new ArrayList<>();
+		employee = new ArrayList<>();
 		apparel = new ArrayList<>();
-		
-		// Probably will change this later to be extensible and add more events.
-		date = "10-15-20";
-		time = "4:10PM";
-		
-		eventName = "FasionCon 2020";
-		showing = new Showing(eventName,date,time);
-		
-		eventName = "Company Party 2020";
-		//party = new Party(eventName,date,time);
-		
-		eventName = "Company Dining 2020";
-		dining = new Dining(eventName,date,time);
+		event = new ArrayList<>();
 	}
 	
 	/**
@@ -86,24 +67,15 @@ public class Studio {
 	 * 
 	 * @return party event
 	 */
-	public Event getPartyEvent() {
-		return this.party;
-	}
-	
-	/**
-	 * 
-	 * @return showing event
-	 */
-	public Event getShowingEvent() {
-		return this.showing;
-	}
-	
-	/**
-	 * 
-	 * @return dining event
-	 */
-	public Event getDiningEvent() {
-		return this.dining;
+	public Event getEvent(String name) {
+		
+		for(Event e : event) {
+			if(e.getName().equals(name)) {
+				return e;
+			}
+		}
+		System.out.println("Event was not found.");
+		return null;
 	}
 	
 	/**
@@ -114,14 +86,14 @@ public class Studio {
 	 * @param phoneNum
 	 */
 	public void addEmployee(String name, String title, int salary, String phone) {
-		employees.add(new Employee(name,title,salary,phone));
+		employee.add(new Employee(name,title,salary,phone));
 	}
 	
 	/**
 	 * Lists the employees information.
 	 */
 	public void getEmployees() {
-		for(Employee e : employees) {
+		for(Employee e : employee) {
 			System.out.println(
 			"Employee Name: " + e.getName() + "\n" + 
 			"Job title: " + e.getJobTitle() + "\n" +
@@ -147,6 +119,25 @@ public class Studio {
 			"ID: " + a.getItemID() + "\n" +
 			"In-stock: " + a.getStock()
 			);
+		}
+	}
+	
+	public void createShowingEvent(String name, String date, String time) {
+		Event e = new Showing(name,date,time);
+		this.event.add(e);
+	}
+	public void createPartyEvent(String name, String date, String time) {
+		Event e = new Party(name,date,time);
+		this.event.add(e);
+	}
+	public void createDiningEvent(String name, String date, String time) {
+		Event e = new Dining(name,date,time);
+		this.event.add(e);
+	}
+	
+	public void displayEvents() {
+		for(Event e : event) {
+			System.out.println(e.getName());
 		}
 	}
 	

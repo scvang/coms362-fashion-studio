@@ -26,4 +26,16 @@ public class Event {
 		this.date = date;
 		this.time = time;
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getDate() {
+		return this.date;
+	}
+	
+	public String getTime() {
+		return this.time;
+	}
 }

@@ -22,6 +22,14 @@ public class Main {
 		
 		studio = new Studio(company,address,phone);
 		
+		// Create some new events.
+		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
+		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
+		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
+		
+		studio.createShowingEvent("FashionCon 2021", "10-15-21", "04:10PM");
+		studio.displayEvents();
+		
 		// Add an employee test
 		
 		/*
@@ -141,6 +149,7 @@ public class Main {
 			"Select a choice ('q' to exit): \n" +
 			"1) Display available seats \n" +
 			"2) Reserve a seat \n" +
+			"3) Check a seat \n" +
 			"3) Refund \n"
 			);
 			
@@ -149,7 +158,7 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displaySeats(studio.getShowingEvent());
+					studio.displaySeats(studio.getEvent("FashionCon 2020"));
 				break;
 				
 				case 2:
@@ -162,10 +171,14 @@ public class Main {
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
 					String time = in2.next();
 					
-					studio.reserveSeat(studio.getShowingEvent(),seat,date,time);
+					studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,date,time);
 				break;
 				
 				case 3:
+					
+				break;
+				
+				case 4:
 					
 				break;
 			}
