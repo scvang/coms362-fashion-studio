@@ -19,8 +19,7 @@ public class Main {
 		String phoneNum = "N/A";
 		
 		studio.addEmployee(name, jobTitle, salary, phoneNum);
-		studio.getEmployees();
-		
+
 		// Add a shirt test
 		String itemName = "T-Shirt";
 		String brandName = "DEUX";
@@ -30,6 +29,25 @@ public class Main {
 		
 		studio.addApparel(itemName,brandName,color,id,stock);
 		studio.getApparel();
+		
+		//Add an Ad test
+		int eid = 123;
+		String eventName = "Spring";
+		String loc = "401 Somewhere Ave";
+		String time = "11:00 AM - 3:00 PM";
+		String contactInfo = "555-555-5555";
+		
+		//studio.addAd(eid, eventName, loc, time, contactInfo);
+		//studio.getAd();
+		
+		//Add a new Model test
+		String modelName = "Jenna";
+		String modNum = "111-111-1111";
+		int audNum = 456;
+
+		studio.addModel(modelName, modNum, audNum);
+		studio.getEmployees();
+		
 		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
@@ -59,6 +77,11 @@ public class Main {
 					System.out.println("Go to agents screen");
 					agentScreen();
 				break;
+				
+				case 4:
+					System.out.println("Go to advertisement Screen");
+					advertisementScreen();
+				break;
 			}
 		}
 		in.close();
@@ -73,6 +96,10 @@ public class Main {
 	}
 	
 	public static void agentScreen() {
+		
+	}
+	
+	public static void advertisementScreen() {
 		
 	}
 }

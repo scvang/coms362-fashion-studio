@@ -1,9 +1,14 @@
 package com.fashion;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author Sebastian Vang
+ * @author Sebastian Vang-Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
+ * 		   Emily Young-getAd(), addAd()
+
  * 
  * Studio is the information expert that knows about the employees and apparel.
  *
@@ -19,6 +24,7 @@ public class Studio {
 	
 	ArrayList<Employee> employees;
 	ArrayList<Apparel> apparel;
+	ArrayList<Advertisement> ad;
 	
 	/**
 	 * 
@@ -35,6 +41,7 @@ public class Studio {
 		
 		employees = new ArrayList<>();
 		apparel = new ArrayList<>();
+		ad = new ArrayList<>();
 	}
 	
 	/**
@@ -104,4 +111,36 @@ public class Studio {
 			);
 		}
 	}
+	
+	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {
+		ad.add(new Advertisement(eid, eventName, loc, time, contactInfo));
+	}
+
+	public void getAd() {
+		for (Advertisement a : ad) {
+			System.out.println("Event ID: " + a.getEventID());
+			BufferedReader input = null;
+			try {
+				input = new BufferedReader(new FileReader(a.getFileName()));
+				String Line = null;
+				while ((Line = input.readLine()) != null) {
+					System.out.println(Line);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void addModel(String name, String phoneNum, int audNum) {
+		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
+		employees.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
+	}
 }
+
