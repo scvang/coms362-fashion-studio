@@ -1,4 +1,4 @@
-package com.fashion;
+package com.fashion.pay;
 
 public class PayStubInfo {
     private double salary;

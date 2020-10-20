@@ -1,6 +1,8 @@
 package com.fashion;
 
-import java.util.ArrayList;
+import com.fashion.pay.Card;
+
+import java.util.Random;
 
 /**
  * @author Sebastian Vang
@@ -47,7 +49,7 @@ public class Event {
 	 @author Chad Morrow
 	 Adds a promotion to this studio for an event
 	 */
-	public boolean addPromotion(String businessName, String text, int loc, double dollarAmount){
+	public boolean addPromotion(String businessName, String text, int loc, double dollarAmount, Card card){
 		Promotion p = new Promotion(businessName, text, dollarAmount);
 
 		/*
@@ -59,7 +61,11 @@ public class Event {
 			the new promotion to this location.
 			 */
 			if(isPromotionSpotOpen(loc)){
-				p.setLocation(loc);
+				if(payPromotion(card)){
+					p.setLocation(loc);
+				} else {
+					System.out.println("Card denied. Try again later");
+				}
 			} else { //otherwise, if the promotion location is filled, then the business must look for
 				//another location to place the promotion
 				System.out.println("Promotions location is filled! Please look for another spot!");
@@ -126,11 +132,27 @@ public class Event {
 	 */
 	private int numPromotionsOpen() {
 		int numFilled = 0;
-		for(int i = 0; i < promotions.length; i++){
-			if(isPromotionSpotOpen(i)) {
+		for (int i = 0; i < promotions.length; i++) {
+			if (isPromotionSpotOpen(i)) {
 				numFilled++;
 			}
 		}
 		return numFilled;
+	}
+	
+	public boolean payReservation(String customerName, int cardNum) {
+		return true;
+	}
+
+	/**
+	 * @param card info to pay for promotion
+	 * @return true if payment completed, false otherwise
+	 */
+	public boolean payPromotion(Card card) {
+		Random random = new Random();
+		if(card != null) {
+			return random.nextInt(100) <= 97;
+		}
+		return false;
 	}
 }

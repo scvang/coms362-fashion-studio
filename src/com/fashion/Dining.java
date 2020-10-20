@@ -72,7 +72,7 @@ public class Dining extends Event{
 	 * @param date
 	 * @param time
 	 */
-	public void reserveTable(String num, String customer, String date, String time) {
+	public boolean reserveTable(String num, String customer, String date, String time) {
 		// Convert to upper case before processing.
 		int tableNum = Integer.parseInt(num);
 		
@@ -81,7 +81,7 @@ public class Dining extends Event{
 			
 			if(whitelist.containsKey(num)) {
 				System.out.println("Table " + num + " is already reserved.");
-				return;
+				return false;
 			}
 			
 			// Finds the table to reserve.
@@ -94,14 +94,15 @@ public class Dining extends Event{
 	            }
 	        }
 			whitelist.put(Integer.toString(tableNum),1);
-			System.out.println("Table was reserved successfully.\n");
 		}
 		else {
 			System.out.println("Not a valid table number.");
-			return;
+			return false;
 		}
 		
 		// Update number of open tables.
 		openTables = countTables();
+		
+		return true;
 	}
 }

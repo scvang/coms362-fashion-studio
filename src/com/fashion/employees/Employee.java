@@ -1,12 +1,11 @@
-package com.fashion;
+package com.fashion.employees;
 
-import java.util.List;
+import com.fashion.pay.PayStubInfo;
 
 /**
  * @author Sebastian Vang
- * 
+ * @author Chad Morrow
  * Employee works in the studio.
- * 
  */
 public class Employee {
 	
@@ -73,6 +72,6 @@ public class Employee {
 	}
 
 	public void setPayStubInfo(PayStubInfo payStub) {
-		this.payStubInfo = payStubInfo;
+		this.payStubInfo = payStub;
 	}
 }

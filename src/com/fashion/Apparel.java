@@ -14,8 +14,6 @@ public class Apparel {
 	private String itemName;
 	private String brandName;
 	private String color;
-	private int itemID;
-	private int stock;
 	
 	/**
 	 * 
@@ -24,15 +22,11 @@ public class Apparel {
 	 * @param name
 	 * @param brand
 	 * @param color
-	 * @param id
-	 * @param stock
 	 */
-	public Apparel(String name, String brand, String color, int id, int stock) {
+	public Apparel(String name, String brand, String color) {
 		this.itemName = name;
 		this.brandName = brand;
 		this.color = color;
-		this.itemID = id;
-		this.stock = stock;
 	}
 	
 	/**
@@ -51,22 +45,12 @@ public class Apparel {
 		return this.brandName;
 	}
 	
+	/**
+	 * 
+	 * @return item color
+	 */
 	public String getColor() {
 		return this.color;
 	}
-	/**
-	 * 
-	 * @return item ID
-	 */
-	public int getItemID() {
-		return this.itemID;
-	}
-	
-	/**
-	 * 
-	 * @return number of items in stock
-	 */
-	public int getStock() {
-		return this.stock;
-	}
+
 }

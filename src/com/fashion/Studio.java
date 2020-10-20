@@ -1,20 +1,21 @@
 package com.fashion;
 
+import com.fashion.employees.Employee;
+import com.fashion.employees.Model;
+import com.fashion.pay.PayStub;
+import com.fashion.pay.PayStubInfo;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Scanner;
 
 /**
- * @author Sebastian Vang-Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
- * 		   Emily Young-getAd(), addAd()
-
+ * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
+ * @author Emily Young: getAd(), addAd()
  * 
  * Studio is the information expert that knows about the employees and apparel.
  *
@@ -26,9 +27,11 @@ public class Studio {
 	 */
 	private String name;
 	private String address;
-	private String phoneNum;	
+	private String phoneNum;
 
 	private ArrayList<Employee> employees;
+	private ArrayList<Employee> employee;
+	private ArrayList<Model> model;
 	private ArrayList<Apparel> apparel;
 	private ArrayList<Event> event;
 	ArrayList<Advertisement> ad;
@@ -46,11 +49,12 @@ public class Studio {
 		this.name = name;
 		this.address = address;
 		this.phoneNum = phoneNum;
-		
+
 		employees = new ArrayList<>();
 		apparel = new ArrayList<>();
 		event = new ArrayList<>();
 		ad = new ArrayList<>();
+
 		payStubHistory = new ArrayList<>();
 	}
 	
@@ -135,38 +139,88 @@ public class Studio {
 	}
 	
 	public void addApparel(String name, String brand, String color, int id, int stock) {
-		apparel.add(new Apparel(name,brand,color,id,stock));
+		apparel.add(new Apparel(name,brand,color));
 	}
 	
 	/**
-	 * Lists the apparel in stock.
+	 * Lists the apparel.
 	 */
 	public void getApparel() {
 		for(Apparel a : apparel) {
 			System.out.println(
 			"Item name: " + a.getItemName() + "\n" +
 			"Brand name: " + a.getBrandName() + "\n" +
-			"Color: " + a.getColor() + "\n" +
-			"ID: " + a.getItemID() + "\n" +
-			"In-stock: " + a.getStock()
+			"Color: " + a.getColor() + "\n"
 			);
 		}
 	}
 	
-
+	/**
+	 * Create one of three events.
+	 * @param type
+	 * @param eventName
+	 * @param date
+	 * @param time
+	 */
+	public void createEvent(String type, String eventName,String date,String time) {
+		type = type.toLowerCase();
+		switch(type) {
+		case "showing":
+			createShowingEvent(eventName,date,time);
+			System.out.println("Showing event successfully created.");
+		break;
+		
+		case "party":
+			createPartyEvent(eventName,date,time);
+			System.out.println("Dining event successfully created.");
+		break;
+		
+		case "dining":
+			createDiningEvent(eventName,date,time);
+			System.out.println("Dining event successfully created.");
+		break;
+		
+		default:
+			System.out.println("Event was not created. " + type + " is not a valid event type. \n");
+		}
+	}
+	
+	/**
+	 * Creates a showing event.
+	 * @param name
+	 * @param date
+	 * @param time
+	 */
 	public void createShowingEvent(String name, String date, String time) {
 		Event e = new Showing(name,date,time);
 		this.event.add(e);
 	}
+	
+	/**
+	 * Creates a party event.
+	 * @param name
+	 * @param date
+	 * @param time
+	 */
 	public void createPartyEvent(String name, String date, String time) {
 		Event e = new Party(name,date,time);
 		this.event.add(e);
 	}
+	
+	/**
+	 * Creates a dining event.
+	 * @param name
+	 * @param date
+	 * @param time
+	 */
 	public void createDiningEvent(String name, String date, String time) {
 		Event e = new Dining(name,date,time);
 		this.event.add(e);
 	}
 	
+	/**
+	 * Displays a list of hosted events.
+	 */
 	public void displayEvents() {
 		for(Event e : event) {
 			System.out.println(e.getName());
@@ -175,6 +229,7 @@ public class Studio {
 	
 	/**
 	 * Displays the available seats.
+	 * @param e event
 	 */
 	public void displaySeats(Event e) {
 		((Showing) e).displaySeats();
@@ -190,22 +245,76 @@ public class Studio {
 	 * @param t time
 	 */
 	public void reserveSeat(Event e, String n, String c, String d, String t) {
-		((Showing) e).reserveSeat(n,c,d,t);
-		
+		if(((Showing) e).reserveSeat(n,c,d,t)) {
+			System.out.println("Success.");
+			chargeCard(e,c);
+		}
 	}
 	
+	/**
+	 * Displays the tables.
+	 * @param e
+	 */
 	public void displayTables(Event e) {
 		((Dining)e).displayTables();
 		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
 	}
+	
+	/**
+	 * Reserves a table for the customer.
+	 * @param e event
+	 * @param n tableNum
+	 * @param c customerName
+	 * @param d date
+	 * @param t time
+	 */
 	public void reserveTable(Event e, String n, String c, String d, String t) {
-		((Dining)e).reserveTable(n,c,d,t);
+		if(((Dining)e).reserveTable(n,c,d,t));
+		{
+			System.out.println("Success.");
+			chargeCard(e,c);
+		}
 	}
 	
+	public void reserveBadge(Event e, String name, String date, String time) {
+		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
+	}
+	
+	public void checkAttendees(Event e) {
+		System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
+	}
+	
+	/**
+	 * Charges the card according to the event.
+	 * @param e event
+	 * @param c customer
+	 */
+	public void chargeCard(Event e, String c) {
+		System.out.println("Enter last 4 digits of card information: ");
+		Scanner in = new Scanner(System.in);
+		int cardNum = in.nextInt();
+		
+		if(e.payReservation(c, cardNum)) System.out.println("Payment successful.");
+	}
+	
+	/**
+	 * @author Emily Young
+	 * @param eid-event id
+	 * @param eventName-event name
+	 * @param loc-location of event
+	 * @param time-time of event
+	 * @param contactInfo-ticket office contact information
+	 * 
+	 * This method adds a new ad to the list of ads in circulation
+	 */
 	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {
 		ad.add(new Advertisement(eid, eventName, loc, time, contactInfo));
 	}
 
+	/**
+	 * @author Emily Young
+	 * This method retrieves an ad from a list of ads that are currently in circulation
+	 */
 	public void getAd() {
 		for (Advertisement a : ad) {
 			System.out.println("Event ID: " + a.getEventID());
@@ -240,6 +349,14 @@ public class Studio {
 		return payStubHistory.add(payStub);
 	}
 	
+	/**
+	 * @author Emily Young
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param audNum-model audition number
+	 * 
+	 * This method adds a new model to a list of existing employees
+	 */
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
 		employees.add(new Employee(nextEID(), model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
@@ -259,6 +376,70 @@ public class Studio {
 		}
 
 		return nextEID + 1;
+	}
+	
+	/**
+	 * @author Emily Young
+	 * This method retrieves the existing list of models 
+	 */
+	public void getModels() {
+		for(Model m : model) {
+			System.out.println(
+			"Model Name: " + m.getName() + "\n" + 
+			"Agent: " + m.getAgent() + "\n" +
+			"Phone: " + m.getPhoneNum() + "\n" +
+			"Salary: " + m.getSalary() + "\n"
+			);
+		}
+	}
+	
+	/**
+	 * @author Emily Young
+	 * @param agent-agent name
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param salary-model salary
+	 * 
+	 * This method adds a new model to a list of existing models
+	 */
+	public void createModel(String agent, String name, String phoneNum, double salary) {
+		model.add(new Model(agent,name,phoneNum,salary));
+	}
+	
+	public void changeHead(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeHead(item);
+		}
+	}
+	
+	public void changeTop(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeTop(item);
+		}
+	}
+	
+	public void changeBot(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeBot(item);
+		}
+	}
+	
+	public void changeLegs(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeLegs(item);
+		}
+	}
+	
+	public void changeShoes(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeShoes(item);
+		}
+	}
+	
+	public void changeAcc(String modelName, Apparel item) {
+		for(Model m : model) {
+			if(m.getName().equals(modelName)) m.changeAcc(item);
+		}
 	}
 }
 

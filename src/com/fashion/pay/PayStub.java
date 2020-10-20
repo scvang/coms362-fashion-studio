@@ -1,6 +1,4 @@
-package com.fashion;
-
-import java.util.Calendar;
+package com.fashion.pay;
 
 public class PayStub {
     int eid;
