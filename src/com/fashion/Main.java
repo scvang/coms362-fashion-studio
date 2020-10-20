@@ -37,7 +37,7 @@ public class Main {
 			businesses.add(business);
 		}
 
-		System.out.println(businesses);
+		//System.out.println(businesses);
 		
 		// Create a studio
 		String company = "Fashion Inc";

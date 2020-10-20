@@ -95,10 +95,6 @@ public class Studio {
 		return null;
 	}
 	
-	public void addModel(String agent, String name, String phone, double salary) {
-		
-	}
-	
 	/**
 	 * Adds an employee to the studio.
 	 * @param eid
