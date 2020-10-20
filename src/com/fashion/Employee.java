@@ -94,6 +94,6 @@ public class Employee {
 	}
 
 	public void setPayStubInfo(PayStubInfo payStub) {
-		this.payStubInfo = payStubInfo;
+		this.payStubInfo = payStub;
 	}
 }
