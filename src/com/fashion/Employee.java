@@ -18,8 +18,6 @@ public class Employee {
 	private String jobTitle;
 	private String phoneNum;
 	private double salary;
-	private int bankAccountNum;
-	private int bankRoutingNum;
 	private PayStubInfo payStubInfo;
 
 	public Employee(int eid, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
@@ -68,22 +66,6 @@ public class Employee {
 
 	public void setSalary(double salary) {
 		this.salary = salary;
-	}
-
-	public int getBankAccountNum() {
-		return bankAccountNum;
-	}
-
-	public void setBankAccountNum(int bankAccountNum) {
-		this.bankAccountNum = bankAccountNum;
-	}
-
-	public int getBankRoutingNum() {
-		return bankRoutingNum;
-	}
-
-	public void setBankRoutingNum(int bankRoutingNum) {
-		this.bankRoutingNum = bankRoutingNum;
 	}
 
 	public PayStubInfo getPayStubInfo() {

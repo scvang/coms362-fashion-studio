@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-<<<<<<< HEAD
 	private static double minPromotionValue = 1000.0;
 	private static double maxPromotionValue = 15000.0;
 	private static int maxBusinesses = 7;
@@ -15,8 +14,6 @@ public class Main {
 	private static String[] businessAddresses = {"450 Grope Lane", "39 Fabulous Texan Way", "90 Ha-Ha Road",
 			"126 Man Fuk Road", "67 Mad Dog Lane", "1 Boring Road", "666 Bad Route Road", "900 Smellies Lane",
 			"12 Butt Street", "879 Break-Me-Neck Hill", "1285 Whip-Ma-Whop-Ma-Gate", "78 Silly Goose Lane"};
-
-=======
 	
 	/**
 	 * Instance variables.
@@ -27,7 +24,6 @@ public class Main {
 	 * Main
 	 * @param args
 	 */
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	public static void main(String[] args) {
 		Random random = new Random();
 
@@ -57,30 +53,7 @@ public class Main {
 		
 		studio.createShowingEvent("FashionCon 2021", "10-15-21", "04:10PM");
 		studio.displayEvents();
-		
-		// Add an employee test
-<<<<<<< HEAD
-		int eid = 1;
-=======
-		
-		/*
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
-		String name = "John";
-		String jobTitle = "Designer";
-		double salary = 50000;
-		String phoneNum = "N/A";
-<<<<<<< HEAD
 
-		studio.addEmployee(eid, name, jobTitle, phoneNum, salary, 0, 0);
-
-=======
-		
-		studio.addEmployee(name, jobTitle, salary, phoneNum);
-		studio.getEmployees();
-    
-		*/
-		
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 		// Add a shirt test
 		
 		/*
@@ -128,7 +101,9 @@ public class Main {
 			"1) Employees \n" +
 			"2) Apparel \n" +
 			"3) Models \n" +
-			"4) Events \n"
+			"4) Events \n" +
+			"5) Advertisements \n" +
+			"6) Promotions \n"
 			);
 			
 			choice = in.next();
@@ -138,29 +113,106 @@ public class Main {
 				case 1:
 					employeeScreen();
 				break;
-				
 				case 2:
 					apparelScreen();
 				break;
-				
 				case 3:
 					modelScreen();
 				break;
-				
 				case 4:
 					eventScreen();
 				break;
-				
 				case 5:
 					advertisementScreen();
+				break;
+				case 6:
+					promotionScreen();
 				break;
 			}
 		}
 		in.close();
 	}
-	
+
+	/**
+	 * @author Chad Morrow
+	 * Employee Screen
+	 */
 	public static void employeeScreen() {
-		//TODO
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select an event ('q' to exit): \n" +
+							"1) View Employees \n" +
+							"2) Pay Employee \n" +
+							"3) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					studio.getEmployees();
+					System.out.println();
+					System.out.println();
+					break;
+				case 2:
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("Enter the employee id ('q' to exit): ");
+					int eid = -1;
+					while(eid == -1){
+						String temp = in2.next();
+						if(temp.equals("q")) {
+							System.out.println();
+							System.out.println();
+							employeeScreen();
+						}
+
+						try {
+							eid = Integer.parseInt(temp);
+						} catch (NumberFormatException e) {
+							System.out.println("Employee id must be a number ('q' to exit): ");
+						}
+					}
+
+					PayStubInfo payStubInfo = studio.getEmployee(eid).getPayStubInfo();
+
+					System.out.println("Did this employee recieve a bonus? (y/n) ('q' to exit)");
+					String yesno = in2.next();
+
+					double bonus = -1;
+					if(yesno.equals("y")) {
+						System.out.println("How much did they recieve? ('q' to exit)");
+						while(bonus == -1){
+							String temp = in2.next();
+							if(temp.equals("q")) {
+								System.out.println();
+								System.out.println();
+								employeeScreen();
+							}
+
+							try {
+								bonus = Double.parseDouble(temp);
+							} catch (NumberFormatException e) {
+								System.out.println("Bonus must be a number ('q' to exit): ");
+							}
+						}
+					}
+					payStubInfo.setBonus(bonus);
+
+					if(studio.payEmployee(eid, payStubInfo)){
+						System.out.println(studio.getEmployee(eid).getName() + " was paid!");
+					} else {
+						System.out.println("Error paying employee, try again later");
+					}
+					System.out.println();
+					System.out.println();
+					break;
+				case 4:
+					mainScreen();
+			}
+		}
 	}
 	
 	public static void apparelScreen() {
@@ -208,7 +260,6 @@ public class Main {
 			}
 		}
 		in.close();
-		
 	}
 	
 	/**
@@ -322,6 +373,198 @@ public class Main {
 	
 	public static void advertisementScreen() {
 		
+	}
+
+	/**
+	 * @author Chad Morrow
+	 * Promotion Screen
+	 */
+	public static void promotionScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select a choice ('q' to exit): \n" +
+							"1) Display upcoming events \n" +
+							"2) Check available promotions \n" +
+							"3) Reserve a promotion spot \n" +
+							"4) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					studio.displayEvents();
+					System.out.println();
+					System.out.println();
+					break;
+				case 2:
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("Enter the event you'd like to view open promotion spots ('q' to exit): ");
+					String eventName = in2.nextLine().trim();
+					if(eventName.equals("q")) {
+						System.out.println();
+						System.out.println();
+						promotionScreen();
+					}
+
+					while(studio.getEvent(eventName) == null){
+						System.out.println("Sorry! we could not find your event, please re-enter a new event ('q' to exit): ");
+						eventName = in2.nextLine().trim();
+						if(eventName.equals("q")) {
+							System.out.println();
+							System.out.println();
+							promotionScreen();
+						}
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(1)){
+						System.out.println("1:  Open");
+					} else {
+						System.out.println("1:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(2)){
+						System.out.println("2:  Open");
+					} else {
+						System.out.println("2:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(3)){
+						System.out.println("3:  Open");
+					} else {
+						System.out.println("3:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(4)){
+						System.out.println("4:  Open");
+					} else {
+						System.out.println("4:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(5)){
+						System.out.println("5:  Open");
+					} else {
+						System.out.println("5:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(6)){
+						System.out.println("6:  Open");
+					} else {
+						System.out.println("6:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(7)){
+						System.out.println("7:  Open");
+					} else {
+						System.out.println("7:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(8)){
+						System.out.println("8:  Open");
+					} else {
+						System.out.println("8:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(9)){
+						System.out.println("9:  Open");
+					} else {
+						System.out.println("9:  Taken");
+					}
+
+					if(studio.getEvent(eventName).isPromotionSpotOpen(10)){
+						System.out.println("10: Open");
+					} else {
+						System.out.println("10: Taken");
+					}
+
+					System.out.println();
+					System.out.println();
+					break;
+				case 3:
+					//TODO
+					Scanner in3 = new Scanner (System.in);
+					System.out.println("Enter the event  ('q' to exit): ");
+					String eventNameReserve = in3.nextLine();
+					if(eventNameReserve.equals("q")) {
+						System.out.println();
+						System.out.println();
+						promotionScreen();
+					}
+					while(studio.getEvent(eventNameReserve) == null) {
+						System.out.println("Sorry! we could not find your event, please re-enter a new event  ('q' to exit): ");
+						eventNameReserve = in3.nextLine().trim();
+						if(eventNameReserve.equals("q")) {
+							System.out.println();
+							System.out.println();
+							promotionScreen();
+						}
+					}
+
+					System.out.println("Enter your business name ('q' to exit): ");
+					String businessName = in3.nextLine();
+					if(businessName.equals("q")) {
+						System.out.println();
+						System.out.println();
+						promotionScreen();
+					}
+
+					System.out.println("What would you like it to say? ('q' to exit): ");
+					String text = in3.nextLine();
+					if(text.equals("q")) {
+						System.out.println();
+						System.out.println();
+						promotionScreen();
+					}
+
+					System.out.println("Enter your desired promotion location ('q' to exit): ");
+					int location = 0;
+					while(location == 0){
+						String temp = in3.next();
+						if(temp.equals("q")) {
+							System.out.println();
+							System.out.println();
+							promotionScreen();
+						}
+
+						try {
+							location = Integer.parseInt(temp);
+						} catch (NumberFormatException e) {
+							System.out.println("Please enter a location (1-10). Open spots are viewable from " +
+									"the promotion start screen ('q' to exit)");
+						}
+					}
+
+					System.out.println("What is your offer ('q' to exit): ");
+					double dollarAmount = 0.0;
+					while(dollarAmount == 0.0){
+						String temp = in3.next();
+						if(temp.equals("q")) {
+							System.out.println();
+							System.out.println();
+							promotionScreen();
+						}
+
+						try {
+							dollarAmount = Double.parseDouble(temp);
+						} catch (NumberFormatException e) {
+							System.out.println("Please enter a valid dollar amount ('q' to exit).");
+						}
+					}
+
+					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount)) {
+						System.out.println("Promotion added!");
+					}
+
+					System.out.println();
+					System.out.println();
+					break;
+				case 4:
+					mainScreen();
+			}
+		}
 	}
 
 	private static String generateNum() {
