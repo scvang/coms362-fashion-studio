@@ -1,5 +1,7 @@
 package com.fashion;
 
+import java.util.List;
+
 /**
  * @author Sebastian Vang
  * 
@@ -11,80 +13,84 @@ public class Employee {
 	/**
 	 * Instance variables.
 	 */
+	private int eid;
 	private String name;
 	private String jobTitle;
-	private int salary;
 	private String phoneNum;
-	
-	/**
-	 * 
-	 * Constructs the employee.
-	 * 
-	 * @param name
-	 * @param jobTitle
-	 * @param salary
-	 * @param phoneNum
-	 */
-	public Employee(String name, String jobTitle, int salary, String phoneNum) {
+	private double salary;
+	private int bankAccountNum;
+	private int bankRoutingNum;
+	private PayStubInfo payStubInfo;
+
+	public Employee(int eid, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
+		this.eid = eid;
 		this.name = name;
 		this.jobTitle = jobTitle;
-		this.salary = salary;
 		this.phoneNum = phoneNum;
+		this.payStubInfo = payStubInfo;
 	}
-	
-	/**
-	 * 
-	 * @return name
-	 */
+
+	public int getEid() {
+		return eid;
+	}
+
+	public void setEid(int eid) {
+		this.eid = eid;
+	}
+
 	public String getName() {
-		return this.name;
+		return name;
 	}
-	
-	/**
-	 * 
-	 * @return job title
-	 */
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getJobTitle() {
-		return this.jobTitle;
+		return jobTitle;
 	}
-	
-	/**
-	 * 
-	 * @return salary
-	 */
-	public int getSalary() {
-		return this.salary;
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
 	}
-	
-	/**
-	 * 
-	 * @return phone number
-	 */
+
 	public String getPhoneNum() {
-		return this.phoneNum;
+		return phoneNum;
 	}
-	
-	/**
-	 * Changes the job title of the employee.
-	 * @param title
-	 */
-	public void setJobTitle(String title) {
-		this.jobTitle = title;
-	}
-	
-	/**
-	 * Changes the salary for the employee.
-	 * @param salary
-	 */
-	public void setSalary(int salary) {
-		this.salary = salary;
-	}
-	
-	/**
-	 * Changes the phone number for the employee.
-	 * @param phoneNum
-	 */
+
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	public int getBankAccountNum() {
+		return bankAccountNum;
+	}
+
+	public void setBankAccountNum(int bankAccountNum) {
+		this.bankAccountNum = bankAccountNum;
+	}
+
+	public int getBankRoutingNum() {
+		return bankRoutingNum;
+	}
+
+	public void setBankRoutingNum(int bankRoutingNum) {
+		this.bankRoutingNum = bankRoutingNum;
+	}
+
+	public PayStubInfo getPayStubInfo() {
+		return payStubInfo;
+	}
+
+	public void setPayStubInfo(PayStubInfo payStub) {
+		this.payStubInfo = payStubInfo;
 	}
 }

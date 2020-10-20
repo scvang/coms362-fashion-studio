@@ -65,7 +65,7 @@ public class ModelAudition {
 	public Employee hireModel(boolean hire) {
 		if(hire) {
 			newMod.setJobTitle("Model");
-			newMod.setSalary(29000);
+			newMod.setSalary(29000.0);
 			newMod.setPhoneNum(phoneNum);
 		} else {
 			System.out.println("We are not going to hire you at this time.");
