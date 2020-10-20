@@ -113,7 +113,7 @@ public class Showing extends Event{
 	 * @param customer
 	 * @param date
 	 */
-	public void reserveSeat(String seatNum, String customer, String date, String time) {
+	public boolean reserveSeat(String seatNum, String customer, String date, String time) {
 		// Convert to upper case before processing.
 		seatNum = seatNum.toUpperCase();
 		
@@ -126,8 +126,8 @@ public class Showing extends Event{
 			// Checks if the seat is already reserved.
 			if(whitelist.containsKey(seatNum)) {
 				System.out.println(seatNum);
-				System.out.println("That seat is already reserved.");
-				return;
+				System.out.println("Seat " + seatNum + " is already reserved.");
+				return false;
 			}
 			
 			// Finds the seat to reserve.
@@ -147,10 +147,12 @@ public class Showing extends Event{
 		}
 		else {
 			System.out.println("Not a valid seat number.");
-			return;
+			return false;
 		}
 		
 		// Update number of open seats.
 		openSeats = countSeats();
+		
+		return true;
 	}
 }

@@ -35,4 +35,8 @@ public class Event {
 	public String getTime() {
 		return this.time;
 	}
+	
+	public boolean payReservation(String customerName, int cardNum) {
+		return true;
+	}
 }

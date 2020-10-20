@@ -13,8 +13,8 @@ public class Employee {
 	 */
 	private String name;
 	private String jobTitle;
-	private int salary;
 	private String phoneNum;
+	private double salary;
 	
 	/**
 	 * 
@@ -25,11 +25,11 @@ public class Employee {
 	 * @param salary
 	 * @param phoneNum
 	 */
-	public Employee(String name, String jobTitle, int salary, String phoneNum) {
+	public Employee(String name, String jobTitle, String phoneNum, double salary) {
 		this.name = name;
 		this.jobTitle = jobTitle;
-		this.salary = salary;
 		this.phoneNum = phoneNum;
+		this.salary = salary;
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class Employee {
 	 * 
 	 * @return salary
 	 */
-	public int getSalary() {
+	public double getSalary() {
 		return this.salary;
 	}
 	
@@ -76,7 +76,7 @@ public class Employee {
 	 * Changes the salary for the employee.
 	 * @param salary
 	 */
-	public void setSalary(int salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 	
