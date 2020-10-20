@@ -24,10 +24,11 @@ public class Studio {
 	 */
 	private String name;
 	private String address;
-	private String phoneNum;
-	
-	ArrayList<Employee> employees;
-	ArrayList<Apparel> apparel;
+	private String phoneNum;	
+
+	private ArrayList<Employee> employee;
+	private ArrayList<Apparel> apparel;
+	private ArrayList<Event> event;
 	ArrayList<Advertisement> ad;
 	Promotion[] promotions;
 	ArrayList<PayStub> payStubHistory;
@@ -45,11 +46,16 @@ public class Studio {
 		this.address = address;
 		this.phoneNum = phoneNum;
 		
-		employees = new ArrayList<>();
+		employee = new ArrayList<>();
 		apparel = new ArrayList<>();
+		event = new ArrayList<>();
 		ad = new ArrayList<>();
+<<<<<<< HEAD
 		promotions = new Promotion[10];
 		payStubHistory = new ArrayList<>();
+=======
+
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	/**
@@ -77,21 +83,41 @@ public class Studio {
 	}
 	
 	/**
+	 * 
+	 * @return party event
+	 */
+	public Event getEvent(String name) {
+		
+		for(Event e : event) {
+			if(e.getName().equals(name)) {
+				return e;
+			}
+		}
+		System.out.println("Event was not found.");
+		return null;
+	}
+	
+	/**
 	 * Adds an employee to the studio.
 	 * @param eid
 	 * @param name
 	 * @param title
 	 * @param phone
 	 */
+<<<<<<< HEAD
 	public void addEmployee(int eid, String name, String title, String phone, double salary, int bankAccount, int bankRouting) {
 		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
+=======
+	public void addEmployee(String name, String title, int salary, String phone) {
+		employee.add(new Employee(name,title,salary,phone));
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	/**
 	 * Lists the employees information.
 	 */
 	public void getEmployees() {
-		for(Employee e : employees) {
+		for(Employee e : employee) {
 			System.out.println(
 			"Employee Name: " + e.getName() + "\n" + 
 			"Job title: " + e.getJobTitle() + "\n" +
@@ -118,6 +144,54 @@ public class Studio {
 			"In-stock: " + a.getStock()
 			);
 		}
+	}
+	
+
+	public void createShowingEvent(String name, String date, String time) {
+		Event e = new Showing(name,date,time);
+		this.event.add(e);
+	}
+	public void createPartyEvent(String name, String date, String time) {
+		Event e = new Party(name,date,time);
+		this.event.add(e);
+	}
+	public void createDiningEvent(String name, String date, String time) {
+		Event e = new Dining(name,date,time);
+		this.event.add(e);
+	}
+	
+	public void displayEvents() {
+		for(Event e : event) {
+			System.out.println(e.getName());
+		}
+	}
+	
+	/**
+	 * Displays the available seats.
+	 */
+	public void displaySeats(Event e) {
+		((Showing) e).displaySeats();
+		System.out.println("Available seats: " + ((Showing) e).getOpenSeats() + "\n");
+	}
+
+	/**
+	 * Reserves a seat for the customer.
+	 * @param e event
+	 * @param s seatNum
+	 * @param c customerName
+	 * @param d date
+	 */
+	public void reserveSeat(Event e, String n, String c, String d, String t) {
+		((Showing) e).reserveSeat(n,c,d,t);
+		
+	}
+	
+	public void displayTables(Event e) {
+		((Dining)e).displayTables();
+		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
+	}
+	public void reserveTable(Event e, String n, String c, String d, String t) {
+		((Dining)e).reserveTable(n,c,d,t);
 	}
 	
 	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {
@@ -235,7 +309,12 @@ public class Studio {
 	
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
+<<<<<<< HEAD
 		employees.add(new Employee(1, model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
+=======
+		employee.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
+
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 }
 
