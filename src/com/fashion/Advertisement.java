@@ -35,6 +35,9 @@ public class Advertisement {
 		this.contactInfo = contactInfo;
 	}
 
+	/**
+	 * Create any written ads (i.e. flyer, billboard, etc)
+	 */
 	public void createAdPaper() {
 		createdAd = new File("coms362-fashion-studio\\" + getFileName());
 		FileWriter writer = null;
@@ -55,30 +58,58 @@ public class Advertisement {
 		}
 	}
 
+	/**
+	 * 
+	 * @return file name
+	 */
 	public String getFileName() {
 		return eventName + ".txt";
 	}
 
+	/**
+	 * 
+	 * @return event id
+	 */
 	public int getEventID() {
 		return this.eid;
 	}
 	
+	/**
+	 * 
+	 * @return location
+	 */
 	public String getLocation() {
 		return this.loc;
 	}
 	
+	/**
+	 * 
+	 * @return time
+	 */
 	public String getTime() {
 		return this.time;
 	}
 	
+	/**
+	 * 
+	 * @return contact info
+	 */
 	public String getContactInfo() {
 		return this.contactInfo;
 	}
 
+	/**
+	 * 
+	 * @return file
+	 */
 	public File getFile() {
 		return createdAd;
 	}
 
+	/**
+	 * 
+	 * @return event name
+	 */
 	public String getEventName() {
 		return this.eventName;
 	}

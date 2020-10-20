@@ -547,10 +547,6 @@ public class Main {
 		in.close();
 		
 	}
-	
-	public static void advertisementScreen() {
-		
-	}
 
 	private static String generateNum() {
 		String phoneNum = "";

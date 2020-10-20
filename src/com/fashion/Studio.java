@@ -280,10 +280,24 @@ public class Studio {
 		if(e.payReservation(c, cardNum)) System.out.println("Payment successful.");
 	}
 	
+	/**
+	 * @author Emily Young
+	 * @param eid-event id
+	 * @param eventName-event name
+	 * @param loc-location of event
+	 * @param time-time of event
+	 * @param contactInfo-ticket office contact information
+	 * 
+	 * This method adds a new ad to the list of ads in circulation
+	 */
 	public void addAd(int eid, String eventName, String loc, String time, String contactInfo) {
 		ad.add(new Advertisement(eid, eventName, loc, time, contactInfo));
 	}
 
+	/**
+	 * @author Emily Young
+	 * This method retrieves an ad from a list of ads that are currently in circulation
+	 */
 	public void getAd() {
 		for (Advertisement a : ad) {
 			System.out.println("Event ID: " + a.getEventID());
@@ -393,12 +407,24 @@ public class Studio {
 		return payStubHistory.add(payStub);
 	}
 	
+	/**
+	 * @author Emily Young
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param audNum-model audition number
+	 * 
+	 * This method adds a new model to a list of existing employees
+	 */
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
 		employee.add(new Employee(1, model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
 
 	}
 	
+	/**
+	 * @author Emily Young
+	 * This method retrieves the existing list of models 
+	 */
 	public void getModels() {
 		for(Model m : model) {
 			System.out.println(
@@ -410,6 +436,15 @@ public class Studio {
 		}
 	}
 	
+	/**
+	 * @author Emily Young
+	 * @param agent-agent name
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param salary-model salary
+	 * 
+	 * This method adds a new model to a list of existing models
+	 */
 	public void createModel(String agent, String name, String phoneNum, double salary) {
 		model.add(new Model(agent,name,phoneNum,salary));
 	}
