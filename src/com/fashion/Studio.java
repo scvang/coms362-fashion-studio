@@ -6,13 +6,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.Scanner;
-=======
 import java.util.Calendar;
 import java.util.List;
->>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
-
 /**
  * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
  * @author Emily Young: getAd(), addAd()
@@ -55,12 +51,9 @@ public class Studio {
 		apparel = new ArrayList<>();
 		event = new ArrayList<>();
 		ad = new ArrayList<>();
-<<<<<<< HEAD
+
 		promotions = new Promotion[10];
 		payStubHistory = new ArrayList<>();
-=======
-
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	/**
@@ -113,18 +106,8 @@ public class Studio {
 	 * @param title
 	 * @param phone
 	 */
-<<<<<<< HEAD
-	public void addEmployee(String name, String title, String phone, double salary) {
-		employee.add(new Employee(name,title,phone, salary));
-=======
-<<<<<<< HEAD
 	public void addEmployee(int eid, String name, String title, String phone, double salary, int bankAccount, int bankRouting) {
-		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
-=======
-	public void addEmployee(String name, String title, int salary, String phone) {
-		employee.add(new Employee(name,title,salary,phone));
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
->>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
+		employee.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
 	}
 	
 	/**
@@ -135,11 +118,8 @@ public class Studio {
 			System.out.println(
 			"Employee Name: " + e.getName() + "\n" + 
 			"Job title: " + e.getJobTitle() + "\n" +
-<<<<<<< HEAD
 			"Salary: " + e.getSalary() + "\n" +
-=======
 			String.format("Salary: $" + "%,d", e.getPayStubInfo().getSalary()) + "\n" +
->>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
 			"Phone: " + e.getPhoneNum()
 			);
 		}
@@ -419,16 +399,8 @@ public class Studio {
 	
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
-<<<<<<< HEAD
-		employee.add(new Employee(model.getName(), "Model", model.getPhoneNum(),29000));
-=======
-<<<<<<< HEAD
-		employees.add(new Employee(1, model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
-=======
-		employee.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
->>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
+		employee.add(new Employee(1, model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
 
->>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	public void getModels() {
