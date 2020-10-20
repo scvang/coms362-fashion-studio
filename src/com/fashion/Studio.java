@@ -3,8 +3,15 @@ package com.fashion;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Scanner;
+=======
+import java.util.Calendar;
+import java.util.List;
+>>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
 
 /**
  * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
@@ -27,6 +34,8 @@ public class Studio {
 	private ArrayList<Apparel> apparel;
 	private ArrayList<Event> event;
 	ArrayList<Advertisement> ad;
+	Promotion[] promotions;
+	ArrayList<PayStub> payStubHistory;
 	
 	/**
 	 * 
@@ -46,7 +55,12 @@ public class Studio {
 		apparel = new ArrayList<>();
 		event = new ArrayList<>();
 		ad = new ArrayList<>();
+<<<<<<< HEAD
+		promotions = new Promotion[10];
+		payStubHistory = new ArrayList<>();
+=======
 
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	/**
@@ -94,13 +108,23 @@ public class Studio {
 	
 	/**
 	 * Adds an employee to the studio.
+	 * @param eid
 	 * @param name
-	 * @param jobTitle
-	 * @param salary
-	 * @param phoneNum
+	 * @param title
+	 * @param phone
 	 */
+<<<<<<< HEAD
 	public void addEmployee(String name, String title, String phone, double salary) {
 		employee.add(new Employee(name,title,phone, salary));
+=======
+<<<<<<< HEAD
+	public void addEmployee(int eid, String name, String title, String phone, double salary, int bankAccount, int bankRouting) {
+		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
+=======
+	public void addEmployee(String name, String title, int salary, String phone) {
+		employee.add(new Employee(name,title,salary,phone));
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
+>>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
 	}
 	
 	/**
@@ -111,7 +135,11 @@ public class Studio {
 			System.out.println(
 			"Employee Name: " + e.getName() + "\n" + 
 			"Job title: " + e.getJobTitle() + "\n" +
+<<<<<<< HEAD
 			"Salary: " + e.getSalary() + "\n" +
+=======
+			String.format("Salary: $" + "%,d", e.getPayStubInfo().getSalary()) + "\n" +
+>>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
 			"Phone: " + e.getPhoneNum()
 			);
 		}
@@ -301,11 +329,106 @@ public class Studio {
 			}
 		}
 	}
+
+	/**
+	@author Chad Morrow
+	 Adds a promotion to this studio for an event
+	 */
+	public boolean addPromotion(String businessName, String text, int loc, double dollarAmount){
+		Promotion p = new Promotion(businessName, text, dollarAmount);
+
+		/*
+		if the number of promotions at the studio is less than 10 than we have room for the new promotion
+		 */
+		if(promotions.length < 10) {
+			/*
+			if the promotion location isn't filled by another company or the same company then we can add
+			the new promotion to this location.
+			 */
+			if(isPromotionSpotOpen(loc)){
+				p.setLocation(loc);
+			} else { //otherwise, if the promotion location is filled, then the business must look for
+				//another location to place the promotion
+				System.out.println("Promotions location is filled! Please look for another spot!");
+				return false;
+			}
+		} else { //if we are at 10 promotions then the studio event is filled
+			System.out.println("Promotion spots are filled! Good luck next event!");
+			return false;
+		}
+
+		//increment the pid +1 more the highest value
+		if(promotions.length != 0){
+			int nextPid = findNextPid(promotions);
+			p.setPid(nextPid);
+		} else {
+			p.setPid(1);
+		}
+
+		promotions[loc] = p;
+
+		return promotions[loc] == p;
+	}
+
+	/**
+	 * @author Chad Morrow
+	 * @param promotions is the list of promotions at this studio event
+	 * @return the next pid value for then new promotion
+	 */
+	private int findNextPid(Promotion[] promotions){
+		int max = 0;
+		for(Promotion promotion : promotions){
+			if(max < promotion.getPid()){
+				max = promotion.getPid();
+			}
+		}
+		return max + 1;
+	}
+
+	/**
+	 @author Chad Morrow
+	  * @param loc is the location of the where were checking if a promotion is
+	 * @return the Promotion information at the requested promotion location
+	 Grabs promotion information from the studio for an event
+	 */
+	public Promotion getPromotion(int loc){
+		return promotions[loc];
+	}
+
+	/**
+	 * @author Chad Morrow
+	 * @param loc is the location of the where were checking if a promotion is
+	 * @return the boolean value if the promotion spot is taken for this studio
+	 */
+	private boolean isPromotionSpotOpen(int loc){
+		return promotions[loc] == null;
+	}
+
+	/**
+	 @author Chad Morrow
+	 pay the employee
+	 */
+	public boolean payEmployee(int eid, PayStubInfo p){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		System.out.println(dateFormat.format(cal));
+
+		PayStub payStub = new PayStub(eid, dateFormat.format(cal), p);
+		return payStubHistory.add(payStub);
+	}
 	
 	public void addModel(String name, String phoneNum, int audNum) {
 		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
+<<<<<<< HEAD
 		employee.add(new Employee(model.getName(), "Model", model.getPhoneNum(),29000));
+=======
+<<<<<<< HEAD
+		employees.add(new Employee(1, model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
+=======
+		employee.add(new Employee(model.getName(), "Model", 29000, model.getPhoneNum()));
+>>>>>>> 94239a5e9d501949d9da3e0287d4d2ede99306ff
 
+>>>>>>> 4a9a6e1e7ce572c34954945c8ac0bcc171618e3e
 	}
 	
 	public void getModels() {
