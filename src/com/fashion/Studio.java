@@ -30,7 +30,6 @@ public class Studio {
 	private String phoneNum;
 
 	private ArrayList<Employee> employees;
-	private ArrayList<Employee> employee;
 	private ArrayList<Model> model;
 	private ArrayList<Apparel> apparel;
 	private ArrayList<Event> event;
@@ -51,6 +50,12 @@ public class Studio {
 		this.phoneNum = phoneNum;
 
 		employees = new ArrayList<>();
+		
+		// I noticed there seems to be a confusion with employees and models.
+		// I'm treating model differently from employees. Usually models are contracted since they can work for multiple studios so they aren't necessarily employees.
+		// Employees are just the people operating the studio.
+		
+		model = new ArrayList<>(); 
 		apparel = new ArrayList<>();
 		event = new ArrayList<>();
 		ad = new ArrayList<>();
