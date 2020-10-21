@@ -46,29 +46,19 @@ public class Showing extends Event{
 	
 	/**
 	 * Randomly fills available seats.
-	 * Probably better for testing purposes.
+	 * For testing purposes.
 	 */
 	
-	/*
 	public void fillSeats() {
-		String[] isle = {"A","B","C","D","E","F","G","H","I"};
-		Random ran = new Random();
-		
 		for(int row = 0; row < seat.length; ++row) {
 			for(int col = 0; col < seat[0].length; ++col) {
-				
-				int num = ran.nextInt(9)+1;
-				String letter = isle[row];
-				String s = letter + num;
-				
-				if(!whitelist.containsKey(s)) {
-					seat[row][col].num = "RR";
-					seat[row][col].customer = "customer" + new Random().nextInt(99)+1;
-					whitelist.put(s,1);
-				}
+				seat[row][col].num = "RR";
+				seat[row][col].customer = "customer";
 			}
 		}
-	}*/
+		// Update the avaialable seats.
+		openSeats = countSeats();
+	}
 	
 	/**
 	 * Gets number of available seats.

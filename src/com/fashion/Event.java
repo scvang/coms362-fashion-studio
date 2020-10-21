@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * @author Sebastian Vang
  * 
- * Generic Events are hosted by the studio.
+ * Events is the information expert that knows about promotions.
  * 
  */
 public class Event {
@@ -140,6 +140,12 @@ public class Event {
 		return numFilled;
 	}
 	
+	/**
+	 * 
+	 * @param customerName
+	 * @param cardNum
+	 * @return
+	 */
 	public boolean payReservation(String customerName, int cardNum) {
 		return true;
 	}

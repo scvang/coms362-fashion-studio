@@ -51,8 +51,6 @@ public class Main {
 		
 		// Make a display model.
 		studio.createModel("Jack","Eve","555-555-5555",100000);
-		int eid = 1;
-
 		
 		// Add an employee test
 		/*
@@ -98,6 +96,8 @@ public class Main {
 		//studio.getEmployees();
 		
 		// Go to main screen.
+		// I think later it should be changed so that the screens
+		// are handled by a display controller so we don't have bloat.
 		mainScreen();
 	}
 	
@@ -260,7 +260,10 @@ public class Main {
 					System.out.println("Which model do you want to change?");
 					studio.getModels();
 					String name = in2.next();
-					
+					if(!studio.findModel(name)) {
+						System.out.println("Model was not found, try again.");
+						break;
+					}
 					changeApparelScreen(name);
 					
 				break;
@@ -471,7 +474,8 @@ public class Main {
 			"2) Reserve a seat \n" +
 			"3) Check a seat \n" +
 			"4) Refund \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Fill Seats (Test)"
 			);
 			
 			choice = in.next();
@@ -479,10 +483,16 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displaySeats(studio.getEvent("FashionCon 2020"));
+					if(!studio.displaySeats(studio.getEvent("FashionCon 2020"))) {
+						System.out.println("No available seats.");
+					}
 				break;
 				
 				case 2:
+					if(!studio.displaySeats(studio.getEvent("FashionCon 2020"))) {
+						System.out.println("No available seats.");
+						break;
+					}
 					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
 					String customerName = in2.next();
@@ -506,6 +516,9 @@ public class Main {
 				
 				case 5:
 					eventScreen();
+				break;
+				case 6:
+					studio.fillSeats(studio.getEvent("FashionCon 2020"));
 				break;
 			}
 		}
@@ -533,10 +546,16 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displayTables(studio.getEvent("Fashion Dining 2020"));
+					if(!studio.displayTables(studio.getEvent("Fashion Dining 2020"))) {
+						System.out.println("There are no available tables.");
+					}
 				break;
 				
 				case 2:
+					if(!studio.displayTables(studio.getEvent("Fashion Dining 2020"))) {
+						System.out.println("There are no available tables.");
+						break;
+					}
 					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
 					String customerName = in2.next();
@@ -586,10 +605,17 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.checkAttendees(studio.getEvent("Company Party 2020"));
+					if(studio.checkAttendees(studio.getEvent("Company Party 2020"))) {
+						System.out.println("The venue is full.");
+					}
 				break;
 				
 				case 2:
+					if(studio.checkAttendees(studio.getEvent("Company Party 2020"))) {
+						System.out.println("The venue is full.");
+						break;
+					}
+					
 					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
 					String customerName = in2.next();

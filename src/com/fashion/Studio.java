@@ -17,7 +17,7 @@ import java.util.Scanner;
  * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
  * @author Emily Young: getAd(), addAd()
  * 
- * Studio is the information expert that knows about the employees and apparel.
+ * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory.
  *
  */
 public class Studio {
@@ -236,9 +236,14 @@ public class Studio {
 	 * Displays the available seats.
 	 * @param e event
 	 */
-	public void displaySeats(Event e) {
+	public boolean displaySeats(Event e) {
 		((Showing) e).displaySeats();
+		Showing s = (Showing)e;
+		
 		System.out.println("Available seats: " + ((Showing) e).getOpenSeats() + "\n");
+		if(s.getOpenSeats() == 0) return false;
+		
+		return true;
 	}
 
 	/**
@@ -260,9 +265,14 @@ public class Studio {
 	 * Displays the tables.
 	 * @param e
 	 */
-	public void displayTables(Event e) {
+	public boolean displayTables(Event e) {
 		((Dining)e).displayTables();
+		Dining d = (Dining)e;
+		
 		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
+		if(d.getOpenTables() == 0) return false;
+		
+		return true;
 	}
 	
 	/**
@@ -285,8 +295,11 @@ public class Studio {
 		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
 	}
 	
-	public void checkAttendees(Event e) {
+	public boolean checkAttendees(Event e) {
+		Party p = (Party)e;
 		System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
+		if(p.getAttendees() == p.getCapacity()) return false;
+		return true;
 	}
 	
 	/**
@@ -294,12 +307,30 @@ public class Studio {
 	 * @param e event
 	 * @param c customer
 	 */
-	public void chargeCard(Event e, String c) {
-		System.out.println("Enter last 4 digits of card information: ");
+	public boolean chargeCard(Event e, String c) {
+		
 		Scanner in = new Scanner(System.in);
+		System.out.println("Enter last 4 digits of card information: ");
+		
+		// Wait for the next integer input.
+		while(in.hasNext() && !in.hasNextInt()) {
+			in.next();
+		}
 		int cardNum = in.nextInt();
 		
+		if(Integer.toString(cardNum).length() != 4) {
+			System.out.println("Not a valid card number. Try again.");
+			return false;
+		}
+		
 		if(e.payReservation(c, cardNum)) System.out.println("Payment successful.");
+		
+		return true;
+	}
+	
+	public void fillSeats(Event e) {
+		Showing s = (Showing)e;
+		s.fillSeats();
 	}
 	
 	/**
@@ -381,6 +412,14 @@ public class Studio {
 		}
 
 		return nextEID + 1;
+	}
+	
+	public boolean findModel(String name) {
+		for(Model m: model) {
+			if(m.getName().equals(name)) return true;
+		}
+		
+		return false;
 	}
 	
 	/**
