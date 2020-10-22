@@ -61,8 +61,14 @@ public class Event {
 			the new promotion to this location.
 			 */
 			if(isPromotionSpotOpen(loc)){
+				//fake payment system with a 97% chance of acceptance
 				if(payPromotion(card)){
-					p.setLocation(loc);
+					//fake
+					if(evaluateOffer()) {
+						p.setLocation(loc);
+					} else  {
+						System.out.println("Offer denied. Please re-offer!");
+					}
 				} else {
 					System.out.println("Card denied. Try again later");
 				}
@@ -160,5 +166,10 @@ public class Event {
 			return random.nextInt(100) <= 97;
 		}
 		return false;
+	}
+
+	public boolean evaluateOffer(){
+		Random random = new Random();
+		return random.nextInt(100) <= 90;
 	}
 }
