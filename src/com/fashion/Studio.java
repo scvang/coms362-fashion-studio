@@ -351,7 +351,7 @@ public class Studio {
 	 * @author Emily Young
 	 * This method retrieves an ad from a list of ads that are currently in circulation
 	 */
-	public void getAd() {
+	public ArrayList<Advertisement> getAd() {
 		for (Advertisement a : ad) {
 			System.out.println("Event ID: " + a.getEventID());
 			BufferedReader input = null;
@@ -371,6 +371,7 @@ public class Studio {
 				}
 			}
 		}
+		return ad;
 	}
 
 	/**

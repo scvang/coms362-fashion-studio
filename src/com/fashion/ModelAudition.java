@@ -1,6 +1,7 @@
 package com.fashion;
 
 import com.fashion.employees.Employee;
+import com.fashion.employees.Model;
 
 import java.io.File;
 
@@ -18,6 +19,7 @@ public class ModelAudition {
 	 * Instance Variables
 	 */
 	private String name;
+	private String agent;
 	private String phoneNum;
 	private int audNum;
 	private File resume = new File("resume.txt");
@@ -88,6 +90,20 @@ public class ModelAudition {
 			hireable = true;
 		}
 		return hireable;
+	}
+	
+	/**
+	 * 
+	 * @param agent-agent name
+	 * @param name-model name
+	 * @param phone-model phone number
+	 * @param salary-model salary
+	 * @return Model instance
+	 * This method creates a new Model instance
+	 */
+	public Model createModel(String agent, String name, String phone, double salary) {
+		Model mod = new Model(agent, name, phone, salary);
+		return mod;
 	}
 	
 	/**

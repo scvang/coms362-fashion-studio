@@ -8,7 +8,8 @@ import java.io.IOException;
  * 
  * @author Emily Young
  * 
- *   Advertisement is used to promote shows that are hosted by the Fashion Studio
+ *         Advertisement is used to promote shows that are hosted by the Fashion
+ *         Studio
  *
  */
 
@@ -23,6 +24,7 @@ public class Advertisement {
 	private String time;
 	private String contactInfo;
 	private File createdAd;
+	private boolean eventExists;
 
 	/**
 	 * Constructor for advertisement
@@ -41,21 +43,38 @@ public class Advertisement {
 	public void createAdPaper() {
 		createdAd = new File("coms362-fashion-studio\\" + getFileName());
 		FileWriter writer = null;
-		try {
-			writer = new FileWriter(createdAd.getName());
-			writer.write("Come enjoy the lovely event: " + eventName + "\n" + "Location: " + loc + "\n" + "Time: "
-					+ time + "\n" + "Please get in contact with our ticket office to reserve seats today!\n"
-					+ "You can reach us at: " + contactInfo);
-		} catch (IOException e) {
-			System.out.println("An error occurred");
-			e.printStackTrace();
-		} finally {
+		if (!checkEventExists(this.eid)) {
 			try {
-				writer.close();
+				writer = new FileWriter(createdAd.getName());
+				writer.write("Come enjoy the lovely event: " + eventName + "\n" + "Location: " + loc + "\n" + "Time: "
+						+ time + "\n" + "Please get in contact with our ticket office to reserve seats today!\n"
+						+ "You can reach us at: " + contactInfo);
 			} catch (IOException e) {
+				System.out.println("An error occurred");
 				e.printStackTrace();
+			} finally {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * @param eid-event id
+	 * @return true if event exist
+	 * 		   false if event does not exist
+	 */
+	public boolean checkEventExists(int eid) {
+		if (this.eid == eid) {
+			eventExists = true;
+		} else {
+			eventExists = false;
+		}
+		return eventExists;
 	}
 
 	/**
@@ -73,7 +92,7 @@ public class Advertisement {
 	public int getEventID() {
 		return this.eid;
 	}
-	
+
 	/**
 	 * 
 	 * @return location
@@ -81,7 +100,7 @@ public class Advertisement {
 	public String getLocation() {
 		return this.loc;
 	}
-	
+
 	/**
 	 * 
 	 * @return time
@@ -89,7 +108,7 @@ public class Advertisement {
 	public String getTime() {
 		return this.time;
 	}
-	
+
 	/**
 	 * 
 	 * @return contact info

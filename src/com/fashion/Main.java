@@ -135,7 +135,7 @@ public class Main {
 					eventScreen();
 				break;
 				case 5:
-//					advertisementScreen();
+					advertisementScreen();
 				break;
 				case 6:
 					promotionScreen();
@@ -222,6 +222,60 @@ public class Main {
 					System.out.println();
 					break;
 				case 4:
+					mainScreen();
+			}
+		}
+	}
+	
+	/**
+	 * @author Emily Young
+	 * Advertisement Screen
+	 */
+	public static void advertisementScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"What do you need to do? ('q' to exit): \n" +
+							"1) View Current Ads \n" +
+							"2) Create New Ad \n" +
+							"3) Go back \n"
+			);
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+			
+			switch(Integer.parseInt(choice)){
+				case 1:
+					studio.getAd();
+				break;
+				
+				case 2:
+					System.out.println("What is the event ID?: ");
+					int eid = in.nextInt();
+					System.out.println("What type of advertisement do you need? (paper or video)");
+					String adType = in.next();
+					System.out.println("What is the name of the event?: ");
+					String eventName = in.next();
+					System.out.println("Where is the location of the event?: ");
+					String loc = in.next();
+					System.out.println("What is the time of the event?: ");
+					String time = in.next();
+					System.out.println("What is the the number we should contact?: ");
+					String contactInfo = in.next();
+					Advertisement advert = new Advertisement(eid, eventName, loc, time, contactInfo);
+					if(adType.equals("paper")) {
+//						studio.addAd(eid, eventName, loc, time, contactInfo);
+						System.out.println("Advertisement Created!");
+					} else if(adType.equals("video")) {
+//						advert.createAdVideo();
+//						studio.addAd(eid, eventName, loc, time, contactInfo);
+						System.out.println("Advertisement Created!");
+					} else {
+						System.out.print("We don't currently support that type of advertisement at this time.");
+					}
+				break;
+				
+				case 3:
 					mainScreen();
 			}
 		}
