@@ -279,6 +279,7 @@ public class Main {
 					mainScreen();
 			}
 		}
+		in.close();
 	}
 	
 	public static void apparelScreen() {
