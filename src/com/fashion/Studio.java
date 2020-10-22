@@ -433,7 +433,8 @@ public class Studio {
 			"Model Name: " + m.getName() + "\n" + 
 			"Agent: " + m.getAgent() + "\n" +
 			"Phone: " + m.getPhoneNum() + "\n" +
-			"Salary: " + m.getSalary() + "\n"
+			"Salary: " + m.getSalary() + "\n" +
+			"Head: " + m.getHeadPiece().getItemName() + " Brand: " + m.getHeadPiece().getBrandName() + " Color: " + m.getHeadPiece().getColor()
 			);
 		}
 	}

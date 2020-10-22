@@ -40,6 +40,17 @@ public class Model {
 		this.name = name;
 		this.phoneNum = phone;
 		this.salary = salary;
+		
+		this.head = new Apparel("","","");
+		this.top = new Apparel("","","");
+		this.bot = new Apparel("","","");
+		this.legs = new Apparel("","","");
+		this.shoes = new Apparel("","","");
+		this.acc = new Apparel("","","");
+	}
+	
+	public Apparel getHeadPiece() {
+		return this.head;
 	}
 	
 	public void setPhoneNum(String phoneNum) {
