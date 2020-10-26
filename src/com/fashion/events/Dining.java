@@ -15,7 +15,7 @@ public class Dining extends Event{
 	
 	private int openTables;
 	private Table[] table = new Table[20];
-	private HashMap<String,Integer> whitelist = new HashMap<>();
+	private HashMap<String,String> whitelist = new HashMap<>();
 	
 	/**
 	 * Constructor for the dining event.
@@ -42,7 +42,7 @@ public class Dining extends Event{
 	public int countTables() {
 		int count = 0;
 		for(int i = 0; i < table.length; ++i){
-			if(table[i].customer == "") ++count;
+			if(table[i].getCustomerName().equals("")) ++count;
 		}
 		return count;
 	}
@@ -60,9 +60,33 @@ public class Dining extends Event{
 	 */
 	public void displayTables() {
         for(int i = 0; i < table.length; ++i) {
-        	System.out.print(table[i].num + " ");
+        	if(table[i].getCustomerName().equals("")) {
+        	System.out.print(table[i].getTableNum() + " ");
+        	}
+        	else {
+        		System.out.print("RR" + " ");
+        	}
         }
         System.out.println("");
+	}
+	
+	public boolean hasTableReservation(String name) {
+		name = name.toLowerCase();
+		if(whitelist.containsValue(name)) return true;
+		return false;
+	}
+	
+	public Table getTable(String name) {
+		name = name.toLowerCase();
+		Table t = new Table();
+		
+		for(int i = 0; i < table.length; ++i) {
+			if(table[i].getCustomerName().toLowerCase().equals(name)){
+				t = this.table[i];
+			}
+		}
+		
+		return t;
 	}
 
 	/**
@@ -86,14 +110,13 @@ public class Dining extends Event{
 			
 			// Finds the table to reserve.
 			for(int i = 0; i < table.length; ++i) {
-	            	if(num.equals(table[i].num)) {
-	            		table[i].num = "RR";
-	            		table[i].customer = customer;
-	            		table[i].date = date;
-	            		table[i].time = time;
+	            	if(num.equals(table[i].getTableNum())) {
+	            		table[i].setCustomerName(customer);
+	            		table[i].setDate(date);
+	            		table[i].setTime(time);
 	            }
 	        }
-			whitelist.put(Integer.toString(tableNum),1);
+			whitelist.put(Integer.toString(tableNum),customer.toLowerCase());
 		}
 		else {
 			System.out.println("Not a valid table number.");
@@ -108,8 +131,7 @@ public class Dining extends Event{
 
 	public void fillTables() {
 		for(int i = 0; i < table.length; ++i) {
-			table[i].num = "RR";
-			table[i].customer = "customer";
+			table[i].setCustomerName("customer");
 		}
 		// Update the available seats.
 		openTables = countTables();

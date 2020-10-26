@@ -2,11 +2,7 @@ package com.fashion;
 
 import com.fashion.employees.Employee;
 import com.fashion.employees.Model;
-import com.fashion.events.Dining;
-import com.fashion.events.Event;
-import com.fashion.events.Party;
-import com.fashion.events.Seat;
-import com.fashion.events.Showing;
+import com.fashion.events.*;
 import com.fashion.pay.PayStub;
 import com.fashion.pay.PayStubInfo;
 
@@ -90,16 +86,15 @@ public class Studio {
 	
 	/**
 	 * 
-	 * @return party event
+	 * @return event
 	 */
-	public Event getEventName(String name) {
+	public Event getEvent(String name) {
 		
 		for(Event e : event) {
-			if(e.getEventName().equals(name)) {
+			if(e.getEvent().equals(name)) {
 				return e;
 			}
 		}
-		System.out.println("Event was not found.");
 		return null;
 	}
 	
@@ -229,7 +224,7 @@ public class Studio {
 	 */
 	public void displayEvents() {
 		for(Event e : event) {
-			System.out.println(e.getEventName());
+			System.out.println(e.getEvent());
 		}
 	}
 	
@@ -261,11 +256,9 @@ public class Studio {
 	 * @param d date
 	 * @param t time
 	 */
-	public void reserveSeat(Event e, String n, String c, String d, String t) {
-		if(((Showing) e).reserveSeat(n,c,d,t)) {
-			System.out.println("Success.");
-			chargeCard(e,c);
-		}
+	public boolean reserveSeat(Event e, String number, String customer, String date, String time) {
+		Showing s = (Showing)e;
+		return s.reserveSeat(number,customer,date,time);
 	}
 	
 	public boolean hasSeatReservation(String customerName,Event e) {
@@ -299,12 +292,14 @@ public class Studio {
 	 * @param d date
 	 * @param t time
 	 */
-	public void reserveTable(Event e, String n, String c, String d, String t) {
-		if(((Dining)e).reserveTable(n,c,d,t));
-		{
-			System.out.println("Success.");
-			chargeCard(e,c);
-		}
+	public boolean reserveTable(Event e, String number, String customer, String date, String time) {
+		Dining d = (Dining)e;
+		return d.reserveTable(number, customer, date, time);
+	}
+	
+	public boolean hasTableReservation(String customerName, Event e) {
+		Dining d = (Dining)e;
+		return d.hasTableReservation(customerName);
 	}
 	
 	/**
@@ -358,7 +353,12 @@ public class Studio {
 	
 	public Seat getSeat(String customer,Event e) {
 		Showing s = (Showing)e;
-		return s.getShowingCustomer(customer);
+		return s.getSeat(customer);
+	}
+	
+	public Table getTable(String customer, Event e) {
+		Dining d = (Dining)e;
+		return d.getTable(customer);
 	}
 	
 	// Populates the seat for a test.

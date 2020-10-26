@@ -15,7 +15,7 @@ public class Showing extends Event{
 	 */
 	private int openSeats;
 	private Seat[][] seat = new Seat[9][9];
-	private HashMap<String,Integer> whitelist = new HashMap<>();
+	private HashMap<String,String> whitelist = new HashMap<>();
 	
 	/**
 	 * Constructor for the showing event.
@@ -113,14 +113,13 @@ public class Showing extends Event{
 		return false;
 	}
 	
-	public Seat getShowingCustomer(String name) {
+	public Seat getSeat(String name) {
 		name = name.toLowerCase();
 		Seat s = new Seat();
 		for(int row = 0; row < seat.length; ++row) {
 			for(int col = 0; col < seat[0].length; ++col) {
 				if(name.equals(seat[row][col].getCustomerName().toLowerCase())) {
 					s = this.seat[row][col];
-					return s;
 				}
 			}
 		}
@@ -138,7 +137,7 @@ public class Showing extends Event{
 		seatNum = seatNum.toUpperCase();
 		
 		// Checks if the seat is in range A1 to I9.
-		if(seatNum.length() !=2 || seatNum.charAt(0) >= 'A' && seatNum.charAt(0) <= 'I'
+		if(seatNum.length() == 2 && seatNum.charAt(0) >= 'A' && seatNum.charAt(0) <= 'I'
 				&& Integer.parseInt(String.valueOf(seatNum.charAt(1))) >= 1
 				&& Integer.parseInt(String.valueOf(seatNum.charAt(1))) <= 9
 				){
@@ -162,7 +161,7 @@ public class Showing extends Event{
 	        }
 			
 			// Places the reserved seat into memory.
-			whitelist.put(seatNum,1);
+			whitelist.put(seatNum,customer.toLowerCase());
 		}
 		else {
 			System.out.println("Not a valid seat number.");
