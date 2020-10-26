@@ -2,6 +2,7 @@ package com.fashion;
 
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
+import com.fashion.apparel.Apparel;
 import com.fashion.events.*;
 import java.util.Random;
 import java.util.Scanner;

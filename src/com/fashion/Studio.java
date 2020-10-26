@@ -1,5 +1,6 @@
 package com.fashion;
 
+import com.fashion.apparel.Apparel;
 import com.fashion.employees.Employee;
 import com.fashion.employees.Model;
 import com.fashion.events.*;
@@ -477,7 +478,13 @@ public class Studio {
 			"Agent: " + m.getAgent() + "\n" +
 			"Phone: " + m.getPhoneNum() + "\n" +
 			"Salary: " + m.getSalary() + "\n" +
-			"Head: " + m.getHeadPiece().getItemName() + " Brand: " + m.getHeadPiece().getBrandName() + " Color: " + m.getHeadPiece().getColor()
+			"Head: " + m.getHeadPiece().getItemName() + ", Brand: " + m.getHeadPiece().getBrandName() + ", Color: " + m.getHeadPiece().getColor() + "\n" +
+			"Top: " + m.getTopPiece().getItemName() + ", Brand: " + m.getTopPiece().getBrandName() + ", Color: " + m.getTopPiece().getColor() + "\n" +
+			"Bottoms: " + m.getBotPiece().getItemName() + ", Brand: " + m.getBotPiece().getBrandName() + ", Color: " + m.getBotPiece().getColor() + "\n" +
+			"Leggings: " + m.getLegsPiece().getItemName() + ", Brand: " + m.getLegsPiece().getBrandName() + ", Color: " + m.getLegsPiece().getColor() + "\n" +
+			"Shoes: " + m.getShoes().getItemName() + ", Brand: " + m.getShoes().getBrandName() + ", Color: " + m.getShoes().getColor() + "\n" +
+			"Accessory: " + m.getAcc().getItemName() + ", Brand: " + m.getAcc().getBrandName() + ", Color: " + m.getAcc().getColor() + "\n"
+			
 			);
 		}
 	}
