@@ -2,7 +2,7 @@ package com.fashion;
 
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
-
+import com.fashion.events.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -563,11 +563,11 @@ public class Main {
 					String name = in.next();
 					if(studio.hasSeatReservation(name,studio.getEventName("FashionCon 2020"))) {
 						System.out.println(
-						"Name: " + studio.getShowingCustomer(name,studio.getEventName("FashionCon 2020")).customer + "\n" +
-						"Date: " + studio.getShowingCustomer(name,studio.getEventName("FashionCon 2020")).date + "\n" + 
-						"Time: " + studio.getShowingCustomer(name,studio.getEventName("FashionCon 2020")).time + "\n" + 
-						"Seat: " + studio.getShowingCustomer(name,studio.getEventName("FashionCon 2020")).num + "\n"
-								);
+						"Name: " + studio.getSeat(name,studio.getEventName("FashionCon 2020")).getCustomerName() + "\n" +
+						"Date: " + studio.getSeat(name,studio.getEventName("FashionCon 2020")).getDate() + "\n" + 
+						"Time: " + studio.getSeat(name,studio.getEventName("FashionCon 2020")).getTime() + "\n" + 
+						"Seat: " + studio.getSeat(name,studio.getEventName("FashionCon 2020")).getSeatNum() + "\n"
+						);
 					}
 					else {
 						System.out.println("No reservation found for " + name);

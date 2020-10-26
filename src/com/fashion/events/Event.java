@@ -1,5 +1,6 @@
-package com.fashion;
+package com.fashion.events;
 
+import com.fashion.Promotion;
 import com.fashion.pay.Card;
 
 import java.util.Random;

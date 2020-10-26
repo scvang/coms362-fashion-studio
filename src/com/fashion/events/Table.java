@@ -1,4 +1,4 @@
-package com.fashion;
+package com.fashion.events;
 
 /**
  * The dining room has tables.

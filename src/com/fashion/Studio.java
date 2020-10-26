@@ -2,6 +2,11 @@ package com.fashion;
 
 import com.fashion.employees.Employee;
 import com.fashion.employees.Model;
+import com.fashion.events.Dining;
+import com.fashion.events.Event;
+import com.fashion.events.Party;
+import com.fashion.events.Seat;
+import com.fashion.events.Showing;
 import com.fashion.pay.PayStub;
 import com.fashion.pay.PayStubInfo;
 
@@ -351,9 +356,9 @@ public class Studio {
 		return true;
 	}
 	
-	public Seat getShowingCustomer(String name,Event e) {
+	public Seat getSeat(String customer,Event e) {
 		Showing s = (Showing)e;
-		return s.getShowingCustomer(name);
+		return s.getShowingCustomer(customer);
 	}
 	
 	// Populates the seat for a test.
