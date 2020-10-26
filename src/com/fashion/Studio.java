@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
+ * @author Sebastian Vang
  * @author Emily Young: getAd(), addAd()
  * 
- * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory.
+ * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory...
  *
  */
 public class Studio {
@@ -50,10 +50,6 @@ public class Studio {
 		this.phoneNum = phoneNum;
 
 		employees = new ArrayList<>();
-		
-		// I noticed there seems to be a confusion with employees and models.
-		// I'm treating model differently from employees. Usually models are contracted since they can work for multiple studios so they aren't necessarily employees.
-		// Employees are just the people operating the studio.
 		
 		model = new ArrayList<>(); 
 		apparel = new ArrayList<>();
@@ -91,10 +87,10 @@ public class Studio {
 	 * 
 	 * @return party event
 	 */
-	public Event getEvent(String name) {
+	public Event getEventName(String name) {
 		
 		for(Event e : event) {
-			if(e.getName().equals(name)) {
+			if(e.getEventName().equals(name)) {
 				return e;
 			}
 		}
@@ -228,7 +224,7 @@ public class Studio {
 	 */
 	public void displayEvents() {
 		for(Event e : event) {
-			System.out.println(e.getName());
+			System.out.println(e.getEventName());
 		}
 	}
 	
@@ -237,13 +233,19 @@ public class Studio {
 	 * @param e event
 	 */
 	public boolean displaySeats(Event e) {
-		((Showing) e).displaySeats();
 		Showing s = (Showing)e;
-		
-		System.out.println("Available seats: " + ((Showing) e).getOpenSeats() + "\n");
-		if(s.getOpenSeats() == 0) return false;
+		s.displaySeats();
+		System.out.println("Available seats: " + s.getOpenSeats() + "\n");
 		
 		return true;
+	}
+	
+	public boolean isShowingFull(Event e) {
+		Showing s = (Showing)e;
+		
+		if(s.getOpenSeats() == 0) return true;
+		
+		return false;
 	}
 
 	/**
@@ -261,20 +263,29 @@ public class Studio {
 		}
 	}
 	
+	public boolean hasSeatReservation(String customerName,Event e) {
+		Showing s = (Showing)e;
+		return s.hasSeatReservation(customerName);
+	}
+	
 	/**
 	 * Displays the tables.
 	 * @param e
 	 */
 	public boolean displayTables(Event e) {
-		((Dining)e).displayTables();
 		Dining d = (Dining)e;
-		
-		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
-		if(d.getOpenTables() == 0) return false;
+		d.displayTables();
+		System.out.println("Available tables: " + d.getOpenTables() + "\n");
 		
 		return true;
 	}
-	
+	public boolean isDiningFull(Event e) {
+		Dining d = (Dining)e;
+		if(d.getOpenTables() == 0) {
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Reserves a table for the customer.
 	 * @param e event
@@ -291,13 +302,25 @@ public class Studio {
 		}
 	}
 	
+	/**
+	 * Reserves a badge.
+	 * @param e event
+	 * @param name
+	 * @param date
+	 * @param time
+	 */
 	public void reserveBadge(Event e, String name, String date, String time) {
 		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
 	}
 	
-	public boolean checkAttendees(Event e) {
+	/**
+	 * Checks number of attendees.
+	 * @param e
+	 * @return
+	 */
+	public boolean isPartyFull(Event e) {
 		Party p = (Party)e;
-		System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
+		//System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
 		if(p.getAttendees() == p.getCapacity()) return false;
 		return true;
 	}
@@ -328,9 +351,19 @@ public class Studio {
 		return true;
 	}
 	
+	public Seat getShowingCustomer(String name,Event e) {
+		Showing s = (Showing)e;
+		return s.getShowingCustomer(name);
+	}
+	
+	// Populates the seat for a test.
 	public void fillSeats(Event e) {
 		Showing s = (Showing)e;
 		s.fillSeats();
+	}
+	public void fillTables(Event e) {
+		Dining d = (Dining)e;
+		d.fillTables();
 	}
 	
 	/**
@@ -415,6 +448,11 @@ public class Studio {
 		return nextEID + 1;
 	}
 	
+	/**
+	 * Finds the model.
+	 * @param name
+	 * @return
+	 */
 	public boolean findModel(String name) {
 		for(Model m: model) {
 			if(m.getName().equals(name)) return true;

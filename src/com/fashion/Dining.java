@@ -105,4 +105,14 @@ public class Dining extends Event{
 		
 		return true;
 	}
+
+	public void fillTables() {
+		for(int i = 0; i < table.length; ++i) {
+			table[i].num = "RR";
+			table[i].customer = "customer";
+		}
+		// Update the available seats.
+		openTables = countTables();
+		
+	}
 }

@@ -52,11 +52,10 @@ public class Showing extends Event{
 	public void fillSeats() {
 		for(int row = 0; row < seat.length; ++row) {
 			for(int col = 0; col < seat[0].length; ++col) {
-				seat[row][col].num = "RR";
 				seat[row][col].customer = "customer";
 			}
 		}
-		// Update the avaialable seats.
+		// Update the available seats.
 		openSeats = countSeats();
 	}
 	
@@ -68,7 +67,7 @@ public class Showing extends Event{
 		int count = 0;
 		for(int i = 0; i < seat.length; ++i){
 			for(int j = 0; j < seat[0].length; ++j) {
-				if(!seat[i][j].num.equals("RR")) ++count;
+				if(seat[i][j].customer.equals("")) ++count;
 			}
 		}
 		return count;
@@ -90,11 +89,42 @@ public class Showing extends Event{
         for(int row = 0; row < seat.length; ++row) {
             System.out.print("|");
             for(int col = 0; col < seat[0].length; ++col) {
+            	if(seat[row][col].customer.equals(""))
                 System.out.print(seat[row][col].num+"|");
+            	else {
+            		System.out.print("RR"+"|");
+            	}
             }
             System.out.println();
             System.out.println("+--+--+--+--+--+--+--+--+--+");
         }
+	}
+	
+	public boolean hasSeatReservation(String name) {
+		name = name.toLowerCase();
+		for(int row = 0; row < seat.length; ++row) {
+			for(int col = 0; col < seat[0].length; ++col) {
+				if(name.equals(seat[row][col].customer.toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public Seat getShowingCustomer(String name) {
+		name = name.toLowerCase();
+		Seat s = new Seat();
+		for(int row = 0; row < seat.length; ++row) {
+			for(int col = 0; col < seat[0].length; ++col) {
+				if(name.equals(seat[row][col].customer.toLowerCase())) {
+					s = this.seat[row][col];
+					return s;
+				}
+			}
+		}
+		return s;
 	}
 
 	/**
@@ -124,7 +154,6 @@ public class Showing extends Event{
 			for(int row = 0; row < seat.length; ++row) {
 	            for(int col = 0; col < seat[0].length; ++col) {
 	            	if(seatNum.equals(seat[row][col].num)) {
-	            		seat[row][col].num = "RR";
 	            		seat[row][col].customer = customer;
 	            		seat[row][col].date = date;
 	            		seat[row][col].time = time;

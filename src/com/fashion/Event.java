@@ -15,7 +15,7 @@ public class Event {
 	/**
 	 * Instance variables.
 	 */
-	private String name;
+	private String eventName;
 	private String date;
 	private String time;
 
@@ -25,16 +25,16 @@ public class Event {
 	 * Constructor for the event.
 	 * @param name
 	 */
-	public Event(String name, String date, String time) {
-		this.name = name;
+	public Event(String eventName, String date, String time) {
+		this.eventName = eventName;
 		this.date = date;
 		this.time = time;
 
 		promotions = new Promotion[11];
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getEventName() {
+		return this.eventName;
 	}
 	
 	public String getDate() {
