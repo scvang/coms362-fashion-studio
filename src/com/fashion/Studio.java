@@ -1,7 +1,9 @@
 package com.fashion;
 
+import com.fashion.apparel.Apparel;
 import com.fashion.employees.Employee;
 import com.fashion.employees.Model;
+import com.fashion.events.*;
 import com.fashion.pay.PayStub;
 import com.fashion.pay.PayStubInfo;
 
@@ -14,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * @author Sebastian Vang: Studio Class, addEmployees(), getEmployees(), addApparel(), getApparel()
+ * @author Sebastian Vang
  * @author Emily Young: getAd(), addAd()
  * 
- * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory.
+ * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory...
  *
  */
 public class Studio {
@@ -50,10 +52,6 @@ public class Studio {
 		this.phoneNum = phoneNum;
 
 		employees = new ArrayList<>();
-		
-		// I noticed there seems to be a confusion with employees and models.
-		// I'm treating model differently from employees. Usually models are contracted since they can work for multiple studios so they aren't necessarily employees.
-		// Employees are just the people operating the studio.
 		
 		model = new ArrayList<>(); 
 		apparel = new ArrayList<>();
@@ -89,16 +87,15 @@ public class Studio {
 	
 	/**
 	 * 
-	 * @return party event
+	 * @return event
 	 */
 	public Event getEvent(String name) {
 		
 		for(Event e : event) {
-			if(e.getName().equals(name)) {
+			if(e.getEvent().equals(name)) {
 				return e;
 			}
 		}
-		System.out.println("Event was not found.");
 		return null;
 	}
 	
@@ -228,7 +225,7 @@ public class Studio {
 	 */
 	public void displayEvents() {
 		for(Event e : event) {
-			System.out.println(e.getName());
+			System.out.println(e.getEvent());
 		}
 	}
 	
@@ -237,13 +234,19 @@ public class Studio {
 	 * @param e event
 	 */
 	public boolean displaySeats(Event e) {
-		((Showing) e).displaySeats();
 		Showing s = (Showing)e;
-		
-		System.out.println("Available seats: " + ((Showing) e).getOpenSeats() + "\n");
-		if(s.getOpenSeats() == 0) return false;
+		s.displaySeats();
+		System.out.println("Available seats: " + s.getOpenSeats() + "\n");
 		
 		return true;
+	}
+	
+	public boolean isShowingFull(Event e) {
+		Showing s = (Showing)e;
+		
+		if(s.getOpenSeats() == 0) return true;
+		
+		return false;
 	}
 
 	/**
@@ -254,11 +257,14 @@ public class Studio {
 	 * @param d date
 	 * @param t time
 	 */
-	public void reserveSeat(Event e, String n, String c, String d, String t) {
-		if(((Showing) e).reserveSeat(n,c,d,t)) {
-			System.out.println("Success.");
-			chargeCard(e,c);
-		}
+	public boolean reserveSeat(Event e, String number, String customer, String date, String time) {
+		Showing s = (Showing)e;
+		return s.reserveSeat(number,customer,date,time);
+	}
+	
+	public boolean hasSeatReservation(String customerName,Event e) {
+		Showing s = (Showing)e;
+		return s.hasSeatReservation(customerName);
 	}
 	
 	/**
@@ -266,15 +272,19 @@ public class Studio {
 	 * @param e
 	 */
 	public boolean displayTables(Event e) {
-		((Dining)e).displayTables();
 		Dining d = (Dining)e;
-		
-		System.out.println("Available tables: " + ((Dining) e).getOpenTables() + "\n");
-		if(d.getOpenTables() == 0) return false;
+		d.displayTables();
+		System.out.println("Available tables: " + d.getOpenTables() + "\n");
 		
 		return true;
 	}
-	
+	public boolean isDiningFull(Event e) {
+		Dining d = (Dining)e;
+		if(d.getOpenTables() == 0) {
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Reserves a table for the customer.
 	 * @param e event
@@ -283,21 +293,35 @@ public class Studio {
 	 * @param d date
 	 * @param t time
 	 */
-	public void reserveTable(Event e, String n, String c, String d, String t) {
-		if(((Dining)e).reserveTable(n,c,d,t));
-		{
-			System.out.println("Success.");
-			chargeCard(e,c);
-		}
+	public boolean reserveTable(Event e, String number, String customer, String date, String time) {
+		Dining d = (Dining)e;
+		return d.reserveTable(number, customer, date, time);
 	}
 	
+	public boolean hasTableReservation(String customerName, Event e) {
+		Dining d = (Dining)e;
+		return d.hasTableReservation(customerName);
+	}
+	
+	/**
+	 * Reserves a badge.
+	 * @param e event
+	 * @param name
+	 * @param date
+	 * @param time
+	 */
 	public void reserveBadge(Event e, String name, String date, String time) {
 		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
 	}
 	
-	public boolean checkAttendees(Event e) {
+	/**
+	 * Checks number of attendees.
+	 * @param e
+	 * @return
+	 */
+	public boolean isPartyFull(Event e) {
 		Party p = (Party)e;
-		System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
+		//System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
 		if(p.getAttendees() == p.getCapacity()) return false;
 		return true;
 	}
@@ -328,9 +352,24 @@ public class Studio {
 		return true;
 	}
 	
+	public Seat getSeat(String customer,Event e) {
+		Showing s = (Showing)e;
+		return s.getSeat(customer);
+	}
+	
+	public Table getTable(String customer, Event e) {
+		Dining d = (Dining)e;
+		return d.getTable(customer);
+	}
+	
+	// Populates the seat for a test.
 	public void fillSeats(Event e) {
 		Showing s = (Showing)e;
 		s.fillSeats();
+	}
+	public void fillTables(Event e) {
+		Dining d = (Dining)e;
+		d.fillTables();
 	}
 	
 	/**
@@ -415,6 +454,11 @@ public class Studio {
 		return nextEID + 1;
 	}
 	
+	/**
+	 * Finds the model.
+	 * @param name
+	 * @return
+	 */
 	public boolean findModel(String name) {
 		for(Model m: model) {
 			if(m.getName().equals(name)) return true;
@@ -434,7 +478,13 @@ public class Studio {
 			"Agent: " + m.getAgent() + "\n" +
 			"Phone: " + m.getPhoneNum() + "\n" +
 			"Salary: " + m.getSalary() + "\n" +
-			"Head: " + m.getHeadPiece().getItemName() + " Brand: " + m.getHeadPiece().getBrandName() + " Color: " + m.getHeadPiece().getColor()
+			"Head: " + m.getHeadPiece().getItemName() + ", Brand: " + m.getHeadPiece().getBrandName() + ", Color: " + m.getHeadPiece().getColor() + "\n" +
+			"Top: " + m.getTopPiece().getItemName() + ", Brand: " + m.getTopPiece().getBrandName() + ", Color: " + m.getTopPiece().getColor() + "\n" +
+			"Bottoms: " + m.getBotPiece().getItemName() + ", Brand: " + m.getBotPiece().getBrandName() + ", Color: " + m.getBotPiece().getColor() + "\n" +
+			"Leggings: " + m.getLegsPiece().getItemName() + ", Brand: " + m.getLegsPiece().getBrandName() + ", Color: " + m.getLegsPiece().getColor() + "\n" +
+			"Shoes: " + m.getShoes().getItemName() + ", Brand: " + m.getShoes().getBrandName() + ", Color: " + m.getShoes().getColor() + "\n" +
+			"Accessory: " + m.getAcc().getItemName() + ", Brand: " + m.getAcc().getBrandName() + ", Color: " + m.getAcc().getColor() + "\n"
+			
 			);
 		}
 	}

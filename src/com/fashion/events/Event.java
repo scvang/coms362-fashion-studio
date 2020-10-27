@@ -1,5 +1,6 @@
-package com.fashion;
+package com.fashion.events;
 
+import com.fashion.Promotion;
 import com.fashion.pay.Card;
 
 import java.util.Random;
@@ -15,7 +16,7 @@ public class Event {
 	/**
 	 * Instance variables.
 	 */
-	private String name;
+	private String event;
 	private String date;
 	private String time;
 
@@ -25,16 +26,16 @@ public class Event {
 	 * Constructor for the event.
 	 * @param name
 	 */
-	public Event(String name, String date, String time) {
-		this.name = name;
+	protected Event(String event, String date, String time) {
+		this.event = event;
 		this.date = date;
 		this.time = time;
 
 		promotions = new Promotion[11];
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getEvent() {
+		return this.event;
 	}
 	
 	public String getDate() {

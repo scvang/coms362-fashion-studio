@@ -2,7 +2,8 @@ package com.fashion;
 
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
-
+import com.fashion.apparel.Apparel;
+import com.fashion.events.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -538,31 +539,45 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					if(!studio.displaySeats(studio.getEvent("FashionCon 2020"))) {
-						System.out.println("No available seats.");
-					}
+					studio.displaySeats(studio.getEvent("FashionCon 2020"));
 				break;
 				
 				case 2:
-					if(!studio.displaySeats(studio.getEvent("FashionCon 2020"))) {
+					if(studio.isShowingFull(studio.getEvent("FashionCon 2020"))) {
 						System.out.println("No available seats.");
 						break;
 					}
-					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
-					String customerName = in2.next();
+					String customerName = in.next();
 					System.out.println("Enter your desired seat (A1~I9): ");
-					String seat = in2.next();
+					String seat = in.next();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in2.next();
+					String date = in.next();
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in2.next();
+					String time = in.next();
 					
-					studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,customerName,date,time);
+					if(studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,customerName,date,time)) {
+						studio.chargeCard(studio.getEvent("FashionCon 2020"),customerName);
+					}
+					else{
+						System.out.println("Seat Reservation failed.");
+					}
 				break;
 				
 				case 3:
-					
+					System.out.println("Enter your customer name");
+					String name = in.next();
+					if(studio.hasSeatReservation(name,studio.getEvent("FashionCon 2020"))) {
+						System.out.println(
+						"Name: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getCustomerName() + "\n" +
+						"Date: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getDate() + "\n" + 
+						"Time: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getTime() + "\n" + 
+						"Seat: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getSeatNum() + "\n"
+						);
+					}
+					else {
+						System.out.println("No reservation found for " + name);
+					}
 				break;
 				
 				case 4:
@@ -593,7 +608,8 @@ public class Main {
 			"2) Reserve a table \n" +
 			"3) Check a table \n" +
 			"4) Refund \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Fill tables (test) \n"
 			);
 			
 			choice = in.next();
@@ -601,31 +617,47 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					if(!studio.displayTables(studio.getEvent("Fashion Dining 2020"))) {
-						System.out.println("There are no available tables.");
-					}
+					studio.displayTables(studio.getEvent("Fashion Dining 2020"));
 				break;
 				
 				case 2:
-					if(!studio.displayTables(studio.getEvent("Fashion Dining 2020"))) {
+					if(studio.isDiningFull(studio.getEvent("Fashion Dining 2020"))) {
 						System.out.println("There are no available tables.");
 						break;
 					}
-					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
-					String customerName = in2.next();
+					String customerName = in.next();
 					System.out.println("Enter your desired table (1~20): ");
-					String table = in2.next();
+					String table = in.next();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in2.next();
+					String date = in.next();
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in2.next();
+					String time = in.next();
 					
-					studio.reserveTable(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time);
+					if(studio.reserveTable(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time)) {
+						studio.chargeCard(studio.getEvent("Fashion Dining 2020"),customerName);
+					}
+					else {
+						System.out.println("Table reservation failed.");
+					}
+					
+					
 				break;
 				
 				case 3:
-					
+					System.out.println("Enter your customer name");
+					String name = in.next();
+					if(studio.hasTableReservation(name,studio.getEvent("Fashion Dining 2020"))) {
+						System.out.println(
+						"Name: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getCustomerName() + "\n" +
+						"Date: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getDate() + "\n" + 
+						"Time: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getTime() + "\n" + 
+						"Seat: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getTableNum() + "\n"
+						);
+					}
+					else {
+						System.out.println("No reservation found for " + name);
+					}
 				break;
 				
 				case 4:
@@ -634,6 +666,10 @@ public class Main {
 				
 				case 5:
 					eventScreen();
+				break;
+				
+				case 6:
+					studio.fillTables(studio.getEvent("Fashion Dining 2020"));
 				break;
 			}
 		}
@@ -660,13 +696,13 @@ public class Main {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					if(studio.checkAttendees(studio.getEvent("Company Party 2020"))) {
+					if(studio.isPartyFull(studio.getEvent("Company Party 2020"))) {
 						System.out.println("The venue is full.");
 					}
 				break;
 				
 				case 2:
-					if(studio.checkAttendees(studio.getEvent("Company Party 2020"))) {
+					if(studio.isPartyFull(studio.getEvent("Company Party 2020"))) {
 						System.out.println("The venue is full.");
 						break;
 					}

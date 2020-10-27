@@ -1,13 +1,13 @@
 package com.fashion.employees;
 
-import com.fashion.Apparel;
+import com.fashion.apparel.Apparel;
 
 /**
  * Model is the information expert that knows about apparel.
  * @author Sebastian Vang
  *
  */
-public class Model {
+public class Model{
 	
 	/**
 	 * Instance variables.
@@ -41,16 +41,32 @@ public class Model {
 		this.phoneNum = phone;
 		this.salary = salary;
 		
-		this.head = new Apparel("","","");
-		this.top = new Apparel("","","");
-		this.bot = new Apparel("","","");
-		this.legs = new Apparel("","","");
-		this.shoes = new Apparel("","","");
-		this.acc = new Apparel("","","");
+		this.head = new Apparel("none","none","none");
+		this.top = new Apparel("none","none","none");
+		this.bot = new Apparel("none","none","none");
+		this.legs = new Apparel("none","none","none");
+		this.shoes = new Apparel("none","none","none");
+		this.acc = new Apparel("none","none","none");
 	}
 	
 	public Apparel getHeadPiece() {
 		return this.head;
+	}
+	
+	public Apparel getTopPiece() {
+		return this.top;
+	}
+	public Apparel getBotPiece() {
+		return this.bot;
+	}
+	public Apparel getLegsPiece() {
+		return this.legs;
+	}
+	public Apparel getShoes() {
+		return this.shoes;
+	}
+	public Apparel getAcc() {
+		return this.acc;
 	}
 	
 	public void setPhoneNum(String phoneNum) {

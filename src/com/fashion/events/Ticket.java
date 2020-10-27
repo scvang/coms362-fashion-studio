@@ -1,4 +1,4 @@
-package com.fashion;
+package com.fashion.events;
 
 public class Ticket {
 	String name;

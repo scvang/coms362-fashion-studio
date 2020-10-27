@@ -1,4 +1,4 @@
-package com.fashion;
+package com.fashion.apparel;
 
 /**
  * @author Sebastian Vang
