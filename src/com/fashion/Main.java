@@ -103,6 +103,15 @@ public class Main {
 	}
 	
 	/**
+	 * Test screen.
+	 * @param description
+	 * @param commands
+	 */
+	public static void Screen(String description, String commands) {
+		
+	}
+	
+	/**
 	 * The main screen that prompts first.
 	 */
 	public static void mainScreen() {
@@ -256,7 +265,7 @@ public class Main {
 					System.out.println("What type of advertisement do you need? (paper or video)");
 					String adType = in.next();
 					System.out.println("What is the name of the event?: ");
-					String eventName = in.next();
+					String eventName = in.next() + in.next();
 					System.out.println("Where is the location of the event?: ");
 					String loc = in.next();
 					System.out.println("What is the time of the event?: ");
@@ -300,7 +309,8 @@ public class Main {
 			"2) Change apparel \n" +
 			"3) Update contact information \n" +
 			"4) Update salary \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Add model \n"
 			);
 			
 			choice = in.next();
@@ -314,7 +324,7 @@ public class Main {
 				case 2:
 					Scanner in2 = new Scanner(System.in);
 					System.out.println("Which model do you want to change?");
-					studio.getModels();
+					//studio.getModels();
 					String name = in2.next();
 					if(!studio.findModel(name)) {
 						System.out.println("Model was not found, try again.");
@@ -334,6 +344,18 @@ public class Main {
 				
 				case 5:
 					mainScreen();
+				break;
+				
+				case 6:
+					System.out.println("Enter agent name:");
+					String agent = in.next();
+					System.out.println("Enter model name:");
+					String model = in.next();
+					System.out.println("Enter phone number:");
+					String number = in.next();
+					System.out.println("Enter salary:");
+					int salary = in.nextInt();
+					studio.createModel(agent,model,model,salary);
 				break;
 			}
 		}
@@ -473,7 +495,8 @@ public class Main {
 			"2) Dining \n" +
 			"3) Party \n" +
 			"4) Create new Event \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Display events"
 			);
 			
 			choice = in.next();
@@ -498,7 +521,7 @@ public class Main {
 					String type = in2.next();
 					
 					System.out.println("Event name?");
-					String name = in2.next();
+					String name = in2.next() + " " + in2.next(); // gotta fix this.
 					
 					System.out.println("What date (mm-dd-yy)? ");
 					String date = in2.next();
@@ -512,6 +535,9 @@ public class Main {
 				case 5:
 					mainScreen();
 				break;
+				
+				case 6:
+					studio.displayEvents();
 			}
 		}
 		in.close();
