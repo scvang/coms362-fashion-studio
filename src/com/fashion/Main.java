@@ -4,40 +4,18 @@ import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.apparel.Apparel;
 import com.fashion.events.*;
+import com.fashion.shopping.ShoppingSession;
+
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-//	private static double minPromotionValue = 1000.0;
-//	private static double maxPromotionValue = 15000.0;
-//	private static int maxBusinesses = 7;
-//	private static String[] businessName = {"Joe's", "Mike's", "Dienda's", "Hugh's", "Dior", "Gucci", "Ralph Lauren",
-//		"Louis Vuitton", "Chanel", "Rolex", "Balenciaga", "Armani", "Yves Saint Laurent", "Tiffany",
-//			"Burberry", "Hermes", "Cartier", "Prada", "Fendi", "Lancome"};
-//	private static String[] businessAddresses = {"450 Grope Lane", "39 Fabulous Texan Way", "90 Ha-Ha Road",
-//			"126 Man Fuk Road", "67 Mad Dog Lane", "1 Boring Road", "666 Bad Route Road", "900 Smellies Lane",
-//			"12 Butt Street", "879 Break-Me-Neck Hill", "1285 Whip-Ma-Whop-Ma-Gate", "78 Silly Goose Lane"};
-	
 	/**
 	 * Instance variables.
 	 */
 	public static Studio studio;
 
 	public static void main(String[] args) {
-//		Random random = new Random();
-//
-//		/*
-//		Create 3-10 businesses randomly
-//		 */
-//		ArrayList<Business> businesses = new ArrayList<>();
-//		for(int i = 0; i < random.nextInt(maxBusinesses); i++){
-//			Business business = new Business(businessName[random.nextInt(businessName.length)],
-//					businessAddresses[random.nextInt(businessAddresses.length)], generateNum());
-//			businesses.add(business);
-//		}
-
-		//System.out.println(businesses);
-		
 		// Create a studio
 		String company = "Fashion Inc";
 		String address = "401 Somewhere Ave";
@@ -116,7 +94,8 @@ public class Main {
 			"3) Models \n" +
 			"4) Events \n" +
 			"5) Advertisements \n" +
-			"6) Promotions \n"
+			"6) Promotions \n" +
+			"7) Shop\n"
 			);
 			
 			choice = in.next();
@@ -140,6 +119,9 @@ public class Main {
 				break;
 				case 6:
 					promotionScreen();
+				break;
+				case 7:
+					shoppingScreen();
 				break;
 			}
 		}
@@ -938,8 +920,8 @@ public class Main {
 					}
 
 					System.out.println("What is your card month ('q' to exit): ");
-					int cardMonth = 0;
-					while(cardMonth == 0){
+					String cardMonth = "";
+					while(cardMonth.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -951,7 +933,7 @@ public class Main {
 							System.out.println("Please enter a valid card month ('q' to exit).");
 						} else  {
 							try {
-								cardMonth = Integer.parseInt(temp);
+								cardMonth = temp;
 							} catch (NumberFormatException e) {
 								System.out.println("Please enter a valid card month ('q' to exit).");
 							}
@@ -959,8 +941,8 @@ public class Main {
 					}
 
 					System.out.println("What is your card year ('q' to exit): ");
-					int cardYear = 0;
-					while(cardYear == 0){
+					String cardYear = "";
+					while(cardYear.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -972,7 +954,7 @@ public class Main {
 							System.out.println("Please enter a valid card year ('q' to exit).");
 						} else  {
 							try {
-								cardYear = Integer.parseInt(temp);
+								cardYear = temp;
 							} catch (NumberFormatException e) {
 								System.out.println("Please enter a valid card year ('q' to exit).");
 							}
@@ -980,8 +962,8 @@ public class Main {
 					}
 
 					System.out.println("What is your card code ('q' to exit): ");
-					int cardCode = 0;
-					while(cardCode == 0){
+					String cardCode = "";
+					while(cardCode.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -993,7 +975,7 @@ public class Main {
 							System.out.println("Please enter a valid card code ('q' to exit).");
 						} else  {
 							try {
-								cardCode = Integer.parseInt(temp);
+								cardCode = temp;
 							} catch (NumberFormatException e) {
 								System.out.println("Please enter a valid card code ('q' to exit).");
 							}
@@ -1008,6 +990,125 @@ public class Main {
 					System.out.println();
 					break;
 				case 4:
+					mainScreen();
+			}
+		}
+	}
+
+	/**
+	 * @author Chad Morrow
+	 * Shopping Screen
+	 */
+	public static void shoppingScreen() {
+		//TODO remove items?
+		ShoppingSession shoppingSession = new ShoppingSession();
+
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select a choice ('q' to exit): \n" +
+							"1) Display apparel information \n" +
+							"2) Show apparel \n" +
+							"3) Add item to your cart \n" +
+							"4) Go to cart \n" +
+							"5) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					System.out.println();
+					shoppingSession.displayApparel();
+					System.out.println();
+					break;
+				case 2:
+					System.out.println();
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("What apparel item would you like to view? ('q' to exit): ");
+					String itemName = in2.nextLine().trim();
+					if(itemName.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+					shoppingSession.apparelImage(itemName);
+					System.out.println();
+					break;
+				case 3:
+					System.out.println();
+					Scanner in3 = new Scanner (System.in);
+
+					System.out.println("What item would you like to add to your cart? ('q' to exit): ");
+					itemName = in3.nextLine().trim();
+					if(itemName.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+
+					System.out.println("What size? ('q' to exit): ");
+					String size = in3.nextLine().trim();
+					if(size.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+					shoppingSession.getCart().addItem(new Apparel(size, itemName));
+					System.out.println();
+					break;
+				case 4:
+					System.out.println(shoppingSession.getCart().toString());
+					System.out.println();
+
+					Scanner in4 = new Scanner (System.in);
+
+					if(!shoppingSession.getCart().getItems().isEmpty()) {
+						System.out.println("Would you like to checkout? (y/n): ");
+						String response = in4.nextLine().trim();
+
+						if (response.equals("y")) {
+							System.out.println("Card Number: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setCardNum(response);
+
+							System.out.println("Card Exp Month: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setEndMonth(response);
+
+							System.out.println("Card Exp Year: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setEndYear(response);
+
+							System.out.println("Card Security Code: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setCode(response);
+
+							System.out.println("Shipping Address: ");
+							response = in4.nextLine().trim();
+							shoppingSession.setShippingAddress(response);
+
+							System.out.println("Billing Address: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setBillingAddress(response);
+							shoppingSession.setBillingAddress(response);
+
+							System.out.println("Purchase? (y/n): ");
+							response = in4.nextLine().trim();
+							if (response.equals("y")) {
+								shoppingSession.updateInventory();
+								System.out.println();
+							} else if (response.equals("n")) {
+								System.out.println();
+								shoppingScreen();
+							}
+						} else if (response.equals("n")) {
+							System.out.println();
+							shoppingScreen();
+						}
+					}
+
+					break;
+				case 5:
 					mainScreen();
 			}
 		}

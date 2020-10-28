@@ -27,6 +27,11 @@ public class Apparel {
 		this.color = color;
 	}
 
+	public Apparel(String size, String itemName) {
+		this.size = size;
+		this.itemName = itemName;
+	}
+
 	/**
 	 * 
 	 * Constructor for the apparel.
@@ -87,5 +92,11 @@ public class Apparel {
 
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	@Override
+	public String toString() {
+		return "$" + price + " " + brandName + " "
+				+ itemName + "\n" + size + "\n";
 	}
 }

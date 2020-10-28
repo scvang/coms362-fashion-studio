@@ -1,9 +1,6 @@
 package com.fashion;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MySQLController {
     private String url;
@@ -11,35 +8,28 @@ public class MySQLController {
     private String password;
 
     public MySQLController() {
-        this.url = "localhost";
+        this.url = "jdbc:mysql://127.0.0.1:3306/fashion_studio";
         this.username = "root";
         this.password = "";
     }
 
-    public ResultSet runPushCommand(String command) {
+    public void runPushCommand(String command) {
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(this.url, this.username, this.password);
             Statement mystatement = con.createStatement();
-//            ResultSet codespeedy = mystatement.executeQuery("select * from data where username=\"ironman\"");
-            ResultSet response = mystatement.executeQuery(command);
+            mystatement.execute(command);
 
-            if(response.next()){
-                return response;
-            }
-
-            return null;
         } catch (Exception e){
-            return null;
+            System.out.println("Unable to connect");
         }
     }
 
     public ResultSet runPullCommand(String command) {
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(this.url, this.username, this.password);
             Statement mystatement = con.createStatement();
-//            ResultSet codespeedy = mystatement.executeQuery("select * from data where username=\"ironman\"");
             ResultSet response = mystatement.executeQuery(command);
 
             if(response.next()){
