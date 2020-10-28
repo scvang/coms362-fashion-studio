@@ -4,10 +4,16 @@ import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.apparel.Apparel;
 import com.fashion.events.*;
+
+import java.awt.EventQueue;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Main {
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class Main extends JFrame {
 //	private static double minPromotionValue = 1000.0;
 //	private static double maxPromotionValue = 15000.0;
 //	private static int maxBusinesses = 7;
@@ -99,6 +105,25 @@ public class Main {
 		// Go to main screen.
 		// I think later it should be changed so that the screens
 		// are handled by a display controller so we don't have bloat.
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ShowPicture frame = new ShowPicture();
+					frame.setVisible(true);
+					
+					// This creates a test model.
+					String description =
+							"<html>"
+							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
+							+ "</html>";
+					
+					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		mainScreen();
 	}
 	
