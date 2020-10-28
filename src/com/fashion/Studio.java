@@ -498,8 +498,8 @@ public class Studio {
 	 * 
 	 * This method adds a new model to a list of existing models
 	 */
-	public void createModel(String agent, String name, String phoneNum, double salary) {
-		model.add(new Model(agent,name,phoneNum,salary));
+	public void createModel(int eid,String agent, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
+		model.add(new Model(eid,agent,name,jobTitle,phoneNum,payStubInfo));
 	}
 	
 	public void changeHead(String modelName, Apparel item) {

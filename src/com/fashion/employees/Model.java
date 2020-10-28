@@ -1,25 +1,19 @@
 package com.fashion.employees;
 
 import com.fashion.apparel.Apparel;
+import com.fashion.pay.PayStubInfo;
 
 /**
  * Model is the information expert that knows about apparel.
  * @author Sebastian Vang
  *
  */
-public class Model{
+public class Model extends Employee{
 	
 	/**
 	 * Instance variables.
 	 */
 	private String agent;
-	private String name;
-	private String phoneNum;
-	private double salary;
-	
-	/**
-	 * Instance variables of what the model wears.
-	 */
 	private Apparel head;
 	private Apparel top;
 	private Apparel bot;
@@ -35,11 +29,9 @@ public class Model{
 	 * @param phone
 	 * @param salary
 	 */
-	public Model(String agent, String name, String phone, double salary) {
+	public Model(int eid, String agent, String name, String jobTitle, String phone, PayStubInfo payStubInfo) {
+		super(eid,name,jobTitle,phone,payStubInfo);
 		this.agent = agent;
-		this.name = name;
-		this.phoneNum = phone;
-		this.salary = salary;
 		
 		this.head = new Apparel("none","none","none");
 		this.top = new Apparel("none","none","none");
@@ -69,28 +61,8 @@ public class Model{
 		return this.acc;
 	}
 	
-	public void setPhoneNum(String phoneNum) {
-		this.phoneNum = phoneNum;
-	}
-	
-	public void setSalary(double salary) {
-		this.salary = salary;
-	}
-	
-	public double getSalary() {
-		return this.salary;
-	}
-	
-	public String getPhoneNum() {
-		return this.phoneNum;
-	}
-	
 	public String getAgent() {
 		return agent;
-	}
-	
-	public String getName() {
-		return this.name;
 	}
 	
 	public void changeHead(Apparel item) {

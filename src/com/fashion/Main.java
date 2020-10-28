@@ -57,7 +57,7 @@ public class Main extends JFrame {
 		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
 		
 		// Make a display model.
-		studio.createModel("Jack","Eve","555-555-5555",100000);
+		//studio.createModel("Jack","Eve","555-555-5555",100000);
 		
 		// Add an employee test
 		/*
@@ -372,6 +372,8 @@ public class Main extends JFrame {
 				break;
 				
 				case 6:
+					System.out.println("Enter EID: ");
+					int eid = in.nextInt();
 					System.out.println("Enter agent name:");
 					String agent = in.next();
 					System.out.println("Enter model name:");
@@ -380,7 +382,7 @@ public class Main extends JFrame {
 					String number = in.next();
 					System.out.println("Enter salary:");
 					int salary = in.nextInt();
-					studio.createModel(agent,model,model,salary);
+					studio.createModel(eid,agent,model,"Model",model,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}
