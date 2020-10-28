@@ -24,7 +24,7 @@ public class Event {
 
 	/**
 	 * Constructor for the event.
-	 * @param name
+	 * @param
 	 */
 	protected Event(String event, String date, String time) {
 		this.event = event;
@@ -166,7 +166,7 @@ public class Event {
 	public boolean payPromotion(Card card) {
 		Random random = new Random();
 		if(card != null) {
-			return random.nextInt(100) <= 97;
+			return random.nextInt(100) <= 98;
 		}
 		return false;
 	}

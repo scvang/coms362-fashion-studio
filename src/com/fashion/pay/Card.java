@@ -5,12 +5,14 @@ public class Card {
     private int endMonth;
     private int endYear;
     private int code;
+    private String billingAddress;
 
-    public Card(String cardNum, int endMonth, int endYear, int code) {
+    public Card(String cardNum, int endMonth, int endYear, int code, String billingAddress) {
         this.cardNum = cardNum;
         this.endMonth = endMonth;
         this.endYear = endYear;
         this.code = code;
+        this.billingAddress = billingAddress;
     }
 
     public String getCardNum() {
@@ -43,5 +45,13 @@ public class Card {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

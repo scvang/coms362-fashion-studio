@@ -1000,7 +1000,7 @@ public class Main {
 						}
 					}
 
-					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode))) {
+					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
 						System.out.println("Promotion added!");
 					}
 
@@ -1012,49 +1012,4 @@ public class Main {
 			}
 		}
 	}
-
-	private static String generateNum() {
-		String phoneNum = "";
-		Random random = new Random();
-
-		for(int i = 0; i < 12; i++){
-			if(i == 3 || i == 7){
-				phoneNum += "-";
-			} else {
-				phoneNum += random.nextInt(9);
-			}
-		}
-
-		return phoneNum;
-	}
-
-//	private static Card generateCard() {
-//		Random random = new Random();
-//		StringBuilder cardNum = new StringBuilder();
-//		StringBuilder endMonth = new StringBuilder();
-//		StringBuilder endYear = new StringBuilder();
-//		StringBuilder code = new StringBuilder();
-//
-//		for(int i = 0; i < 16; i++){
-//			 cardNum.append(random.nextInt(10));
-//		}
-//
-//		endMonth.append(random.nextInt(2));
-//		if(endMonth.equals("1")){
-//			endMonth.append(random.nextInt(3));
-//		} else {
-//			endMonth.append(random.nextInt(10));
-//		}
-//
-//		for(int i = 0; i < 2; i++){
-//			endYear.append(random.nextInt(10));
-//		}
-//
-//		for(int i = 0; i < 3; i++){
-//			code.append(random.nextInt(10));
-//		}
-//
-//		return new Card(Integer.parseInt(cardNum.toString()), Integer.parseInt(endMonth.toString()),
-//				Integer.parseInt(endYear.toString()), Integer.parseInt(code.toString()));
-//	}
 }
