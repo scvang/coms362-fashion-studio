@@ -69,9 +69,11 @@ public class Event {
 						p.setLocation(loc);
 					} else  {
 						System.out.println("Offer denied. Please re-offer!");
+						return false;
 					}
 				} else {
 					System.out.println("Card denied. Try again later");
+					return false;
 				}
 			} else { //otherwise, if the promotion location is filled, then the business must look for
 				//another location to place the promotion

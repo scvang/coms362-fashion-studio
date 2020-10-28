@@ -231,7 +231,7 @@ public class Main {
 					System.out.println();
 					System.out.println();
 					break;
-				case 4:
+				case 3:
 					mainScreen();
 			}
 		}
@@ -941,8 +941,8 @@ public class Main {
 					}
 
 					System.out.println("What is your card number ('q' to exit): ");
-					int cardNum = 0;
-					while(cardNum == 0){
+					String cardNum = "";
+					while(cardNum.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -952,13 +952,15 @@ public class Main {
 
 						if(temp.length() < 16) {
 							System.out.println("Please enter a valid card number ('q' to exit).");
-						} else  {
-							try {
-								cardNum = Integer.parseInt(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Please enter a valid card number ('q' to exit).");
-							}
 						}
+						cardNum = temp;
+//						else  {
+//							try {
+//								cardNum = Integer.parseInt(temp);
+//							} catch (NumberFormatException e) {
+//								System.out.println("Please enter a valid card number ('q' to exit).");
+//							}
+//						}
 					}
 
 					System.out.println("What is your card month ('q' to exit): ");
@@ -1003,9 +1005,9 @@ public class Main {
 						}
 					}
 
-					System.out.println("What is your card year ('q' to exit): ");
-					int cardCode = 0;
-					while(cardCode == 0){
+					System.out.println("What is your card code ('q' to exit): ");
+					String cardCode = "";
+					while(cardCode.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -1013,15 +1015,16 @@ public class Main {
 							promotionScreen();
 						}
 
-						if(temp.length() < 3) {
+						if(temp.length() != 3) {
 							System.out.println("Please enter a valid card code ('q' to exit).");
-						} else  {
-							try {
-								cardCode = Integer.parseInt(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Please enter a valid card code ('q' to exit).");
-							}
-						}
+						} 
+//						else  {
+//							try {
+//								cardCode = Integer.parseInt(temp);
+//							} catch (NumberFormatException e) {
+//								System.out.println("Please enter a valid card code ('q' to exit).");
+//							}
+//						}
 					}
 
 					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode))) {

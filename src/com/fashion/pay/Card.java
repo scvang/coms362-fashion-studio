@@ -1,23 +1,23 @@
 package com.fashion.pay;
 
 public class Card {
-    private int cardNum;
+    private String cardNum;
     private int endMonth;
     private int endYear;
-    private int code;
+    private String code;
 
-    public Card(int cardNum, int endMonth, int endYear, int code) {
+    public Card(String cardNum, int endMonth, int endYear, String code) {
         this.cardNum = cardNum;
         this.endMonth = endMonth;
         this.endYear = endYear;
         this.code = code;
     }
 
-    public int getCardNum() {
+    public String getCardNum() {
         return cardNum;
     }
 
-    public void setCardNum(int cardNum) {
+    public void setCardNum(String cardNum) {
         this.cardNum = cardNum;
     }
 
@@ -37,11 +37,11 @@ public class Card {
         this.endYear = endYear;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 }
