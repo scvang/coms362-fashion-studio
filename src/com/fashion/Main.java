@@ -128,6 +128,15 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * Test screen.
+	 * @param description
+	 * @param commands
+	 */
+	public static void Screen(String description, String commands) {
+		
+	}
+	
+	/**
 	 * The main screen that prompts first.
 	 */
 	public static void mainScreen() {
@@ -247,7 +256,7 @@ public class Main extends JFrame {
 					System.out.println();
 					System.out.println();
 					break;
-				case 4:
+				case 3:
 					mainScreen();
 			}
 		}
@@ -281,7 +290,7 @@ public class Main extends JFrame {
 					System.out.println("What type of advertisement do you need? (paper or video)");
 					String adType = in.next();
 					System.out.println("What is the name of the event?: ");
-					String eventName = in.next();
+					String eventName = in.next() + in.next();
 					System.out.println("Where is the location of the event?: ");
 					String loc = in.next();
 					System.out.println("What is the time of the event?: ");
@@ -325,7 +334,8 @@ public class Main extends JFrame {
 			"2) Change apparel \n" +
 			"3) Update contact information \n" +
 			"4) Update salary \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Add model \n"
 			);
 			
 			choice = in.next();
@@ -339,7 +349,7 @@ public class Main extends JFrame {
 				case 2:
 					Scanner in2 = new Scanner(System.in);
 					System.out.println("Which model do you want to change?");
-					studio.getModels();
+					//studio.getModels();
 					String name = in2.next();
 					if(!studio.findModel(name)) {
 						System.out.println("Model was not found, try again.");
@@ -359,6 +369,18 @@ public class Main extends JFrame {
 				
 				case 5:
 					mainScreen();
+				break;
+				
+				case 6:
+					System.out.println("Enter agent name:");
+					String agent = in.next();
+					System.out.println("Enter model name:");
+					String model = in.next();
+					System.out.println("Enter phone number:");
+					String number = in.next();
+					System.out.println("Enter salary:");
+					int salary = in.nextInt();
+					studio.createModel(agent,model,model,salary);
 				break;
 			}
 		}
@@ -498,7 +520,8 @@ public class Main extends JFrame {
 			"2) Dining \n" +
 			"3) Party \n" +
 			"4) Create new Event \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Display events"
 			);
 			
 			choice = in.next();
@@ -523,7 +546,7 @@ public class Main extends JFrame {
 					String type = in2.next();
 					
 					System.out.println("Event name?");
-					String name = in2.next();
+					String name = in2.next() + " " + in2.next(); // gotta fix this.
 					
 					System.out.println("What date (mm-dd-yy)? ");
 					String date = in2.next();
@@ -537,6 +560,9 @@ public class Main extends JFrame {
 				case 5:
 					mainScreen();
 				break;
+				
+				case 6:
+					studio.displayEvents();
 			}
 		}
 		in.close();
@@ -940,8 +966,8 @@ public class Main extends JFrame {
 					}
 
 					System.out.println("What is your card number ('q' to exit): ");
-					int cardNum = 0;
-					while(cardNum == 0){
+					String cardNum = "";
+					while(cardNum.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -951,13 +977,15 @@ public class Main extends JFrame {
 
 						if(temp.length() < 16) {
 							System.out.println("Please enter a valid card number ('q' to exit).");
-						} else  {
-							try {
-								cardNum = Integer.parseInt(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Please enter a valid card number ('q' to exit).");
-							}
 						}
+						cardNum = temp;
+//						else  {
+//							try {
+//								cardNum = Integer.parseInt(temp);
+//							} catch (NumberFormatException e) {
+//								System.out.println("Please enter a valid card number ('q' to exit).");
+//							}
+//						}
 					}
 
 					System.out.println("What is your card month ('q' to exit): ");
@@ -1002,9 +1030,9 @@ public class Main extends JFrame {
 						}
 					}
 
-					System.out.println("What is your card year ('q' to exit): ");
-					int cardCode = 0;
-					while(cardCode == 0){
+					System.out.println("What is your card code ('q' to exit): ");
+					String cardCode = "";
+					while(cardCode.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -1012,15 +1040,16 @@ public class Main extends JFrame {
 							promotionScreen();
 						}
 
-						if(temp.length() < 3) {
+						if(temp.length() != 3) {
 							System.out.println("Please enter a valid card code ('q' to exit).");
-						} else  {
-							try {
-								cardCode = Integer.parseInt(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Please enter a valid card code ('q' to exit).");
-							}
-						}
+						} 
+//						else  {
+//							try {
+//								cardCode = Integer.parseInt(temp);
+//							} catch (NumberFormatException e) {
+//								System.out.println("Please enter a valid card code ('q' to exit).");
+//							}
+//						}
 					}
 
 					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode))) {
