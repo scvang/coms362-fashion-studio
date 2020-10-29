@@ -1068,9 +1068,33 @@ public class Main {
 					Scanner in4 = new Scanner (System.in);
 
 					if(!shoppingSession.getCart().getItems().isEmpty()) {
-						System.out.println("Would you like to checkout? (y/n): ");
-						String response = in4.nextLine().trim();
+						System.out.println("Edit Cart? (y/n): ");
 
+						String response = in4.nextLine().trim();
+						if (response.equals("y")) {
+							System.out.println("What item would you like to remove from your cart? ('q' to exit): ");
+							itemName = in4.nextLine().trim();
+							if(itemName.equals("q")) {
+								System.out.println();
+								shoppingScreen();
+							}
+
+							System.out.println("What size? ('q' to exit): ");
+							size = in4.nextLine().trim();
+							if(size.equals("q")) {
+								System.out.println();
+								shoppingScreen();
+							}
+							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
+
+							if(shoppingSession.getCart().getItems().size() == 0)
+								System.out.println();
+								break;
+						} else if (response.equals("n")) {
+							System.out.println();
+						}
+
+						System.out.println("Checkout? (y/n): ");
 						if (response.equals("y")) {
 							System.out.println("Card Number: ");
 							response = in4.nextLine().trim();

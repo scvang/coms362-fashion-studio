@@ -93,6 +93,25 @@ public class Cart {
     }
 
     /**
+     * @param item contains the information we need to verify our item is in stock and can be added to our cart
+     */
+    public void removeItem(Apparel item) {
+        //loop through the cart
+        for(int i = 0; i < items.size(); i++){
+            //if the current item in the cart is equal to the parameters set by the Customer then remove it
+            if(items.get(i).getItemName().equals(item.getItemName())
+                    && items.get(i).getSize().equals(item.getSize())) {
+                items.remove(i);
+                System.out.println(item.getItemName() + " has been removed!");
+                System.out.println();
+                return;
+            }
+        }
+        System.out.println("Unable to find the product you were looking for :(");
+        System.out.println();
+    }
+
+    /**
      * clears the cart, mainly used after processing a transaction
      */
     public void clearCart(){
