@@ -1,9 +1,19 @@
 package com.fashion;
 
 public class Business {
+    private int bid;
     private String name;
     private String address;
     private String phoneNum;
+    private String busType;
+
+    public Business(int bid, String name, String address, String phoneNum, String busType) {
+        this.bid = bid;
+        this.name = name;
+        this.address = address;
+        this.phoneNum = phoneNum;
+        this.busType = busType;
+    }
 
     public Business(String name, String address, String phoneNum) {
         this.name = name;
@@ -17,6 +27,14 @@ public class Business {
     }
 
     public Business() { }
+
+    public int getBid() {
+        return bid;
+    }
+
+    public void setBid(int bid) {
+        this.bid = bid;
+    }
 
     public String getName() {
         return name;
@@ -40,6 +58,14 @@ public class Business {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getBusType() {
+        return busType;
+    }
+
+    public void setBusType(String busType) {
+        this.busType = busType;
     }
 
     @Override

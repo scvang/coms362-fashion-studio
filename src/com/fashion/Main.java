@@ -1,5 +1,6 @@
 package com.fashion;
 
+import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.apparel.Apparel;
@@ -95,7 +96,8 @@ public class Main {
 			"4) Events \n" +
 			"5) Advertisements \n" +
 			"6) Promotions \n" +
-			"7) Shop\n"
+			"7) Shop\n" +
+			"8) Negotiate Contract\n"
 			);
 			
 			choice = in.next();
@@ -122,6 +124,9 @@ public class Main {
 				break;
 				case 7:
 					shoppingScreen();
+				break;
+				case 8:
+					contractScreen();
 				break;
 			}
 		}
@@ -1109,6 +1114,43 @@ public class Main {
 
 					break;
 				case 5:
+					mainScreen();
+			}
+		}
+	}
+
+	/**
+	 * @author Chad Morrow
+	 * Contract Screen
+	 */
+	public static void contractScreen() {
+		ContractSession contractSession = new ContractSession();
+
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select a choice ('q' to exit): \n" +
+							"1) Begin contract negotiation \n" +
+							"2) View old contracts \n" +
+							"3) View current contract \n" +
+							"4) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					contractSession.negotiate();
+					break;
+				case 2:
+					contractSession.viewOldContracts();
+					break;
+				case 3:
+					contractSession.viewCurrentContract();
+					break;
+				case 4:
 					mainScreen();
 			}
 		}
