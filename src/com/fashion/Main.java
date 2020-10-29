@@ -831,7 +831,6 @@ public class Main {
 					System.out.println();
 					break;
 				case 3:
-					//TODO
 					Scanner in3 = new Scanner (System.in);
 					System.out.println("Enter the event  ('q' to exit): ");
 					String eventNameReserve = in3.nextLine();
@@ -1005,7 +1004,6 @@ public class Main {
 	 * Shopping Screen
 	 */
 	public static void shoppingScreen() {
-		//TODO remove items?
 		ShoppingSession shoppingSession = new ShoppingSession();
 
 		String choice = "";
