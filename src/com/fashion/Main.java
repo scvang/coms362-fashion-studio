@@ -1,16 +1,16 @@
 package com.fashion;
 
+import com.fashion.apparel.Apparel;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
-import com.fashion.apparel.Apparel;
-import com.fashion.events.*;
 import com.fashion.shopping.ShoppingSession;
 
-import java.util.Random;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Scanner;
 
-public class Main {
+public class Main extends JFrame {
 	/**
 	 * Instance variables.
 	 */
@@ -28,45 +28,7 @@ public class Main {
 		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
 		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
 		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
-		
-		// Make a display model.
-		studio.createModel("Jack","Eve","555-555-5555",100000);
-		
-		// Add an employee test
-		/*
-		String name = "John";
-		String jobTitle = "Designer";
-		double salary = 50000;
-		String phoneNum = "N/A";
 
-		studio.addEmployee(eid, name, jobTitle, phoneNum, salary, 0, 0);
-		
-		studio.addEmployee(name, jobTitle, phoneNum,salary);
-		studio.getEmployees();
-		*/
-
-		// Add a shirt test
-		/*
-		String itemName = "T-Shirt";
-		String brandName = "DEUX";
-		String color = "White";
-		int id = 50021;
-		int stock = 1;
-		
-		studio.addApparel(itemName,brandName,color,id,stock);
-		studio.getApparel();
-		*/
-		
-		//Add an Ad test
-		int eidAd = 123;
-		String eventName = "Spring";
-		String loc = "401 Somewhere Ave";
-		String time = "11:00 AM - 3:00 PM";
-		String contactInfo = "555-555-5555";
-		
-		//studio.addAd(eidAd, eventName, loc, time, contactInfo);
-		//studio.getAd();
-		
 		//Add a new Model test
 		String modelName = "Jenna";
 		String modNum = "111-111-1111";
@@ -78,7 +40,35 @@ public class Main {
 		// Go to main screen.
 		// I think later it should be changed so that the screens
 		// are handled by a display controller so we don't have bloat.
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ShowPicture frame = new ShowPicture();
+					frame.setVisible(true);
+					
+					// This creates a test model.
+					String description =
+							"<html>"
+							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
+							+ "</html>";
+					
+					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		mainScreen();
+	}
+	
+	/**
+	 * Test screen.
+	 * @param description
+	 * @param commands
+	 */
+	public static void Screen(String description, String commands) {
+		
 	}
 	
 	/**
@@ -243,7 +233,7 @@ public class Main {
 					System.out.println("What type of advertisement do you need? (paper or video)");
 					String adType = in.next();
 					System.out.println("What is the name of the event?: ");
-					String eventName = in.next();
+					String eventName = in.next() + in.next();
 					System.out.println("Where is the location of the event?: ");
 					String loc = in.next();
 					System.out.println("What is the time of the event?: ");
@@ -287,7 +277,8 @@ public class Main {
 			"2) Change apparel \n" +
 			"3) Update contact information \n" +
 			"4) Update salary \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Add model \n"
 			);
 			
 			choice = in.next();
@@ -301,7 +292,7 @@ public class Main {
 				case 2:
 					Scanner in2 = new Scanner(System.in);
 					System.out.println("Which model do you want to change?");
-					studio.getModels();
+					//studio.getModels();
 					String name = in2.next();
 					if(!studio.findModel(name)) {
 						System.out.println("Model was not found, try again.");
@@ -321,6 +312,20 @@ public class Main {
 				
 				case 5:
 					mainScreen();
+				break;
+				
+				case 6:
+					System.out.println("Enter EID: ");
+					int eid = in.nextInt();
+					System.out.println("Enter agent name:");
+					String agent = in.next();
+					System.out.println("Enter model name:");
+					String model = in.next();
+					System.out.println("Enter phone number:");
+					String number = in.next();
+					System.out.println("Enter salary:");
+					int salary = in.nextInt();
+					studio.createModel(eid,agent,model,"Model",model,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}
@@ -460,7 +465,8 @@ public class Main {
 			"2) Dining \n" +
 			"3) Party \n" +
 			"4) Create new Event \n" +
-			"5) Go back \n"
+			"5) Go back \n" +
+			"6) Display events"
 			);
 			
 			choice = in.next();
@@ -485,7 +491,7 @@ public class Main {
 					String type = in2.next();
 					
 					System.out.println("Event name?");
-					String name = in2.next();
+					String name = in2.next() + " " + in2.next(); // gotta fix this.
 					
 					System.out.println("What date (mm-dd-yy)? ");
 					String date = in2.next();
@@ -499,6 +505,9 @@ public class Main {
 				case 5:
 					mainScreen();
 				break;
+				
+				case 6:
+					studio.displayEvents();
 			}
 		}
 		in.close();
@@ -902,25 +911,18 @@ public class Main {
 
 					System.out.println("What is your card number ('q' to exit): ");
 					String cardNum = "";
-					while(cardNum.isEmpty()){
+					while(cardNum.isEmpty()) {
 						String temp = in3.next();
-						if(temp.equals("q")) {
+						if (temp.equals("q")) {
 							System.out.println();
 							System.out.println();
 							promotionScreen();
 						}
 
-						if(temp.length() < 16) {
+						if (temp.length() < 16) {
 							System.out.println("Please enter a valid card number ('q' to exit).");
 						}
 						cardNum = temp;
-//						else  {
-//							try {
-//								cardNum = Integer.parseInt(temp);
-//							} catch (NumberFormatException e) {
-//								System.out.println("Please enter a valid card number ('q' to exit).");
-//							}
-//						}
 					}
 
 					System.out.println("What is your card month ('q' to exit): ");

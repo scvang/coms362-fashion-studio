@@ -2,6 +2,7 @@ package com.fashion;
 
 import com.fashion.employees.Employee;
 import com.fashion.employees.Model;
+import com.fashion.pay.PayStubInfo;
 
 import java.io.File;
 
@@ -101,8 +102,8 @@ public class ModelAudition {
 	 * @return Model instance
 	 * This method creates a new Model instance
 	 */
-	public Model createModel(String agent, String name, String phone, double salary) {
-		Model mod = new Model(agent, name, phone, salary);
+	public Model createModel(int ied, String agent, String name, String jobTitle, String phone, PayStubInfo payStubInfo) {
+		Model mod = new Model(ied, agent, name, jobTitle, phone, payStubInfo);
 		return mod;
 	}
 	

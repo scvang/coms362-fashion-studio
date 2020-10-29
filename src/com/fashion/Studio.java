@@ -250,12 +250,13 @@ public class Studio {
 	}
 
 	/**
-	 * Reserves a seat for the customer.
-	 * @param e event
-	 * @param n seatNum
-	 * @param c customerName
-	 * @param d date
-	 * @param t time
+	 *
+	 * @param e
+	 * @param number
+	 * @param customer
+	 * @param date
+	 * @param time
+	 * @return
 	 */
 	public boolean reserveSeat(Event e, String number, String customer, String date, String time) {
 		Showing s = (Showing)e;
@@ -285,13 +286,15 @@ public class Studio {
 		}
 		return false;
 	}
+
 	/**
-	 * Reserves a table for the customer.
-	 * @param e event
-	 * @param n tableNum
-	 * @param c customerName
-	 * @param d date
-	 * @param t time
+	 *
+	 * @param e
+	 * @param number
+	 * @param customer
+	 * @param date
+	 * @param time
+	 * @return
 	 */
 	public boolean reserveTable(Event e, String number, String customer, String date, String time) {
 		Dining d = (Dining)e;
@@ -477,7 +480,7 @@ public class Studio {
 			"Model Name: " + m.getName() + "\n" + 
 			"Agent: " + m.getAgent() + "\n" +
 			"Phone: " + m.getPhoneNum() + "\n" +
-			"Salary: " + m.getSalary() + "\n" +
+			"Salary: " + m.getPayStubInfo().getSalary() + "\n" +
 			"Head: " + m.getHeadPiece().getItemName() + ", Brand: " + m.getHeadPiece().getBrandName() + ", Color: " + m.getHeadPiece().getColor() + "\n" +
 			"Top: " + m.getTopPiece().getItemName() + ", Brand: " + m.getTopPiece().getBrandName() + ", Color: " + m.getTopPiece().getColor() + "\n" +
 			"Bottoms: " + m.getBotPiece().getItemName() + ", Brand: " + m.getBotPiece().getBrandName() + ", Color: " + m.getBotPiece().getColor() + "\n" +
@@ -494,12 +497,12 @@ public class Studio {
 	 * @param agent-agent name
 	 * @param name-model name
 	 * @param phoneNum-model phone number
-	 * @param salary-model salary
+	 * @param payStubInfo-model pay info
 	 * 
 	 * This method adds a new model to a list of existing models
 	 */
-	public void createModel(String agent, String name, String phoneNum, double salary) {
-		model.add(new Model(agent,name,phoneNum,salary));
+	public void createModel(int eid,String agent, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
+		model.add(new Model(eid,agent,name,jobTitle,phoneNum,payStubInfo));
 	}
 	
 	public void changeHead(String modelName, Apparel item) {
