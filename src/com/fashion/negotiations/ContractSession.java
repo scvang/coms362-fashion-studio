@@ -44,9 +44,14 @@ public class ContractSession {
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `businesses` WHERE `busType` = 'Manufacturer'");
 
-            while(rs.next()){
+            if(rs != null){
                 businesses.add(new Business(rs.getInt("bid"), rs.getString("name"),
                         rs.getString("address"), rs.getString("number"), rs.getString("busType")));
+
+                while(rs.next()){
+                    businesses.add(new Business(rs.getInt("bid"), rs.getString("name"),
+                            rs.getString("address"), rs.getString("number"), rs.getString("busType")));
+                }
             }
         } catch (SQLException throwables) {
             System.out.println("Error creating a shopping session");
@@ -66,20 +71,6 @@ public class ContractSession {
          */
         if(negotiator == null){
             return;
-        }
-
-        /**
-         * grab the all the manufacturing businesses
-         */
-        try {
-            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `businesses` WHERE `busType` = 'Manufacturer'");
-
-            while(rs.next()){
-                businesses.add(new Business(rs.getInt("bid"), rs.getString("name"),
-                        rs.getString("address"), rs.getString("number"), rs.getString("busType")));
-            }
-        } catch (SQLException throwables) {
-            System.out.println("Error creating a shopping session");
         }
 
         boolean foundDeal = false;
@@ -187,7 +178,7 @@ public class ContractSession {
                     System.out.println("They won't be happy about this");
                 }
             } else {
-                System.out.println(business + " has backed out of the negotiation. on to the next");
+                System.out.println(business.getName() + " has backed out of the negotiation. on to the next\n");
             }
         }
 

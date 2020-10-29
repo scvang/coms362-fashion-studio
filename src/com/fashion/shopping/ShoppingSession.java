@@ -89,12 +89,20 @@ public class ShoppingSession {
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory`");
 
-            while(rs.next()){
+            if(rs != null) {
                 System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
                         + rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
                         rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
                         + rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
                 System.out.println();
+
+                while (rs.next()) {
+                    System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
+                            + rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
+                            rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
+                            + rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
+                    System.out.println();
+                }
             }
 
         } catch (SQLException throwables) {
@@ -159,7 +167,8 @@ public class ShoppingSession {
                     "CARDMONTH,CARDYEAR,CARDCODE,SHIPPINGADDRESS,BILLINGADDRESS) VALUES ('" + sid + "','" + items.toString() +
                     "','" + (cart.getSubtotal() + (cart.getSubtotal() * (cart.getTaxRate() / 100.0))) + "','" + cart.getTaxRate() + "','" + card.getCardNum() + "','" + card.getEndMonth() + "','"
                     + card.getEndYear() + "','" + card.getCode() + "','" + shippingAddress + "','" + billingAddress + "')");
-
+            System.out.println("Purchased!");
+            System.out.println();
         } catch (Exception e) {
             System.out.println("ERROR: Unable to finalize purchase");
         }

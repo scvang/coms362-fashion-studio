@@ -20,7 +20,6 @@ public class Employee {
 	private String name;
 	private String jobTitle;
 	private String phoneNum;
-	private double salary;
 	private PayStubInfo payStubInfo;
 
 	public Employee(int eid, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
@@ -91,14 +90,6 @@ public class Employee {
 
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
-	}
-
-	public double getSalary() {
-		return salary;
-	}
-
-	public void setSalary(double salary) {
-		this.salary = salary;
 	}
 
 	public PayStubInfo getPayStubInfo() {

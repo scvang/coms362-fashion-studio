@@ -1095,6 +1095,7 @@ public class Main {
 						}
 
 						System.out.println("Checkout? (y/n): ");
+						response = in4.nextLine().trim();
 						if (response.equals("y")) {
 							System.out.println("Card Number: ");
 							response = in4.nextLine().trim();
