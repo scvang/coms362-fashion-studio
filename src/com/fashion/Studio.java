@@ -38,6 +38,8 @@ public class Studio {
 	ArrayList<Advertisement> ad;
 	ArrayList<PayStub> payStubHistory;
 	
+	private Inventory inventory;
+	
 	/**
 	 * 
 	 * Constructor for the studio.
@@ -59,6 +61,15 @@ public class Studio {
 		ad = new ArrayList<>();
 
 		payStubHistory = new ArrayList<>();
+		inventory = new Inventory();
+	}
+	
+	public void displayClothingInventory() {
+		inventory.displayClothingInventory();
+	}
+	
+	public void storeClothingItem(Apparel a) {
+		inventory.storeClothing(a);
 	}
 	
 	/**
@@ -83,6 +94,10 @@ public class Studio {
 	 */
 	public String getPhoneNum() {
 		return this.phoneNum;
+	}
+	
+	public ArrayList<Event> getEventList(){
+		return this.event;
 	}
 	
 	/**
@@ -224,8 +239,9 @@ public class Studio {
 	 * Displays a list of hosted events.
 	 */
 	public void displayEvents() {
+		int count = 1;
 		for(Event e : event) {
-			System.out.println(e.getEvent());
+			System.out.println(count++ + ") " + e.getEvent());
 		}
 	}
 	
@@ -260,6 +276,11 @@ public class Studio {
 	public boolean reserveSeat(Event e, String number, String customer, String date, String time) {
 		Showing s = (Showing)e;
 		return s.reserveSeat(number,customer,date,time);
+	}
+	
+	public boolean removeSeatReservation(String name,Event e) {
+		Showing s = (Showing)e;
+		return s.removeSeatReservation(name);
 	}
 	
 	public boolean hasSeatReservation(String customerName,Event e) {

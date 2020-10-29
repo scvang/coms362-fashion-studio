@@ -14,6 +14,7 @@ public class Apparel {
 	private String itemName;
 	private String brandName;
 	private String color;
+	private int quantity;
 	
 	/**
 	 * 
@@ -27,6 +28,15 @@ public class Apparel {
 		this.itemName = name;
 		this.brandName = brand;
 		this.color = color;
+		quantity = 1;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	public int getQuantity() {
+		return this.quantity;
 	}
 	
 	/**
@@ -51,6 +61,12 @@ public class Apparel {
 	 */
 	public String getColor() {
 		return this.color;
+	}
+	
+	public boolean sameItem(Object o) {
+		if(o == null || o.getClass() != this.getClass()) return false;
+		Apparel a = (Apparel)o;
+		return this.itemName.equals(a.itemName) && this.brandName.equals(a.brandName) && this.color.equals(a.color);
 	}
 
 }

@@ -125,6 +125,24 @@ public class Showing extends Event{
 		}
 		return s;
 	}
+	
+	public boolean removeSeatReservation(String name) {
+				String[] isle = {"A","B","C","D","E","F","G","H","I"};
+				int num = 1;
+				
+				for(int row = 0; row < seat.length; ++row) {
+					for(int col = 0; col < seat[0].length; ++col) {
+						String seatNum = isle[row] + num;
+						if(name.equals(seat[row][col].getCustomerName())) {
+						seat[row][col] = new Seat(seatNum,"","","");
+						openSeats = countSeats();
+						return true;
+						}
+					}
+				}
+				openSeats = countSeats();
+				return false;
+	}
 
 	/**
 	 * Reserves a seat for the showing event.
