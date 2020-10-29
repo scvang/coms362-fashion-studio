@@ -19,28 +19,25 @@ public class Cart {
         this.taxRate = taxRate;
     }
 
-    public Cart(List<Apparel> items, int taxRate) {
-        this.items = items;
-        this.taxRate = taxRate;
-    }
-
-    public Cart(List<Apparel> items) {
-        this.items = items;
-        taxRate = 2;
-    }
-
+    /**
+     * Basic constructor that doesn't take in a value but assigns the default values necessary
+     */
     public Cart() {
         taxRate = 2;
         items = new ArrayList<>();
     }
 
+    /**
+     * @return the items in our cart
+     */
     public List<Apparel> getItems() {
         return items;
     }
 
+    /**
+     * @param item contains the information we need to verify our item is in stock and can be added to our cart
+     */
     public void addItem(Apparel item) {
-        //TODO test
-
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory` WHERE `itemName` = '" + item.getItemName() + "'");
 
@@ -95,10 +92,16 @@ public class Cart {
         }
     }
 
+    /**
+     * clears the cart, mainly used after processing a transaction
+     */
     public void clearCart(){
         items.clear();
     }
 
+    /**
+     * @return the subtotal of our cart
+     */
     public double getSubtotal() {
         return subtotal;
     }
@@ -107,6 +110,9 @@ public class Cart {
         this.subtotal = subtotal;
     }
 
+    /**
+     * @return the tax rate for the Customer
+     */
     public int getTaxRate() {
         return taxRate;
     }

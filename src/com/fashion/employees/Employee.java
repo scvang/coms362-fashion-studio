@@ -33,6 +33,9 @@ public class Employee {
 
 	public Employee(){}
 
+	/**
+	 * @return a random sales employee
+	 */
 	public Employee getRandomSalesEmployee(){
 		MySQLController mySQLController = new MySQLController();
 		Employee employee = new Employee();

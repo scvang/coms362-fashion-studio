@@ -28,11 +28,17 @@ public class ContractSession {
         this.contract = contract;
     }
 
+    /**
+     * basic constructor to add the bare minimum elements
+     */
     public ContractSession(){
         businesses = getManufacturers();
         contract = new Contract();
     }
 
+    /**
+     * @return the business that can manufacture our clothes
+     */
     private List<Business> getManufacturers(){
         List<Business> businesses = new ArrayList<>();
         try {
@@ -48,6 +54,9 @@ public class ContractSession {
         return businesses;
     }
 
+    /**
+     * runs the negotiation process
+     */
     public void negotiate(){
         Random rand = new Random();
         Employee negotiator = new Employee().getRandomSalesEmployee();

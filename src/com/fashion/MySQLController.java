@@ -7,12 +7,19 @@ public class MySQLController {
     private String username;
     private String password;
 
+    /**
+     * adds the connection information
+     */
     public MySQLController() {
         this.url = "jdbc:mysql://127.0.0.1:3306/fashion_studio";
         this.username = "root";
         this.password = "";
     }
 
+    /**
+     * runs a push command (INSERT, UPDATE)
+     * @param command is the SQL command we want to run
+     */
     public void runPushCommand(String command) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -25,6 +32,11 @@ public class MySQLController {
         }
     }
 
+    /**
+     * runs the pull command (SELECT)
+     * @param command is the query we want to run
+     * @return the ResultSet with our query results
+     */
     public ResultSet runPullCommand(String command) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -50,6 +62,9 @@ public class MySQLController {
         this.url = url;
     }
 
+    /**
+     * @return the username to login to database
+     */
     public String getUsername() {
         return username;
     }

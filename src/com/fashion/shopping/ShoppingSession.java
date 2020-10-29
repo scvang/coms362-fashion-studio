@@ -25,6 +25,14 @@ public class ShoppingSession {
     private String billingAddress;
     private MySQLController mySQLController = new MySQLController();
 
+    /**
+     * could be used in the future for saving a shoppingsession state
+     * @param sid
+     * @param cart
+     * @param card
+     * @param shippingAddress
+     * @param billingAddress
+     */
     public ShoppingSession(int sid, Cart cart, Card card, String shippingAddress, String billingAddress) {
         this.sid = sid;
         this.cart = cart;
@@ -33,21 +41,30 @@ public class ShoppingSession {
         this.billingAddress = billingAddress;
     }
 
+    /**
+     * could be used in the future for saving a shoppingsession state
+     * @param sid
+     */
     public ShoppingSession(int sid) {
         this.sid = sid;
         this.cart = new Cart();
         this.card = new Card();
     }
 
+    /**
+     * basic constructor that takes in no values, but instantiates it with the next option or base option
+     */
     public ShoppingSession() {
         this.sid = initSessionId();
         this.cart = new Cart();
         this.card = new Card();
     }
 
+    /**
+     * @return the next available session id value
+     */
     private int initSessionId(){
         int sid = -1;
-        //TODO test
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` ORDER BY `shoppingsessions`.`sid` DESC");
 
@@ -85,7 +102,11 @@ public class ShoppingSession {
         }
     }
 
-    //TODO display image of apparel
+
+    /**
+     * pulls the apparel image from the database and displays it to the user
+     * @param itemName tells us which item to display
+     */
     public void apparelImage(String itemName){
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory` WHERE `itemName` = '" + itemName + "'");
@@ -101,7 +122,10 @@ public class ShoppingSession {
                 fos.write(b);
                 fos.close();
 
-                JFrame editorFrame = new JFrame("Image Demo");
+                /**
+                 * creates a JFrame for our apparel image
+                 */
+                JFrame editorFrame = new JFrame("Apparel Image");
                 editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
                 BufferedImage image = ImageIO.read(new File(rs.getString("itemName") + ".png"));
@@ -121,6 +145,9 @@ public class ShoppingSession {
         }
     }
 
+    /**
+     * adds the completed shopping session to the database as a record
+     */
     public void addShoppingSession(){
         StringBuilder items = new StringBuilder();
         for(Apparel item : cart.getItems()){
@@ -138,6 +165,9 @@ public class ShoppingSession {
         }
     }
 
+    /**
+     * updates the inventory on the backend to reflect the change in purchased items
+     */
     public void updateInventory(){
         for(Apparel item : cart.getItems()){
             int numLeft = 0;
@@ -194,6 +224,9 @@ public class ShoppingSession {
         this.sid = sid;
     }
 
+    /**
+     * @return the cart associated with the shoppingsession
+     */
     public Cart getCart() {
         return cart;
     }
@@ -202,6 +235,9 @@ public class ShoppingSession {
         this.cart = cart;
     }
 
+    /**
+     * @return the card associated with the shoppingsession
+     */
     public Card getCard() {
         return card;
     }
@@ -214,6 +250,9 @@ public class ShoppingSession {
         return shippingAddress;
     }
 
+    /**
+     * @param shippingAddress is the shipping address for our shoppingsession
+     */
     public void setShippingAddress(String shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
@@ -222,6 +261,9 @@ public class ShoppingSession {
         return billingAddress;
     }
 
+    /**
+     * @param billingAddress is the billing address for our shoppingsession
+     */
     public void setBillingAddress(String billingAddress) {
         this.billingAddress = billingAddress;
     }
