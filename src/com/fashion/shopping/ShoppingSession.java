@@ -4,6 +4,15 @@ import com.fashion.MySQLController;
 import com.fashion.apparel.Apparel;
 import com.fashion.pay.Card;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,12 +91,32 @@ public class ShoppingSession {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory` WHERE `itemName` = '" + itemName + "'");
 
             if(rs != null){
-                System.out.println(rs.getInt("id"));
+                File file = new File(rs.getString("itemName") + ".png");
+                FileOutputStream fos = new FileOutputStream(file);
+                byte b[];
+                Blob blob;
+
+                blob = rs.getBlob("image");
+                b=blob.getBytes(1,(int)blob.length());
+                fos.write(b);
+                fos.close();
+
+                JFrame editorFrame = new JFrame("Image Demo");
+                editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+                BufferedImage image = ImageIO.read(new File(rs.getString("itemName") + ".png"));
+                ImageIcon imageIcon = new ImageIcon(image);
+                JLabel jLabel = new JLabel();
+                jLabel.setIcon(imageIcon);
+                editorFrame.getContentPane().add(jLabel, BorderLayout.CENTER);
+
+                editorFrame.pack();
+                editorFrame.setLocationRelativeTo(null);
+                editorFrame.setVisible(true);
             } else {
                 System.out.println("Unable to find your product");
             }
-
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             System.out.println("Error displaying apparel on our side");
         }
     }
