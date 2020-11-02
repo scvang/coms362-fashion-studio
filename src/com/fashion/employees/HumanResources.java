@@ -65,14 +65,14 @@ public class HumanResources {
 		addService(sid, repName, service);
 	}
 	
-	/**public boolean payBusiness(int eid, PayStubInfo p){
+	public boolean payBusiness(int eid, PayStubInfo p){
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 
 		PayStub payStub = new PayStub(eid, dtf.format(now), p);
 		return payStubHistory.add(payStub);
 	}
-	**/
+
 	public void addEmployee(int eid, String name, String title, String phone, double salary, int bankAccount, int bankRouting) {
 		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
 	}
@@ -89,17 +89,22 @@ public class HumanResources {
 			"Business Location: " + s.getAddress() + "\n" +
 			"Representative: " + s.getRepName() + "\n" +
 			"Rep Contact" + s.getPhoneNum() + "\n" +
-			"Service Provided: " + s.getServiceType() + "\n" //+
-			//"Money Owed: $" + payBusiness(s.getServiceID(), p)
+			"Service Provided: " + s.getServiceType() + "\n" +
+			"Money Owed: $" + payBusiness(s.getServiceID(), p)
 			);
 		}
 	}
 	
-	/**public ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
+	public ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
 		ArrayList<Service> newServices = new ArrayList<Service>();
-		return needs.removeAll(servicesUsed);
+		for(int i = 0; i < needs.size() - 1; i++) {
+			if(!servicesUsed.contains(needs.get(i))) {
+				newServices.add(needs.get(i));
+			}
+		}
+		return newServices ;
 	}
-	**/
+
 	public ArrayList<Service> getServiceRequests(){
 		return servicesUsed;
 	}
