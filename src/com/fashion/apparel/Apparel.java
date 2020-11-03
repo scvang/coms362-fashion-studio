@@ -17,6 +17,7 @@ public class Apparel {
 	private String itemName;
 	private String brandName;
 	private String color;
+	private int quantity;
 
 	public Apparel(int id, String size, int price, String itemName, String brandName, String color) {
 		this.id = id;

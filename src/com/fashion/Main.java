@@ -2,6 +2,9 @@ package com.fashion;
 
 import java.sql.*;
 import com.fashion.apparel.Apparel;
+import com.fashion.events.Dining;
+import com.fashion.events.Party;
+import com.fashion.events.Showing;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
@@ -141,13 +144,12 @@ public class Main extends JFrame {
 			System.out.println(
 			"Select an option ('q' to exit): \n" +
 			"1) Employees \n" +
-			"2) Apparel \n" +
+			"2) Inventory \n" +
 			"3) Models \n" +
 			"4) Events \n" +
 			"5) Advertisements \n" +
 			"6) Promotions \n" +
-			"9) Inventory \n"
-			"7) Shop\n" +
+			"7) Shop \n" +
 			"8) Negotiate Contract\n"
 			);
 			
@@ -159,7 +161,7 @@ public class Main extends JFrame {
 					employeeScreen();
 				break;
 				case 2:
-					apparelScreen();
+					inventoryScreen();
 				break;
 				case 3:
 					modelScreen();
@@ -172,9 +174,6 @@ public class Main extends JFrame {
 				break;
 				case 6:
 					promotionScreen();
-				break;
-				case 9:
-					inventoryScreen();
 				break;
 			}
 		}
@@ -530,8 +529,8 @@ public class Main extends JFrame {
 					
 					System.out.println("Enter salary:");
 					salary = in.nextDouble();
-					
-					studio.getModel(name).setSalary(salary);
+					PayStubInfo p = new PayStubInfo(salary,0,0,0);
+					studio.getModel(name).setPayStubInfo(p);;
 				break;
 				
 				case 6:
