@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Showing is the information expert that knows about seats.
  * @author Sebastian Vang
+ * 
+ * Showing is the information expert that knows about seats.
  *
  */
 public class Showing extends Event{
@@ -124,6 +125,25 @@ public class Showing extends Event{
 			}
 		}
 		return s;
+	}
+	
+	public boolean removeSeatReservation(String name) {
+		String[] isle = {"A","B","C","D","E","F","G","H","I"};
+		int num = 1;
+		
+		for(int row = 0; row < seat.length; ++row) {
+			for(int col = 0; col < seat[0].length; ++col) {
+				String seatNum = isle[row] + num;
+				if(name.equals(seat[row][col].getCustomerName())) {
+				seat[row][col] = new Seat(seatNum,"","","");
+				openSeats = countSeats();
+				return true;
+				}
+				++num;
+			}
+		}
+		openSeats = countSeats();
+		return false;
 	}
 
 	/**

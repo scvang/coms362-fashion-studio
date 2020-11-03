@@ -29,16 +29,16 @@ public class Model extends Employee{
 	 * @param phone
 	 * @param salary
 	 */
-	public Model(int eid, String agent, String name, String jobTitle, String phone, PayStubInfo payStubInfo) {
+	public Model(int eid,String agent, String name, String jobTitle, String phone, PayStubInfo payStubInfo) {
 		super(eid,name,jobTitle,phone,payStubInfo);
 		this.agent = agent;
 		
-		this.head = new Apparel("none","none","none");
-		this.top = new Apparel("none","none","none");
-		this.bot = new Apparel("none","none","none");
-		this.legs = new Apparel("none","none","none");
-		this.shoes = new Apparel("none","none","none");
-		this.acc = new Apparel("none","none","none");
+		this.head = new Apparel(0,"none","none","none");
+		this.top = new Apparel(0,"none","none","none");
+		this.bot = new Apparel(0,"none","none","none");
+		this.legs = new Apparel(0,"none","none","none");
+		this.shoes = new Apparel(0,"none","none","none");
+		this.acc = new Apparel(0,"none","none","none");
 	}
 	
 	public Apparel getHeadPiece() {

@@ -1,11 +1,14 @@
 package com.fashion;
 
+import java.sql.*;
 import com.fashion.apparel.Apparel;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.shopping.ShoppingSession;
-
+import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Scanner;
@@ -15,50 +18,106 @@ public class Main extends JFrame {
 	 * Instance variables.
 	 */
 	public static Studio studio;
-
+	
 	public static void main(String[] args) {
+		 
+//		Random random = new Random();
+//
+//		/*
+//		Create 3-10 businesses randomly
+//		 */
+//		ArrayList<Business> businesses = new ArrayList<>();
+//		for(int i = 0; i < random.nextInt(maxBusinesses); i++){
+//			Business business = new Business(businessName[random.nextInt(businessName.length)],
+//					businessAddresses[random.nextInt(businessAddresses.length)], generateNum());
+//			businesses.add(business);
+//		}
+
+		//System.out.println(businesses);
+		
 		// Create a studio
 		String company = "Fashion Inc";
 		String address = "401 Somewhere Ave";
 		String phone = "555-555-5555";
+		double funds = 500000;
 		
-		studio = new Studio(company,address,phone);
+		studio = new Studio(company,address,phone,funds);
 		
 		// Create some new events.
-		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
-		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
-		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
+//		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
+//		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
+//		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
+		
+		// Make a display model.
+		//studio.createModel("Jack","Eve","555-555-5555",100000);
+		
+		// Add an employee test
+		/*
+		String name = "John";
+		String jobTitle = "Designer";
+		double salary = 50000;
+		String phoneNum = "N/A";
 
+		studio.addEmployee(eid, name, jobTitle, phoneNum, salary, 0, 0);
+		
+		studio.addEmployee(name, jobTitle, phoneNum,salary);
+		studio.getEmployees();
+		*/
+
+		// Add a shirt test
+		/*
+		String itemName = "T-Shirt";
+		String brandName = "DEUX";
+		String color = "White";
+		int id = 50021;
+		int stock = 1;
+		
+		studio.addApparel(itemName,brandName,color,id,stock);
+		studio.getApparel();
+		*/
+		
+		//Add an Ad test
+		int eidAd = 123;
+		String eventName = "Spring";
+		String loc = "401 Somewhere Ave";
+		String time = "11:00 AM - 3:00 PM";
+		String contactInfo = "555-555-5555";
+		
+		//studio.addAd(eidAd, eventName, loc, time, contactInfo);
+		//studio.getAd();
+		
 		//Add a new Model test
-		String modelName = "Jenna";
-		String modNum = "111-111-1111";
-		int audNum = 456;
-
-		studio.addModel(modelName, modNum, audNum);
+//		String modelName = "Jenna";
+//		String modNum = "111-111-1111";
+//		int audNum = 456;
+//
+//		studio.addModel(modelName, modNum, audNum);
 		//studio.getEmployees();
 		
-		// Go to main screen.
-		// I think later it should be changed so that the screens
-		// are handled by a display controller so we don't have bloat.
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ShowPicture frame = new ShowPicture();
-					frame.setVisible(true);
-					
-					// This creates a test model.
-					String description =
-							"<html>"
-							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
-							+ "</html>";
-					
-					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		
+		// Test adding to database.
+		
+		
+		// Test picture.
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ShowPicture frame = new ShowPicture();
+//					frame.setVisible(true);
+//					
+//					// This creates a test model.
+//					String description =
+//							"<html>"
+//							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
+//							+ "</html>";
+//					
+//					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
+//					frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 		mainScreen();
 	}
 	
@@ -72,6 +131,7 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * The main screen that prompts first.
 	 */
 	public static void mainScreen() {
@@ -86,6 +146,7 @@ public class Main extends JFrame {
 			"4) Events \n" +
 			"5) Advertisements \n" +
 			"6) Promotions \n" +
+			"9) Inventory \n"
 			"7) Shop\n" +
 			"8) Negotiate Contract\n"
 			);
@@ -112,12 +173,149 @@ public class Main extends JFrame {
 				case 6:
 					promotionScreen();
 				break;
+				case 9:
+					inventoryScreen();
+				break;
+			}
+		}
+		in.close();
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * Inventory Screen.
+	 */
+	public static void inventoryScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+			"Select an option ('q' to exit): \n" +
+			"1) View clothing listing \n" +
+			"2) View makeup listing \n" +
+			"3) View food listing \n" +
+			"4) Store clothing item \n" +
+			"5) Store makeup item \n" +
+			"6) Store food item \n" +
+			"7) Go back \n"
+			);
+			
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine(); // Clear the buffer.
+			
+			int id = 0;
+			String itemName = "";
+			String brandName = "";
+			String color = ""; 
+			int quantity = 0;
+			
+			// Establish a connection to the database to query data.
+			try{
+		      // Step 1: "Load" the JDBC driver
+				Class.forName("com.mysql.jdbc.Driver");
+
+		      // Step 2: Establish the connection to the database 
+		      String url = "jdbc:mysql://localhost/fashion_studio"; 
+		      Connection conn = DriverManager.getConnection(url,"root","");
+		      //System.out.println("Connected.");
+		      
+		      // create a Statement from the connection
+		      Statement st = conn.createStatement();
+		      
+		      // query the data
+		      ResultSet rs = st.executeQuery("SELECT * FROM clothing_stock");
+		      
+		      studio.resetInventory();
+		      while(rs.next()) {
+		    	  id = rs.getInt("id");
+		    	  itemName = rs.getString("name");
+		    	  brandName = rs.getString("brand");
+		    	  color = rs.getString("color");
+		    	  quantity = rs.getInt("quantity");
+		    	  
+		    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,quantity));
+		      }
+		      // close the connection.
+		      st.close();
+		    }
+		    catch (Exception e){
+		      System.err.println(e.getMessage()); 
+		    }
+			
+			switch(Integer.parseInt(choice)){
+				case 1:
+					studio.displayClothingInventory();
+				break;
+				
+				case 2:
+					//TODO
+				break;
+				
+				case 3:
+					//TODO
+				break;
+				
+				case 4:
+					System.out.println("Enter the id:");
+					id = in.nextInt(); in.nextLine();
+					System.out.println("Enter the item name:");
+					itemName = in.nextLine();
+					System.out.println("Enter the brand name:");
+					brandName = in.nextLine();
+					System.out.println("Enter the color:");
+					color = in.nextLine();
+					System.out.println("Enter the quantity:");
+					quantity = in.nextInt(); in.nextLine();
+					
+					studio.resetInventory();
+					//studio.storeClothingItem(new Apparel(itemName,brandName,color));
+					
+					 // Establish a connection to the database test.
+					try{
+				      // Step 1: "Load" the JDBC driver
+						Class.forName("com.mysql.jdbc.Driver");
+
+				      // Step 2: Establish the connection to the database 
+				      String url = "jdbc:mysql://localhost/fashion_studio"; 
+				      Connection conn = DriverManager.getConnection(url,"root","");
+				      //System.out.println("Connected.");
+				      
+				      // create a prepared statement from the connection
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO clothing_stock (id,name,brand,color,quantity)" + "VALUES (?,?,?,?,?)");
+				      
+				      ps.setInt(1,id);
+				      ps.setString(2, itemName);
+				      ps.setString(3,  brandName);
+				      ps.setString(4, color);
+				      ps.setInt(5, quantity);
+				      
+				      ps.execute();
+				      conn.close();
+				    }
+				    catch (Exception e){
+				      System.err.println(e.getMessage()); 
+				    }
+					System.out.println("Item was added into the database.");
+				break;
+				
+				case 5:
+					
+				break;
+				
+				case 6:
+					//TODO
+				break;
+				
 				case 7:
-					shoppingScreen();
+					mainScreen();
 				break;
 				case 8:
-					contractScreen();
+					shoppingScreen();
 				break;
+        case 9:
+          contractScreen();
+        break;
 			}
 		}
 		in.close();
@@ -265,6 +463,7 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Model screen.
 	 */
 	public static void modelScreen() {
@@ -277,24 +476,26 @@ public class Main extends JFrame {
 			"2) Change apparel \n" +
 			"3) Update contact information \n" +
 			"4) Update salary \n" +
-			"5) Go back \n" +
-			"6) Add model \n"
+			"5) Add model \n" +
+			"6) Go back \n"
 			);
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine(); // Clear the buffer.
+			
+			String name = "";
+			double salary = 0;
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.getModels();
+					studio.displayModels();
 				break;
 				
 				case 2:
-					Scanner in2 = new Scanner(System.in);
 					System.out.println("Which model do you want to change?");
-					//studio.getModels();
-					String name = in2.next();
-					if(!studio.findModel(name)) {
+					name = in.next();
+					if(!studio.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -303,29 +504,52 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-
-				break;
-				
-				case 4:
+					System.out.println("Enter model name:");
+					name = in.nextLine();
+					
+					if(!studio.doesModelExist(name)) {
+						System.out.println("Model was not found, try again.");
+						break;
+					}
+					
+					System.out.println("Enter contact information:");
+					String phoneNum = in.nextLine();
+					
+					studio.getModel(name).setPhoneNum(phoneNum);
 					
 				break;
 				
-				case 5:
-					mainScreen();
+				case 4:
+					System.out.println("Enter model name:");
+					name = in.nextLine();
+					
+					if(!studio.doesModelExist(name)) {
+						System.out.println("Model was not found, try again.");
+						break;
+					}
+					
+					System.out.println("Enter salary:");
+					salary = in.nextDouble();
+					
+					studio.getModel(name).setSalary(salary);
 				break;
 				
 				case 6:
+					mainScreen();
+				break;
+				
+				case 5:
 					System.out.println("Enter EID: ");
-					int eid = in.nextInt();
+					int eid = in.nextInt(); in.nextLine();
 					System.out.println("Enter agent name:");
-					String agent = in.next();
+					String agent = in.nextLine();
 					System.out.println("Enter model name:");
-					String model = in.next();
+					String model = in.nextLine();
 					System.out.println("Enter phone number:");
-					String number = in.next();
+					String number = in.nextLine();
 					System.out.println("Enter salary:");
-					int salary = in.nextInt();
-					studio.createModel(eid,agent,model,"Model",model,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
+					salary = in.nextDouble();
+					studio.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}
@@ -333,6 +557,11 @@ public class Main extends JFrame {
 		
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * Change Apparel Screen
+	 * @param modelName
+	 */
 	public static void changeApparelScreen(String modelName) {
 		String choice = "";
 		Scanner in = new Scanner(System.in);
@@ -350,95 +579,98 @@ public class Main extends JFrame {
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine();
 			
-			Scanner in2 = new Scanner(System.in);
-			String name;
-			String brand;
-			String color;
+			int id = 0;
+			String name = "";
+			String brand = "";
+			String color = "";
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
+					System.out.println("Enter the item id:");
+					id = in.nextInt(); in.nextLine();
 					
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					Apparel item = new Apparel(name, brand, color);
+					Apparel item = new Apparel(id,name, brand, color);
 					studio.changeHead(modelName,item);
 				break;
 				
 				case 2:
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					item = new Apparel(name, brand, color);
+					item = new Apparel(id,name, brand, color);
 					studio.changeTop(modelName,item);
 				break;
 				
 				case 3:
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					item = new Apparel(name, brand, color);
+					item = new Apparel(id,name, brand, color);
 					studio.changeBot(modelName,item);
 				break;
 				
 				case 4:
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					item = new Apparel(name, brand, color);
+					item = new Apparel(id,name, brand, color);
 					studio.changeLegs(modelName,item);
 				break;
 				
 				case 5:
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					item = new Apparel(name, brand, color);
+					item = new Apparel(id,name, brand, color);
 					studio.changeShoes(modelName,item);
 				break;
 				
 				case 6:
 					System.out.println("Enter the item name:");
-					name = in2.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("Enter the brand name:");
-					brand = in2.nextLine();
+					brand = in.nextLine();
 					
 					System.out.println("Enter the color:");
-					color = in2.nextLine();
+					color = in.nextLine();
 					
-					item = new Apparel(name, brand, color);
+					item = new Apparel(id,name, brand, color);
 					studio.changeAcc(modelName,item);
 				break;
 				
@@ -452,6 +684,7 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Event screen.
 	 */
 	public static void eventScreen() {
@@ -465,12 +698,13 @@ public class Main extends JFrame {
 			"2) Dining \n" +
 			"3) Party \n" +
 			"4) Create new Event \n" +
-			"5) Go back \n" +
-			"6) Display events"
+			"5) Display events \n" +
+			"6) Go back"
 			);
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine(); // Clear the buffer.
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
@@ -486,27 +720,26 @@ public class Main extends JFrame {
 				break;
 				
 				case 4:
-					Scanner in2 = new Scanner(System.in);
 					System.out.println("What type of event (showing, dining, party)? ");
-					String type = in2.next();
+					String type = in.nextLine();
 					
 					System.out.println("Event name?");
-					String name = in2.next() + " " + in2.next(); // gotta fix this.
+					String name = in.nextLine();
 					
 					System.out.println("What date (mm-dd-yy)? ");
-					String date = in2.next();
+					String date = in.nextLine();
 					
 					System.out.println("What time (hh:mm am/pm)? ");
-					String time = in2.next();
+					String time = in.nextLine();
 					
 					studio.createEvent(type,name,date,time);
 				break;
 				
-				case 5:
+				case 6:
 					mainScreen();
 				break;
 				
-				case 6:
+				case 5:
 					studio.displayEvents();
 			}
 		}
@@ -514,9 +747,30 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Showing screen.
 	 */
 	public static void showingScreen() {
+		System.out.println("Choose a showing event:");
+		
+		int count = 1;
+		ArrayList<Showing> showingList = new ArrayList<>();
+		for(int i = 0; i < studio.getEventList().size(); ++i) {
+			if(studio.getEventList().get(i) instanceof Showing) {
+				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
+				++count;
+				showingList.add((Showing)studio.getEventList().get(i));
+			}
+		}
+		if(showingList.isEmpty()) {
+			System.out.println("There are no showings!");
+			eventScreen();
+		}
+		Scanner in3 = new Scanner(System.in);
+		int i = in3.nextInt();
+		
+		String eventName = showingList.get(i-1).getEvent();
+		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
@@ -526,34 +780,36 @@ public class Main extends JFrame {
 			"2) Reserve a seat \n" +
 			"3) Check a seat \n" +
 			"4) Refund \n" +
-			"5) Go back \n" +
-			"6) Fill Seats (Test)"
+			"5) Go back \n"
 			);
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine(); // Clear the buffer.
+			
+			String name = "";
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displaySeats(studio.getEvent("FashionCon 2020"));
+					studio.displaySeats(studio.getEvent(eventName));
 				break;
 				
 				case 2:
-					if(studio.isShowingFull(studio.getEvent("FashionCon 2020"))) {
+					if(studio.isShowingFull(studio.getEvent(eventName))) {
 						System.out.println("No available seats.");
 						break;
 					}
 					System.out.println("Enter your customer name: ");
-					String customerName = in.next();
+					String customerName = in.nextLine();
 					System.out.println("Enter your desired seat (A1~I9): ");
-					String seat = in.next();
+					String seat = in.nextLine();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in.next();
+					String date = in.nextLine();
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in.next();
+					String time = in.nextLine();
 					
-					if(studio.reserveSeat(studio.getEvent("FashionCon 2020"),seat,customerName,date,time)) {
-						studio.chargeCard(studio.getEvent("FashionCon 2020"),customerName);
+					if(studio.reserveSeat(studio.getEvent(eventName),seat,customerName,date,time)) {
+						studio.chargeCard(studio.getEvent(eventName),customerName);
 					}
 					else{
 						System.out.println("Seat Reservation failed.");
@@ -561,14 +817,14 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-					System.out.println("Enter your customer name");
-					String name = in.next();
-					if(studio.hasSeatReservation(name,studio.getEvent("FashionCon 2020"))) {
+					System.out.println("Enter your customer name:");
+					name = in.nextLine();
+					if(studio.hasSeatReservation(name,studio.getEvent(eventName))) {
 						System.out.println(
-						"Name: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getCustomerName() + "\n" +
-						"Date: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getDate() + "\n" + 
-						"Time: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getTime() + "\n" + 
-						"Seat: " + studio.getSeat(name,studio.getEvent("FashionCon 2020")).getSeatNum() + "\n"
+						"Name: " + studio.getSeat(name,studio.getEvent(eventName)).getCustomerName() + "\n" +
+						"Date: " + studio.getSeat(name,studio.getEvent(eventName)).getDate() + "\n" + 
+						"Time: " + studio.getSeat(name,studio.getEvent(eventName)).getTime() + "\n" + 
+						"Seat: " + studio.getSeat(name,studio.getEvent(eventName)).getSeatNum() + "\n"
 						);
 					}
 					else {
@@ -577,14 +833,21 @@ public class Main extends JFrame {
 				break;
 				
 				case 4:
-				
+					System.out.println("Enter the customer name:");
+					name = in.nextLine();
+					if(studio.hasSeatReservation(name,studio.getEvent(eventName))) {
+						System.out.println("Reservation found.");
+						studio.removeSeatReservation(name,studio.getEvent(eventName));
+						System.out.println("Reservation removed.");
+					}
+					else {
+						System.out.println("Could not find reservaton.");
+					}
+					
 				break;
 				
 				case 5:
 					eventScreen();
-				break;
-				case 6:
-					studio.fillSeats(studio.getEvent("FashionCon 2020"));
 				break;
 			}
 		}
@@ -592,11 +855,32 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Dining screen.
 	 */
 	public static void diningScreen() {
-		String choice = "";
+		
+		System.out.println("Choose a dining event:");
+		
+		int count = 1;
+		ArrayList<Dining> list = new ArrayList<>();
+		for(int i = 0; i < studio.getEventList().size(); ++i) {
+			if(studio.getEventList().get(i) instanceof Dining) {
+				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
+				++count;
+				list.add((Dining)studio.getEventList().get(i));
+			}
+		}
+		if(list.isEmpty()) {
+			System.out.println("There are no dinings!");
+			eventScreen();
+		}
 		Scanner in = new Scanner(System.in);
+		int i = in.nextInt();
+		
+		String eventName = list.get(i-1).getEvent();
+		String choice = "";
+		
 		while(!choice.equals("q")) {
 			System.out.println(
 			"Select a choice ('q' to exit): \n" +
@@ -604,34 +888,36 @@ public class Main extends JFrame {
 			"2) Reserve a table \n" +
 			"3) Check a table \n" +
 			"4) Refund \n" +
-			"5) Go back \n" +
-			"6) Fill tables (test) \n"
+			"5) Go back \n"
 			);
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine();
+			
+			String name = "";
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displayTables(studio.getEvent("Fashion Dining 2020"));
+					studio.displayTables(studio.getEvent(eventName));
 				break;
 				
 				case 2:
-					if(studio.isDiningFull(studio.getEvent("Fashion Dining 2020"))) {
+					if(studio.isDiningFull(studio.getEvent(eventName))) {
 						System.out.println("There are no available tables.");
 						break;
 					}
 					System.out.println("Enter your customer name: ");
-					String customerName = in.next();
+					String customerName = in.nextLine();
 					System.out.println("Enter your desired table (1~20): ");
-					String table = in.next();
+					String table = in.nextLine();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in.next();
+					String date = in.nextLine();
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in.next();
+					String time = in.nextLine();
 					
-					if(studio.reserveTable(studio.getEvent("Fashion Dining 2020"),table,customerName,date,time)) {
-						studio.chargeCard(studio.getEvent("Fashion Dining 2020"),customerName);
+					if(studio.reserveTable(studio.getEvent(eventName),table,customerName,date,time)) {
+						studio.chargeCard(studio.getEvent(eventName),customerName);
 					}
 					else {
 						System.out.println("Table reservation failed.");
@@ -641,14 +927,14 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-					System.out.println("Enter your customer name");
-					String name = in.next();
-					if(studio.hasTableReservation(name,studio.getEvent("Fashion Dining 2020"))) {
+					System.out.println("Enter your customer name:");
+					name = in.nextLine();
+					if(studio.hasTableReservation(name,studio.getEvent(eventName))) {
 						System.out.println(
-						"Name: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getCustomerName() + "\n" +
-						"Date: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getDate() + "\n" + 
-						"Time: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getTime() + "\n" + 
-						"Seat: " + studio.getTable(name,studio.getEvent("Fashion Dining 2020")).getTableNum() + "\n"
+						"Name: " + studio.getTable(name,studio.getEvent(eventName)).getCustomerName() + "\n" +
+						"Date: " + studio.getTable(name,studio.getEvent(eventName)).getDate() + "\n" + 
+						"Time: " + studio.getTable(name,studio.getEvent(eventName)).getTime() + "\n" + 
+						"Table: " + studio.getTable(name,studio.getEvent(eventName)).getTableNum() + "\n"
 						);
 					}
 					else {
@@ -657,15 +943,20 @@ public class Main extends JFrame {
 				break;
 				
 				case 4:
-					
+					System.out.println("Enter the customer name:");
+					name = in.nextLine();
+					if(studio.hasTableReservation(name,studio.getEvent(eventName))) {
+						System.out.println("Reservation found.");
+						studio.removeTableReservation(name,studio.getEvent(eventName));
+						System.out.println("Reservation removed.");
+					}
+					else {
+						System.out.println("Could not find reservaton.");
+					}
 				break;
 				
 				case 5:
 					eventScreen();
-				break;
-				
-				case 6:
-					studio.fillTables(studio.getEvent("Fashion Dining 2020"));
 				break;
 			}
 		}
@@ -673,9 +964,31 @@ public class Main extends JFrame {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Party screen.
 	 */
 	public static void partyScreen() {
+		
+System.out.println("Choose a party event:");
+		
+		int count = 1;
+		ArrayList<Party> list = new ArrayList<>();
+		for(int i = 0; i < studio.getEventList().size(); ++i) {
+			if(studio.getEventList().get(i) instanceof Party) {
+				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
+				++count;
+				list.add((Party)studio.getEventList().get(i));
+			}
+		}
+		if(list.isEmpty()) {
+			System.out.println("There are no parties!");
+			eventScreen();
+		}
+		Scanner in3 = new Scanner(System.in);
+		int i = in3.nextInt();
+		
+		String eventName = list.get(i-1).getEvent();
+		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
@@ -683,39 +996,51 @@ public class Main extends JFrame {
 			"Select a choice ('q' to exit): \n" +
 			"1) Display number of attendees \n" +
 			"2) Reserve a badge \n" +
-			"3) Refund \n" +
-			"4) Go back \n"
+			"3) Check reservation \n" +
+			"4) Refund \n" +
+			"5) Go back \n"
 			);
 			
 			choice = in.next();
 			if(choice.equals("q") || choice.equals("'q'")) break;
+			else in.nextLine();
+			
+			String name = "";
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					if(studio.isPartyFull(studio.getEvent("Company Party 2020"))) {
-						System.out.println("The venue is full.");
-					}
+					System.out.println("There are: " + studio.getNumOfAttendees(studio.getEvent(eventName)) + " number of attendees.");
 				break;
 				
 				case 2:
-					if(studio.isPartyFull(studio.getEvent("Company Party 2020"))) {
+					if(studio.isPartyFull(studio.getEvent(eventName))) {
 						System.out.println("The venue is full.");
 						break;
 					}
 					
-					Scanner in2 = new Scanner (System.in);
 					System.out.println("Enter your customer name: ");
-					String customerName = in2.next();
+					String customerName = in.nextLine();
 					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in2.next();
+					String date = in.nextLine();
 					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in2.next();
+					String time = in.nextLine();
 					
-					studio.reserveBadge(studio.getEvent("Company Party 2020"),customerName,date,time);
+					studio.reserveBadge(studio.getEvent(eventName),customerName,date,time);
 				break;
 				
 				case 3:
-					
+					System.out.println("Enter your customer name:");
+					name = in.nextLine();
+					if(studio.hasBadgeReservation(name,studio.getEvent(eventName))) {
+						System.out.println(
+								"Name: " + studio.getBadge(name,studio.getEvent(eventName)).getName() + "\n" +
+								"Date: " + studio.getBadge(name,studio.getEvent(eventName)).getDate() + "\n" + 
+								"Time: " + studio.getBadge(name,studio.getEvent(eventName)).getTime() + "\n"
+								);
+					}
+					else {
+						System.out.println("No reservation found.");
+					}
 				break;
 				
 				case 4:
