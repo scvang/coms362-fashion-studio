@@ -2,9 +2,7 @@ package com.fashion;
 
 import java.sql.*;
 import com.fashion.apparel.Apparel;
-import com.fashion.events.Dining;
-import com.fashion.events.Party;
-import com.fashion.events.Showing;
+import com.fashion.events.*;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
