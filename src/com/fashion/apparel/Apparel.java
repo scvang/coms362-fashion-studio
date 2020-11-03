@@ -11,6 +11,7 @@ public class Apparel {
 	/**
 	 * Instance variables.
 	 */
+	private int id;
 	private String itemName;
 	private String brandName;
 	private String color;
@@ -24,11 +25,20 @@ public class Apparel {
 	 * @param brand
 	 * @param color
 	 */
-	public Apparel(String name, String brand, String color) {
+	public Apparel(int id,String name, String brand, String color) {
+		this.id = id;
 		this.itemName = name;
 		this.brandName = brand;
 		this.color = color;
 		quantity = 1;
+	}
+	
+	public Apparel(int id,String name, String brand, String color, int quantity) {
+		this.id = id;
+		this.itemName = name;
+		this.brandName = brand;
+		this.color = color;
+		this.quantity = quantity;
 	}
 	
 	public void setQuantity(int quantity) {

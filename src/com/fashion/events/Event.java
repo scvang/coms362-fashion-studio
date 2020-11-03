@@ -150,7 +150,7 @@ public class Event {
 	}
 	
 	/**
-	 * 
+	 * @author Sebastian Vang
 	 * @param customerName
 	 * @param cardNum
 	 * @return

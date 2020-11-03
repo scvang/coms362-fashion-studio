@@ -3,8 +3,9 @@ package com.fashion.events;
 import java.util.HashMap;
 
 /**
- * Party is the information expert that knows about badges.
  * @author Sebastian Vang
+ * 
+ * Party is the information expert that knows about badges.
  *
  */
 public class Party extends Event {
@@ -16,8 +17,8 @@ public class Party extends Event {
 	public Party(String name, String date, String time) {
 		super(name, date, time);
 		
-		attendees = 0;
-		capacity = 200;
+		this.attendees = 0;
+		this.capacity = 200;
 	}
 	
 	public boolean reserveBadge(String customer, String date, String time) {
@@ -30,6 +31,17 @@ public class Party extends Event {
 		
 		++attendees;
 		return true;
+	}
+	
+	public Badge getBadge(String name) {
+		return whitelist.get(name);
+	}
+	
+	public boolean hasBadgeReservaton(String name) {
+		if(whitelist.containsKey(name)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public int getCapacity() {

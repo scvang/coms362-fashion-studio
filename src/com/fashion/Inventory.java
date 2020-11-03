@@ -13,23 +13,14 @@ import com.fashion.apparel.Apparel;
  *
  */
 public class Inventory {
-	private String name;
 	private ArrayList<Apparel> clothingStock;
 	private ArrayList<Food> foodStock;
 	private ArrayList<MakeUp> makeupStock;
 	
 	public Inventory() {
-		this.name = "default";
 		clothingStock = new ArrayList<>();
 		foodStock = new ArrayList<>();
 		makeupStock = new ArrayList<>();
-	}
-	
-	public String getInventoryName() {
-		return this.name;
-	}
-	public void changeInventoryName(String name) {
-		this.name = name;
 	}
 	
 	public void storeClothing(Apparel a) {
@@ -46,15 +37,44 @@ public class Inventory {
 	}
 	
 	public void storeFood(Food f) {
+		int count = 0;
+		for(int i = 0; i < foodStock.size(); ++i) {
+			if(f.getItemName().equals((foodStock.get(i)).getItemName())) {
+				count = foodStock.get(i).getQuantity();
+				++count;
+				foodStock.get(i).setQuantity(count);
+				return;
+			}
+		}
 		foodStock.add(f);
 	}
 	public void storeMakeup(MakeUp m) {
+		int count = 0;
+		for(int i = 0; i < foodStock.size(); ++i) {
+			if(m.sameItem(makeupStock.get(i))) {
+				count = makeupStock.get(i).getQuantity();
+				++count;
+				makeupStock.get(i).setQuantity(count);
+				return;
+			}
+		}
 		makeupStock.add(m);
 	}
 	
 	public void displayClothingInventory() {
 		for(Apparel a : clothingStock) {
 			System.out.println("Item name: " + a.getItemName() + ", " + "Brand name: " + a.getBrandName() + ", " + a.getColor() + ", " + "Quantity: " + a.getQuantity());
+		}
+	}
+	
+	public void displayFoodInventory() {
+		for(Food f : foodStock) {
+			System.out.println("Item name: " + f.getItemName() + " " + "Quantity: " + f.getQuantity());
+		}
+	}
+	public void displayMakeupInventory() {
+		for(MakeUp m : makeupStock) {
+			System.out.println("Item name: " + m.getItemName() + ", Brand name:" + m.getBrandName() + ", Weight: " + m.getWeight() + ", Color: " + m.getColor() + ", Quantity: " + m.getQuantity());
 		}
 	}
 }
