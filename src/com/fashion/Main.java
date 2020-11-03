@@ -1,61 +1,25 @@
 package com.fashion;
 
 import java.sql.*;
+import com.fashion.apparel.Apparel;
+import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
-import com.fashion.apparel.Apparel;
-import com.fashion.events.*;
-
+import com.fashion.shopping.ShoppingSession;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Scanner;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 public class Main extends JFrame {
-//	private static double minPromotionValue = 1000.0;
-//	private static double maxPromotionValue = 15000.0;
-//	private static int maxBusinesses = 7;
-//	private static String[] businessName = {"Joe's", "Mike's", "Dienda's", "Hugh's", "Dior", "Gucci", "Ralph Lauren",
-//		"Louis Vuitton", "Chanel", "Rolex", "Balenciaga", "Armani", "Yves Saint Laurent", "Tiffany",
-//			"Burberry", "Hermes", "Cartier", "Prada", "Fendi", "Lancome"};
-//	private static String[] businessAddresses = {"450 Grope Lane", "39 Fabulous Texan Way", "90 Ha-Ha Road",
-//			"126 Man Fuk Road", "67 Mad Dog Lane", "1 Boring Road", "666 Bad Route Road", "900 Smellies Lane",
-//			"12 Butt Street", "879 Break-Me-Neck Hill", "1285 Whip-Ma-Whop-Ma-Gate", "78 Silly Goose Lane"};
-	
 	/**
 	 * Instance variables.
 	 */
 	public static Studio studio;
 	
 	public static void main(String[] args) {
-		
-		 // Establish a connection to the database test.
-		try{
-	      // Step 1: "Load" the JDBC driver
-			Class.forName("com.mysql.jdbc.Driver");
-
-	      // Step 2: Establish the connection to the database 
-	      String url = "jdbc:mysql://localhost/fashion_studio"; 
-	      Connection conn = DriverManager.getConnection(url,"root","");
-	      System.out.println("Connected.");
-	      
-	      // create a Statement from the connection
-	      Statement statement = conn.createStatement();
-	      
-	      // insert the data
-	      statement.executeUpdate(" INSERT INTO models " + "VALUES ('Testie','Fashion Model') ");
-	      
-	      // delete the data
-	      //statement.executeUpdate(" DELETE FROM models WHERE Name='Testie' ");
-	    }
-	    catch (Exception e){
-	      System.err.println(e.getMessage()); 
-	    }
-		
 		 
 //		Random random = new Random();
 //
@@ -182,7 +146,9 @@ public class Main extends JFrame {
 			"4) Events \n" +
 			"5) Advertisements \n" +
 			"6) Promotions \n" +
-			"7) Inventory \n"
+			"9) Inventory \n"
+			"7) Shop\n" +
+			"8) Negotiate Contract\n"
 			);
 			
 			choice = in.next();
@@ -207,7 +173,7 @@ public class Main extends JFrame {
 				case 6:
 					promotionScreen();
 				break;
-				case 7:
+				case 9:
 					inventoryScreen();
 				break;
 			}
@@ -344,6 +310,12 @@ public class Main extends JFrame {
 				case 7:
 					mainScreen();
 				break;
+				case 8:
+					shoppingScreen();
+				break;
+        case 9:
+          contractScreen();
+        break;
 			}
 		}
 		in.close();
@@ -1193,7 +1165,6 @@ System.out.println("Choose a party event:");
 					System.out.println();
 					break;
 				case 3:
-					//TODO
 					Scanner in3 = new Scanner (System.in);
 					System.out.println("Enter the event  ('q' to exit): ");
 					String eventNameReserve = in3.nextLine();
@@ -1265,30 +1236,23 @@ System.out.println("Choose a party event:");
 
 					System.out.println("What is your card number ('q' to exit): ");
 					String cardNum = "";
-					while(cardNum.isEmpty()){
+					while(cardNum.isEmpty()) {
 						String temp = in3.next();
-						if(temp.equals("q")) {
+						if (temp.equals("q")) {
 							System.out.println();
 							System.out.println();
 							promotionScreen();
 						}
 
-						if(temp.length() < 16) {
+						if (temp.length() < 16) {
 							System.out.println("Please enter a valid card number ('q' to exit).");
 						}
 						cardNum = temp;
-//						else  {
-//							try {
-//								cardNum = Integer.parseInt(temp);
-//							} catch (NumberFormatException e) {
-//								System.out.println("Please enter a valid card number ('q' to exit).");
-//							}
-//						}
 					}
 
 					System.out.println("What is your card month ('q' to exit): ");
-					int cardMonth = 0;
-					while(cardMonth == 0){
+					String cardMonth = "";
+					while(cardMonth.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -1300,7 +1264,7 @@ System.out.println("Choose a party event:");
 							System.out.println("Please enter a valid card month ('q' to exit).");
 						} else  {
 							try {
-								cardMonth = Integer.parseInt(temp);
+								cardMonth = temp;
 							} catch (NumberFormatException e) {
 								System.out.println("Please enter a valid card month ('q' to exit).");
 							}
@@ -1308,8 +1272,8 @@ System.out.println("Choose a party event:");
 					}
 
 					System.out.println("What is your card year ('q' to exit): ");
-					int cardYear = 0;
-					while(cardYear == 0){
+					String cardYear = "";
+					while(cardYear.isEmpty()){
 						String temp = in3.next();
 						if(temp.equals("q")) {
 							System.out.println();
@@ -1321,7 +1285,7 @@ System.out.println("Choose a party event:");
 							System.out.println("Please enter a valid card year ('q' to exit).");
 						} else  {
 							try {
-								cardYear = Integer.parseInt(temp);
+								cardYear = temp;
 							} catch (NumberFormatException e) {
 								System.out.println("Please enter a valid card year ('q' to exit).");
 							}
@@ -1340,17 +1304,16 @@ System.out.println("Choose a party event:");
 
 						if(temp.length() != 3) {
 							System.out.println("Please enter a valid card code ('q' to exit).");
-						} 
-//						else  {
-//							try {
-//								cardCode = Integer.parseInt(temp);
-//							} catch (NumberFormatException e) {
-//								System.out.println("Please enter a valid card code ('q' to exit).");
-//							}
-//						}
+						} else  {
+							try {
+								cardCode = temp;
+							} catch (NumberFormatException e) {
+								System.out.println("Please enter a valid card code ('q' to exit).");
+							}
+						}
 					}
 
-					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode))) {
+					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
 						System.out.println("Promotion added!");
 					}
 
@@ -1363,48 +1326,183 @@ System.out.println("Choose a party event:");
 		}
 	}
 
-	private static String generateNum() {
-		String phoneNum = "";
-		Random random = new Random();
+	/**
+	 * @author Chad Morrow
+	 * Shopping Screen
+	 */
+	public static void shoppingScreen() {
+		ShoppingSession shoppingSession = new ShoppingSession();
 
-		for(int i = 0; i < 12; i++){
-			if(i == 3 || i == 7){
-				phoneNum += "-";
-			} else {
-				phoneNum += random.nextInt(9);
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select a choice ('q' to exit): \n" +
+							"1) Display apparel information \n" +
+							"2) Show apparel \n" +
+							"3) Add item to your cart \n" +
+							"4) Go to cart \n" +
+							"5) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					System.out.println();
+					shoppingSession.displayApparel();
+					System.out.println();
+					break;
+				case 2:
+					System.out.println();
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("What apparel item would you like to view? ('q' to exit): ");
+					String itemName = in2.nextLine().trim();
+					if(itemName.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+					shoppingSession.apparelImage(itemName);
+					System.out.println();
+					break;
+				case 3:
+					System.out.println();
+					Scanner in3 = new Scanner (System.in);
+
+					System.out.println("What item would you like to add to your cart? ('q' to exit): ");
+					itemName = in3.nextLine().trim();
+					if(itemName.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+
+					System.out.println("What size? ('q' to exit): ");
+					String size = in3.nextLine().trim();
+					if(size.equals("q")) {
+						System.out.println();
+						shoppingScreen();
+					}
+					shoppingSession.getCart().addItem(new Apparel(size, itemName));
+					System.out.println();
+					break;
+				case 4:
+					System.out.println(shoppingSession.getCart().toString());
+					System.out.println();
+
+					Scanner in4 = new Scanner (System.in);
+
+					if(!shoppingSession.getCart().getItems().isEmpty()) {
+						System.out.println("Edit Cart? (y/n): ");
+
+						String response = in4.nextLine().trim();
+						if (response.equals("y")) {
+							System.out.println("What item would you like to remove from your cart? ('q' to exit): ");
+							itemName = in4.nextLine().trim();
+							if(itemName.equals("q")) {
+								System.out.println();
+								shoppingScreen();
+							}
+
+							System.out.println("What size? ('q' to exit): ");
+							size = in4.nextLine().trim();
+							if(size.equals("q")) {
+								System.out.println();
+								shoppingScreen();
+							}
+							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
+
+							if(shoppingSession.getCart().getItems().size() == 0)
+								System.out.println();
+								break;
+						} else if (response.equals("n")) {
+							System.out.println();
+						}
+
+						System.out.println("Checkout? (y/n): ");
+						response = in4.nextLine().trim();
+						if (response.equals("y")) {
+							System.out.println("Card Number: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setCardNum(response);
+
+							System.out.println("Card Exp Month: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setEndMonth(response);
+
+							System.out.println("Card Exp Year: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setEndYear(response);
+
+							System.out.println("Card Security Code: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setCode(response);
+
+							System.out.println("Shipping Address: ");
+							response = in4.nextLine().trim();
+							shoppingSession.setShippingAddress(response);
+
+							System.out.println("Billing Address: ");
+							response = in4.nextLine().trim();
+							shoppingSession.getCard().setBillingAddress(response);
+							shoppingSession.setBillingAddress(response);
+
+							System.out.println("Purchase? (y/n): ");
+							response = in4.nextLine().trim();
+							if (response.equals("y")) {
+								shoppingSession.updateInventory();
+								System.out.println();
+							} else if (response.equals("n")) {
+								System.out.println();
+								shoppingScreen();
+							}
+						} else if (response.equals("n")) {
+							System.out.println();
+							shoppingScreen();
+						}
+					}
+
+					break;
+				case 5:
+					mainScreen();
 			}
 		}
-
-		return phoneNum;
 	}
 
-//	private static Card generateCard() {
-//		Random random = new Random();
-//		StringBuilder cardNum = new StringBuilder();
-//		StringBuilder endMonth = new StringBuilder();
-//		StringBuilder endYear = new StringBuilder();
-//		StringBuilder code = new StringBuilder();
-//
-//		for(int i = 0; i < 16; i++){
-//			 cardNum.append(random.nextInt(10));
-//		}
-//
-//		endMonth.append(random.nextInt(2));
-//		if(endMonth.equals("1")){
-//			endMonth.append(random.nextInt(3));
-//		} else {
-//			endMonth.append(random.nextInt(10));
-//		}
-//
-//		for(int i = 0; i < 2; i++){
-//			endYear.append(random.nextInt(10));
-//		}
-//
-//		for(int i = 0; i < 3; i++){
-//			code.append(random.nextInt(10));
-//		}
-//
-//		return new Card(Integer.parseInt(cardNum.toString()), Integer.parseInt(endMonth.toString()),
-//				Integer.parseInt(endYear.toString()), Integer.parseInt(code.toString()));
-//	}
+	/**
+	 * @author Chad Morrow
+	 * Contract Screen
+	 */
+	public static void contractScreen() {
+		ContractSession contractSession = new ContractSession();
+
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select a choice ('q' to exit): \n" +
+							"1) Begin contract negotiation \n" +
+							"2) View old contracts \n" +
+							"3) View current contract \n" +
+							"4) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					contractSession.negotiate();
+					break;
+				case 2:
+					contractSession.viewOldContracts();
+					break;
+				case 3:
+					contractSession.viewCurrentContract();
+					break;
+				case 4:
+					mainScreen();
+			}
+		}
+	}
 }

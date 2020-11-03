@@ -372,6 +372,7 @@ public class Studio {
 		}
 		return false;
 	}
+
 	/**
 	 * @author Sebastian Vang
 	 * Reserves a table for the customer.
@@ -634,7 +635,7 @@ public class Studio {
 			"Model Name: " + m.getName() + "\n" + 
 			"Agent: " + m.getAgent() + "\n" +
 			"Phone: " + m.getPhoneNum() + "\n" +
-			"Salary: " + m.getSalary() + "\n" +
+			"Salary: " + m.getPayStubInfo().getSalary() + "\n" +
 			"Head: " + m.getHeadPiece().getItemName() + ", Brand: " + m.getHeadPiece().getBrandName() + ", Color: " + m.getHeadPiece().getColor() + "\n" +
 			"Top: " + m.getTopPiece().getItemName() + ", Brand: " + m.getTopPiece().getBrandName() + ", Color: " + m.getTopPiece().getColor() + "\n" +
 			"Bottoms: " + m.getBotPiece().getItemName() + ", Brand: " + m.getBotPiece().getBrandName() + ", Color: " + m.getBotPiece().getColor() + "\n" +
@@ -651,7 +652,7 @@ public class Studio {
 	 * @param agent-agent name
 	 * @param name-model name
 	 * @param phoneNum-model phone number
-	 * @param salary-model salary
+	 * @param payStubInfo-model pay info
 	 * 
 	 * This method adds a new model to a list of existing models
 	 */
