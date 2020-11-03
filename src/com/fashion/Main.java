@@ -173,6 +173,12 @@ public class Main extends JFrame {
 				case 6:
 					promotionScreen();
 				break;
+				case 7:
+					shoppingScreen();
+				break;
+				case 8:
+					contractScreen();
+				break;
 			}
 		}
 		in.close();
