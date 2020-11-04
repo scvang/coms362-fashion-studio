@@ -40,9 +40,9 @@ public class Main extends JFrame {
 		String company = "Fashion Inc";
 		String address = "401 Somewhere Ave";
 		String phone = "555-555-5555";
-		double funds = 500000;
+		double balance = 500000;
 		
-		studio = new Studio(company,address,phone,funds);
+		studio = new Studio(company,address,phone,balance);
 		
 		// Create some new events.
 //		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
@@ -94,41 +94,7 @@ public class Main extends JFrame {
 //
 //		studio.addModel(modelName, modNum, audNum);
 		//studio.getEmployees();
-		
-		
-		// Test adding to database.
-		
-		
-		// Test picture.
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ShowPicture frame = new ShowPicture();
-//					frame.setVisible(true);
-//					
-//					// This creates a test model.
-//					String description =
-//							"<html>"
-//							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
-//							+ "</html>";
-//					
-//					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
-//					frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 		mainScreen();
-	}
-	
-	/**
-	 * Test screen.
-	 * @param description
-	 * @param commands
-	 */
-	public static void Screen(String description, String commands) {
-		
 	}
 	
 	/**
@@ -200,7 +166,8 @@ public class Main extends JFrame {
 			"4) Store clothing item \n" +
 			"5) Store makeup item \n" +
 			"6) Store food item \n" +
-			"7) Go back \n"
+			"7) Search clothing item \n" +
+			"8) Go back \n"
 			);
 			
 			choice = in.next();
@@ -209,10 +176,13 @@ public class Main extends JFrame {
 			
 			int id = 0;
 			String itemName = "";
+			String size = "";
+			int price = 0;
 			String brandName = "";
 			String color = ""; 
 			int quantity = 0;
 			
+			// This retrieves a clothing list from the database.
 			// Establish a connection to the database to query data.
 			try{
 		      // Step 1: "Load" the JDBC driver
@@ -227,17 +197,19 @@ public class Main extends JFrame {
 		      Statement st = conn.createStatement();
 		      
 		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM clothing_stock");
+		      ResultSet rs = st.executeQuery("SELECT * FROM inventory");
 		      
 		      studio.resetInventory();
 		      while(rs.next()) {
 		    	  id = rs.getInt("id");
-		    	  itemName = rs.getString("name");
-		    	  brandName = rs.getString("brand");
+		    	  itemName = rs.getString("itemName");
+		    	  price = rs.getInt("price");
+		    	  size = rs.getString("size");
+		    	  brandName = rs.getString("brandName");
 		    	  color = rs.getString("color");
 		    	  quantity = rs.getInt("quantity");
 		    	  
-		    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,quantity));
+		    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
 		      }
 		      // close the connection.
 		      st.close();
@@ -264,6 +236,10 @@ public class Main extends JFrame {
 					id = in.nextInt(); in.nextLine();
 					System.out.println("Enter the item name:");
 					itemName = in.nextLine();
+					System.out.println("Enter the size:");
+					size = in.nextLine();
+					System.out.println("Enter the price:");
+					price = in.nextInt(); in.nextLine();
 					System.out.println("Enter the brand name:");
 					brandName = in.nextLine();
 					System.out.println("Enter the color:");
@@ -285,13 +261,15 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO clothing_stock (id,name,brand,color,quantity)" + "VALUES (?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,size,price,itemName,brandName,color,quantity)" + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
-				      ps.setString(2, itemName);
-				      ps.setString(3,  brandName);
-				      ps.setString(4, color);
-				      ps.setInt(5, quantity);
+				      ps.setString(2, size);
+				      ps.setInt(3, price);
+				      ps.setString(4,itemName);
+				      ps.setString(5,brandName);
+				      ps.setString(6, color);
+				      ps.setInt(7, quantity);
 				      
 				      ps.execute();
 				      conn.close();
@@ -311,14 +289,33 @@ public class Main extends JFrame {
 				break;
 				
 				case 7:
-					mainScreen();
+					System.out.println("Enter item name:");
+					String n = in.nextLine();
+					
+					System.out.println("Enter brand name:");
+					String b = in.nextLine();
+					
+					System.out.println("Enter color:");
+					String c = in.nextLine();
+					
+					Apparel apparel = studio.getInventory().search(new Apparel(0,n,b,c));
+					
+					if(apparel == null) {
+						System.out.println("Search results:");
+						System.out.println("Item was not found.");
+						break;
+					}
+					System.out.println("Search results:");
+					System.out.println(
+							"Item name: " + apparel.getItemName() + "\n" +
+							"Brand name: " + apparel.getBrandName() + "\n" +
+							"Color: " + apparel.getColor() + "\n" +
+							"Quantity: " + apparel.getQuantity() + "\n"
+							);
 				break;
 				case 8:
-					shoppingScreen();
+					mainScreen();
 				break;
-        case 9:
-          contractScreen();
-        break;
 			}
 		}
 		in.close();
@@ -813,6 +810,33 @@ public class Main extends JFrame {
 					
 					if(studio.reserveSeat(studio.getEvent(eventName),seat,customerName,date,time)) {
 						studio.chargeCard(studio.getEvent(eventName),customerName);
+						
+						// update the database
+						 // Establish a connection to the database test.
+						try{
+					      // Step 1: "Load" the JDBC driver
+							Class.forName("com.mysql.jdbc.Driver");
+
+					      // Step 2: Establish the connection to the database 
+					      String url = "jdbc:mysql://localhost/fashion_studio"; 
+					      Connection conn = DriverManager.getConnection(url,"root","");
+					      //System.out.println("Connected.");
+					      
+					      // create a prepared statement from the connection
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (name,date,time,seat)" + "VALUES (?,?,?,?)");
+					      
+					      ps.setString(1, customerName);
+					      ps.setString(2, date);
+					      ps.setString(3, time);
+					      ps.setString(4, seat);
+					      
+					      ps.execute();
+					      conn.close();
+					    }
+					    catch (Exception e){
+					      System.err.println(e.getMessage()); 
+					    }
+						System.out.println("Reservation was added into the database.");
 					}
 					else{
 						System.out.println("Seat Reservation failed.");
