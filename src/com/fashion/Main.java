@@ -509,7 +509,7 @@ public class Main extends JFrame {
 		while (!choice.equals("q")) {
 			System.out.println(
 					"Select an event ('q' to exit): \n" + "1) View Business Records \n" + "2) Hire a Business \n"
-							+ "3) View Event Needs \n" + "4) Confirm a Business \n" + "5) Go back \n");
+							+ "3) Confirm a Business \n" + "5) Go back \n");
 
 			choice = in.next();
 			if (choice.equals("q") || choice.equals("'q'"))
@@ -541,11 +541,6 @@ public class Main extends JFrame {
 			break;
 
 			case 3:
-				//TODO
-			break;
-			
-			case 4:
-
 				for (int i = 0; i < HumanResources.servicesUsed.size(); i++) {
 					if (HumanResources.servicesUsed.get(i).hasBeenContacted() == false) {
 						HumanResources.getServiceRequests();
@@ -562,6 +557,10 @@ public class Main extends JFrame {
 						HumanResources.getServiceRequests();
 					}
 				}
+			break;
+			
+			case 4:
+				//TODO
 			break;
 			
 			case 5:
