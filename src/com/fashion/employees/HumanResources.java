@@ -101,7 +101,7 @@ public class HumanResources {
 	
 	public static ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
 		ArrayList<Service> newServices = new ArrayList<Service>();
-		for(int i = 0; i < needs.size() - 1; i++) {
+		for(int i = 0; i < needs.size(); i++) {
 			if(!servicesUsed.contains(needs.get(i))) {
 				newServices.add(needs.get(i));
 			}
@@ -117,7 +117,7 @@ public class HumanResources {
 			"Representative: " + s.getRepName() + "\n" +
 			"Rep Contact: " + s.getPhoneNum() + "\n" +
 			"Service Provided: " + s.getServiceType() + "\n" +
-			"Have they been contacted?" + s.hasBeenContacted() + "\n"
+			"Have they been contacted? " + s.hasBeenContacted() + "\n"
 			);
 		}
 	}

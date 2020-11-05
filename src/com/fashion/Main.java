@@ -519,7 +519,7 @@ public class Main extends JFrame {
 				in.nextLine();
 				System.out.println("What is the name of the Business?");
 				String name = in.nextLine();
-				System.out.println("What is the adress?");
+				System.out.println("What is the address?");
 				String loc = in.nextLine();
 				System.out.println("What is the service requested?");
 				String service = in.nextLine();
@@ -529,6 +529,7 @@ public class Main extends JFrame {
 				String contactInfo = in.nextLine();
 				System.out.println("How much are they charging?");
 				double salary = in.nextDouble();
+				in.nextLine();
 				HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
 			break;
 
@@ -537,19 +538,27 @@ public class Main extends JFrame {
 			break;
 			
 			case 4:
-				// HumanResources.getServiceRequests();
-				for (int i = 0; i < HumanResources.servicesUsed.size() - 1; i++) {
+
+				for (int i = 0; i < HumanResources.servicesUsed.size(); i++) {
 					if (HumanResources.servicesUsed.get(i).hasBeenContacted() == false) {
 						HumanResources.getServiceRequests();
-						System.out.println("Would you like to contact them now? ('y' or 'n')");
-						String yorn = in.nextLine();
+						System.out.println("Would you like to contact them now? ('y' or 'n')\n");
+						String yorn = in.next();
+						in.nextLine();
 						if (yorn.equals("y")) {
 							HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));
+							System.out.println("Service confirmed!\n");
 						} else {
-							System.out.println("Please be sure to contact them at a different date.");
+							System.out.println("Please be sure to contact them at a different date.\n");
 						}
+					} else {
+						HumanResources.getServiceRequests();
 					}
 				}
+			break;
+			
+			case 5:
+				mainScreen();
 			break;
 			}
 		}
