@@ -117,7 +117,7 @@ public class HumanResources {
 			"Representative: " + s.getRepName() + "\n" +
 			"Rep Contact: " + s.getPhoneNum() + "\n" +
 			"Service Provided: " + s.getServiceType() + "\n" +
-			"Have they been contacted?" + s.hasBeenContacted() + "\n"
+			"Have they been contacted? " + s.hasBeenContacted() + "\n"
 			);
 		}
 	}
