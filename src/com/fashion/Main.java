@@ -498,6 +498,7 @@ public class Main extends JFrame {
 	public static void businessScreen() {
 		String choice = "";
 		Scanner in = new Scanner(System.in);
+
 		while (!choice.equals("q")) {
 			System.out.println(
 					"Select an event ('q' to exit): \n" + "1) View Business Records \n" + "2) Hire a Business \n"
@@ -550,7 +551,6 @@ public class Main extends JFrame {
 					}
 				}
 			break;
-
 			}
 		}
 	}

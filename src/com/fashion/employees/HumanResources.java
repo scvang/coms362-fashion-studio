@@ -32,7 +32,8 @@ public class HumanResources {
 	public static ArrayList<Service> servicesUsed = new ArrayList<>();
 	private ArrayList<Service> servicesRequested;
 	static ArrayList<PayStub> payStubHistory;
-	static PayStubInfo p;
+	private static PayStubInfo p;
+
 	
 	/**
 	 * Constructor
@@ -116,7 +117,7 @@ public class HumanResources {
 			"Representative: " + s.getRepName() + "\n" +
 			"Rep Contact: " + s.getPhoneNum() + "\n" +
 			"Service Provided: " + s.getServiceType() + "\n" +
-			"Have they been confirmed?: " + s.hasBeenContacted()
+			"Have they been contacted?" + s.hasBeenContacted() + "\n"
 			);
 		}
 	}

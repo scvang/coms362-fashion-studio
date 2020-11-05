@@ -6,7 +6,5 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/erae97/Desktop/Documents/Fall 2020/COM S 362/itextpdf-5.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/erae97/Desktop/Documents/Fall 2020/COM S 362/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
