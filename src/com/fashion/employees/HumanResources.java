@@ -3,6 +3,7 @@ package com.fashion.employees;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fashion.Business;
 import com.fashion.ModelAudition;
@@ -11,6 +12,7 @@ import com.fashion.Studio;
 import com.fashion.events.Event;
 import com.fashion.pay.PayStub;
 import com.fashion.pay.PayStubInfo;
+
 
 /**
  * This class represents the entirety of the Human Resources of the Fashion Studio
@@ -24,19 +26,22 @@ public class HumanResources {
 	 * Instance variables
 	 */
 	private Employee emp;
-	private Business bus;
+	private static Business bus;
 	private ArrayList<Employee> employees;
-	private Service service;
-	private ArrayList<Service> servicesUsed;
+	private static Service serv;
+	public static ArrayList<Service> servicesUsed = new ArrayList<>();
 	private ArrayList<Service> servicesRequested;
-	ArrayList<PayStub> payStubHistory;
-	PayStubInfo p;
+	static ArrayList<PayStub> payStubHistory;
+	static PayStubInfo p;
 	
 	/**
 	 * Constructor
 	 */
 	public HumanResources() {
-		
+		employees = new ArrayList<>();
+		servicesUsed = new ArrayList<>();
+		servicesRequested = new ArrayList<>();
+		payStubHistory = new ArrayList<>();
 	}
 	
 	public Employee modelAudition(String name, String phoneNum, int audNum) {
@@ -57,15 +62,13 @@ public class HumanResources {
 		employees.remove(getEmployee(eid));
 	}
 	
-	public void hireBusiness(int sid, String businessName, String loc, String service, String repName, String contactInfo, double salary) {
-		bus.setName(businessName);
-		bus.setAddress(loc);
-		bus.setPhoneNum(contactInfo);
+	public static void hireBusiness(int sid, String businessName, String loc, String service, String repName, String contactInfo, double salary) {
+		bus = new Business(sid, businessName, loc, contactInfo, service);
 		p = new PayStubInfo(salary);
-		addService(sid, repName, service);
+		addService(repName);
 	}
 	
-	public boolean payBusiness(int eid, PayStubInfo p){
+	public static boolean payBusiness(int eid, PayStubInfo p){
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 
@@ -77,25 +80,25 @@ public class HumanResources {
 		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
 	}
 	
-	public void addService(int sid, String repName, String service) {
-			this.service = new Service(sid, bus, repName, service);	
-			servicesUsed.add(this.service);
+	public static void addService(String repName) {
+			serv = new Service(bus.getBid(), bus, repName, bus.getBusType());	
+			servicesUsed.add(serv);
 	}
 	
-	public void getServices() {
+	public static void getServices() {
 		for(Service s : servicesUsed) {
 			System.out.println(
 			"Business Name: " + s.getName() + "\n" +
 			"Business Location: " + s.getAddress() + "\n" +
 			"Representative: " + s.getRepName() + "\n" +
-			"Rep Contact" + s.getPhoneNum() + "\n" +
-			"Service Provided: " + s.getServiceType() + "\n" +
-			"Money Owed: $" + payBusiness(s.getServiceID(), p)
+			"Rep Contact: " + s.getPhoneNum() + "\n" +
+			"Service Provided: " + s.getServiceType() + "\n" //+
+			//"Money Owed: $" + payBusiness(s.getServiceID(), p)
 			);
 		}
 	}
 	
-	public ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
+	public static ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
 		ArrayList<Service> newServices = new ArrayList<Service>();
 		for(int i = 0; i < needs.size() - 1; i++) {
 			if(!servicesUsed.contains(needs.get(i))) {
@@ -105,8 +108,17 @@ public class HumanResources {
 		return newServices ;
 	}
 
-	public ArrayList<Service> getServiceRequests(){
-		return servicesUsed;
+	public static void getServiceRequests(){
+		for(Service s : servicesUsed) {
+			System.out.println(
+			"Business Name: " + s.getName() + "\n" +
+			"Business Location: " + s.getAddress() + "\n" +
+			"Representative: " + s.getRepName() + "\n" +
+			"Rep Contact: " + s.getPhoneNum() + "\n" +
+			"Service Provided: " + s.getServiceType() + "\n" +
+			"Have they been confirmed?: " + s.hasBeenContacted()
+			);
+		}
 	}
 	
 	public Employee getEmployee(int eid) {
