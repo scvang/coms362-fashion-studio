@@ -24,13 +24,13 @@ public class HumanResources {
 	 * Instance variables
 	 */
 	private Employee emp;
-	private Business bus;
+	private static Business bus;
 	private ArrayList<Employee> employees;
-	private Service service;
-	private ArrayList<Service> servicesUsed;
+	private static Service serv;
+	public static ArrayList<Service> servicesUsed = new ArrayList<>();
 	private ArrayList<Service> servicesRequested;
-	ArrayList<PayStub> payStubHistory;
-	PayStubInfo p;
+	static ArrayList<PayStub> payStubHistory;
+	private static PayStubInfo p;
 	
 	/**
 	 * Constructor
@@ -57,15 +57,13 @@ public class HumanResources {
 		employees.remove(getEmployee(eid));
 	}
 	
-	public void hireBusiness(int sid, String businessName, String loc, String service, String repName, String contactInfo, double salary) {
-		bus.setName(businessName);
-		bus.setAddress(loc);
-		bus.setPhoneNum(contactInfo);
+	public static void hireBusiness(int sid, String businessName, String loc, String service, String repName, String contactInfo, double salary) {
+		bus = new Business(sid, businessName, loc, contactInfo, service);
 		p = new PayStubInfo(salary);
-		addService(sid, repName, service);
+		addService(repName);
 	}
 	
-	public boolean payBusiness(int eid, PayStubInfo p){
+	public static boolean payBusiness(int eid, PayStubInfo p){
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 
@@ -77,20 +75,20 @@ public class HumanResources {
 		employees.add(new Employee(eid, name,title,phone, new PayStubInfo(salary, 0, bankAccount, bankRouting)));
 	}
 	
-	public void addService(int sid, String repName, String service) {
-			this.service = new Service(sid, bus, repName, service);	
-			servicesUsed.add(this.service);
+	public static void addService(String repName) {
+			serv = new Service(bus.getBid(), bus, repName, bus.getBusType());	
+			servicesUsed.add(serv);
 	}
 	
-	public void getServices() {
+	public static void getServices() {
 		for(Service s : servicesUsed) {
 			System.out.println(
 			"Business Name: " + s.getName() + "\n" +
 			"Business Location: " + s.getAddress() + "\n" +
 			"Representative: " + s.getRepName() + "\n" +
-			"Rep Contact" + s.getPhoneNum() + "\n" +
-			"Service Provided: " + s.getServiceType() + "\n" +
-			"Money Owed: $" + payBusiness(s.getServiceID(), p)
+			"Rep Contact: " + s.getPhoneNum() + "\n" +
+			"Service Provided: " + s.getServiceType() + "\n" //+
+			//"Money Owed: $" + payBusiness(s.getServiceID(), p)
 			);
 		}
 	}
@@ -105,8 +103,17 @@ public class HumanResources {
 		return newServices ;
 	}
 
-	public ArrayList<Service> getServiceRequests(){
-		return servicesUsed;
+	public static void getServiceRequests(){
+		for(Service s : servicesUsed) {
+			System.out.println(
+			"Business Name: " + s.getName() + "\n" +
+			"Business Location: " + s.getAddress() + "\n" +
+			"Representative: " + s.getRepName() + "\n" +
+			"Rep Contact: " + s.getPhoneNum() + "\n" +
+			"Service Provided: " + s.getServiceType() + "\n" +
+			"Have they been contacted?" + s.hasBeenContacted() + "\n"
+			);
+		}
 	}
 	
 	public Employee getEmployee(int eid) {

@@ -1,6 +1,7 @@
 package com.fashion;
 
 import com.fashion.apparel.Apparel;
+import com.fashion.employees.HumanResources;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
@@ -87,7 +88,8 @@ public class Main extends JFrame {
 			"5) Advertisements \n" +
 			"6) Promotions \n" +
 			"7) Shop\n" +
-			"8) Negotiate Contract\n"
+			"8) Negotiate Contract\n" +
+			"9) Manage Businesses"
 			);
 			
 			choice = in.next();
@@ -118,6 +120,8 @@ public class Main extends JFrame {
 				case 8:
 					contractScreen();
 				break;
+				case 9:
+					businessScreen();
 			}
 		}
 		in.close();
@@ -258,6 +262,74 @@ public class Main extends JFrame {
 			}
 		}
 		in.close();
+	}
+	
+	public static void businessScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(	
+					"Select an event ('q' to exit): \n" +
+							"1) View Business Records \n" +
+							"2) Hire a Business \n" +	
+							"3) View Event Needs \n"+	
+							"4) Confirm a Business \n" +	
+							"5) Go back \n"	
+			);	
+		
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){	
+				case 1:	
+					HumanResources.getServices();	
+				break;
+
+
+				case 2:				
+					System.out.println("What is the service ID?");
+					int sid = in.nextInt();
+					in.nextLine();
+					System.out.println("What is the name of the Business?");	
+					String name = in.nextLine();
+					System.out.println("What is the adress?");
+					String loc = in.nextLine();
+					System.out.println("What is the service requested?");
+					String service = in.nextLine();
+					System.out.println("Who do we contact?");
+					String repName = in.nextLine();
+					System.out.println("Please provice their phone number.");
+					String contactInfo = in.nextLine();
+					System.out.println("How much are they charging?");
+					double salary = in.nextDouble();
+					HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
+				break;	
+
+				case 3:
+					//TODO
+				break;
+				
+				case 4:
+					HumanResources.getServiceRequests();
+					for(int i = 0; i < HumanResources.servicesUsed.size()-1; i++) {
+						if(HumanResources.servicesUsed.get(i).hasBeenContacted()==false) {
+							HumanResources.getServiceRequests();	
+							System.out.println("Would you like to contact them now? ('y' or 'n')");	
+							String yorn = in.nextLine();
+							if(yorn.equals("y")) {
+								HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));	
+							} else {
+								System.out.println("Please be sure to contact them at a different date.");
+							}
+						}
+					}
+				break;
+				
+				case 5:
+					mainScreen();
+				break;
+			}
+		}
 	}
 	
 	public static void apparelScreen() {
