@@ -223,7 +223,7 @@ public class Main extends JFrame {
 			// Establish a connection to the database to query data.
 			try{
 		      // Step 1: "Load" the JDBC driver
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName("com.mysql.cj.jdbc.Driver");
 
 		      // Step 2: Establish the connection to the database 
 		      String url = "jdbc:mysql://localhost/fashion_studio"; 
@@ -234,7 +234,7 @@ public class Main extends JFrame {
 		      Statement st = conn.createStatement();
 		      
 		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM inventory");
+		      ResultSet rs = st.executeQuery("SELECT * FROM inventory2");
 		      
 		      studio.resetInventory();
 		      while(rs.next()) {
@@ -289,7 +289,7 @@ public class Main extends JFrame {
 					 // Establish a connection to the database test.
 					try{
 				      // Step 1: "Load" the JDBC driver
-						Class.forName("com.mysql.jdbc.Driver");
+						Class.forName("com.mysql.cj.jdbc.Driver");
 
 				      // Step 2: Establish the connection to the database 
 				      String url = "jdbc:mysql://localhost/fashion_studio"; 
@@ -297,7 +297,7 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
 				      ps.setString(2, size);
@@ -927,7 +927,7 @@ public class Main extends JFrame {
 						 // Establish a connection to the database test.
 						try{
 					      // Step 1: "Load" the JDBC driver
-							Class.forName("com.mysql.jdbc.Driver");
+							Class.forName("com.mysql.cj.jdbc.Driver");
 
 					      // Step 2: Establish the connection to the database 
 					      String url = "jdbc:mysql://localhost/fashion_studio"; 

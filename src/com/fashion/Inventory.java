@@ -1,5 +1,7 @@
 package com.fashion;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,6 +66,34 @@ public class Inventory {
 					);
 		}
 	}
+
+//	/**
+//	 * Displays all the apparel from the backend
+//	 */
+//	public void displayApparel(){
+//		try {
+//			ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory`");
+//
+//			if(rs != null) {
+//				System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
+//						+ rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
+//						rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
+//						+ rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
+//				System.out.println();
+//
+//				while (rs.next()) {
+//					System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
+//							+ rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
+//							rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
+//							+ rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
+//					System.out.println();
+//				}
+//			}
+//
+//		} catch (SQLException throwables) {
+//			System.out.println("Error displaying apparel on our side");
+//		}
+//	}
 	
 	public void displayFoodInventory() {
 		for(Food f : foodStock) {
