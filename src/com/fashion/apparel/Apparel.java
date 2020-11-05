@@ -55,6 +55,8 @@ public class Apparel{
 	
 	public Apparel(int id,String size, int price,String name, String brand, String color, int quantity) {
 		this.id = id;
+		this.size = size;
+		this.price = price;
 		this.itemName = name;
 		this.brandName = brand;
 		this.color = color;
@@ -87,7 +89,7 @@ public class Apparel{
 	 * @return the price of our product
 	 */
 	public int getPrice() {
-		return price;
+		return this.price;
 	}
 
 	/**
@@ -135,7 +137,11 @@ public class Apparel{
 	public boolean sameItem(Object o) {
 		if(o == null || o.getClass() != this.getClass()) return false;
 		Apparel a = (Apparel)o;
-		return this.itemName.equals(a.itemName) && this.brandName.equals(a.brandName) && this.color.equals(a.color);
+		return 	this.size.equals(a.size) &&
+				this.price == a.price && 
+				this.itemName.equals(a.itemName) && 
+				this.brandName.equals(a.brandName) && 
+				this.color.equals(a.color);
 	}
 
 	/**
@@ -149,7 +155,7 @@ public class Apparel{
 	 * @return the size of the apparel item
 	 */
 	public String getSize() {
-		return size;
+		return this.size;
 	}
 
 	/**

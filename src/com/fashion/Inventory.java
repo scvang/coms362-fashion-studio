@@ -24,15 +24,6 @@ public class Inventory {
 	}
 	
 	public void storeClothing(Apparel a) {
-		int count = 0;
-		for(int i = 0; i < clothingStock.size(); ++i) {
-			if(a.sameItem(clothingStock.get(i))) {
-				count = clothingStock.get(i).getQuantity();
-				++count;
-				clothingStock.get(i).setQuantity(count);
-				return;
-			}
-		}
 		clothingStock.add(a);
 	}
 	
@@ -63,7 +54,14 @@ public class Inventory {
 	
 	public void displayClothingInventory() {
 		for(Apparel a : clothingStock) {
-			System.out.println("Item name: " + a.getItemName() + ", " + "Brand name: " + a.getBrandName() + ", " + a.getColor() + ", " + "Quantity: " + a.getQuantity());
+			System.out.println(
+					"Item name: " + a.getItemName() + "\n" +
+					"Brand name: " + a.getBrandName() + "\n" +
+					"Size: " + a.getSize() + "\n" +
+					"Color: " + a.getColor() + "\n" +
+					"Price: " + a.getPrice() + "\n" +
+					"Quantity: " + a.getQuantity() + "\n"
+					);
 		}
 	}
 	

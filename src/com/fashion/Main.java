@@ -175,9 +175,9 @@ public class Main extends JFrame {
 			else in.nextLine(); // Clear the buffer.
 			
 			int id = 0;
-			String itemName = "";
 			String size = "";
 			int price = 0;
+			String itemName = "";
 			String brandName = "";
 			String color = ""; 
 			int quantity = 0;
@@ -202,9 +202,9 @@ public class Main extends JFrame {
 		      studio.resetInventory();
 		      while(rs.next()) {
 		    	  id = rs.getInt("id");
-		    	  itemName = rs.getString("itemName");
-		    	  price = rs.getInt("price");
 		    	  size = rs.getString("size");
+		    	  price = rs.getInt("price");
+		    	  itemName = rs.getString("itemName");
 		    	  brandName = rs.getString("brandName");
 		    	  color = rs.getString("color");
 		    	  quantity = rs.getInt("quantity");
@@ -217,7 +217,6 @@ public class Main extends JFrame {
 		    catch (Exception e){
 		      System.err.println(e.getMessage()); 
 		    }
-			
 			switch(Integer.parseInt(choice)){
 				case 1:
 					studio.displayClothingInventory();
@@ -234,12 +233,12 @@ public class Main extends JFrame {
 				case 4:
 					System.out.println("Enter the id:");
 					id = in.nextInt(); in.nextLine();
-					System.out.println("Enter the item name:");
-					itemName = in.nextLine();
 					System.out.println("Enter the size:");
 					size = in.nextLine();
 					System.out.println("Enter the price:");
 					price = in.nextInt(); in.nextLine();
+					System.out.println("Enter the item name:");
+					itemName = in.nextLine();
 					System.out.println("Enter the brand name:");
 					brandName = in.nextLine();
 					System.out.println("Enter the color:");
@@ -261,7 +260,7 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,size,price,itemName,brandName,color,quantity)" + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
 				      ps.setString(2, size);
@@ -289,6 +288,12 @@ public class Main extends JFrame {
 				break;
 				
 				case 7:
+					System.out.println("Enter the price:");
+					int p = in.nextInt(); in.nextLine();
+					
+					System.out.println("Enter size");
+					String s = in.nextLine();
+					
 					System.out.println("Enter item name:");
 					String n = in.nextLine();
 					
@@ -298,7 +303,7 @@ public class Main extends JFrame {
 					System.out.println("Enter color:");
 					String c = in.nextLine();
 					
-					Apparel apparel = studio.getInventory().search(new Apparel(0,n,b,c));
+					Apparel apparel = studio.getInventory().search(new Apparel(0,s,p,n,b,c,0));
 					
 					if(apparel == null) {
 						System.out.println("Search results:");
@@ -309,7 +314,9 @@ public class Main extends JFrame {
 					System.out.println(
 							"Item name: " + apparel.getItemName() + "\n" +
 							"Brand name: " + apparel.getBrandName() + "\n" +
+							"Size: " + apparel.getSize() + "\n" +
 							"Color: " + apparel.getColor() + "\n" +
+							"Price: " + apparel.getPrice() + "\n" +
 							"Quantity: " + apparel.getQuantity() + "\n"
 							);
 				break;
