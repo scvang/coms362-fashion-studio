@@ -17,19 +17,22 @@ import java.util.Scanner;
 
 /**
  * @author Sebastian Vang
- * @author Emily Young: getAd(), addAd()
+ * @author Emily Young
+ * @author Chad Morrow
  * 
- * Studio is the information expert that knows about the employees, models, apparel, event, ad, payStubHistory...
+ * Studio is the information expert that knows about the employees, models, inventory, apparel, event, ad, payStubHistory...
  *
  */
 public class Studio {
 	
 	/**
+	 * @author Sebastian Vang
 	 * Instance variables.
 	 */
 	private String name;
 	private String address;
 	private String phoneNum;
+	private double balance;
 
 	private ArrayList<Employee> employees;
 	private ArrayList<Model> model;
@@ -38,18 +41,21 @@ public class Studio {
 	ArrayList<Advertisement> ad;
 	ArrayList<PayStub> payStubHistory;
 	
+	private Inventory inventory;
+	
 	/**
-	 * 
+	 * @author Sebastian Vang
 	 * Constructor for the studio.
 	 * 
 	 * @param name
 	 * @param address
 	 * @param phoneNum
 	 */
-	public Studio(String name, String address, String phoneNum) {
+	public Studio(String name, String address, String phoneNum,double balance) {
 		this.name = name;
 		this.address = address;
 		this.phoneNum = phoneNum;
+		this.balance = balance;
 
 		employees = new ArrayList<>();
 		
@@ -59,10 +65,36 @@ public class Studio {
 		ad = new ArrayList<>();
 
 		payStubHistory = new ArrayList<>();
+		inventory = new Inventory();
+	}
+	public Inventory getInventory(){
+		return this.inventory;
+	}
+	public void resetInventory() {
+		this.inventory = new Inventory();
+	}
+	
+	public ArrayList<Apparel> getApparelList(){
+		return this.apparel;
 	}
 	
 	/**
-	 * 
+	 * @author Sebastian Vang
+	 */
+	public void displayClothingInventory() {
+		inventory.displayClothingInventory();
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * @param apparel
+	 */
+	public void storeClothingItem(Apparel a) {
+		inventory.storeClothing(a);
+	}
+	
+	/**
+	 * @author Sebastian Vang
 	 * @return studio name
 	 */
 	public String getName() {
@@ -70,7 +102,7 @@ public class Studio {
 	}
 	
 	/**
-	 * 
+	 * @author Sebastian Vang
 	 * @return studio address
 	 */
 	public String getAddress() {
@@ -78,7 +110,7 @@ public class Studio {
 	}
 	
 	/**
-	 * 
+	 * @author Sebastian Vang
 	 * @return studio phone number
 	 */
 	public String getPhoneNum() {
@@ -86,7 +118,15 @@ public class Studio {
 	}
 	
 	/**
-	 * 
+	 * @author Sebastian Vang
+	 * @return event
+	 */
+	public ArrayList<Event> getEventList(){
+		return this.event;
+	}
+	
+	/**
+	 * @author Sebastian Vang
 	 * @return event
 	 */
 	public Event getEvent(String name) {
@@ -100,6 +140,7 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Chad Morrow
 	 * Adds an employee to the studio.
 	 * @param eid
 	 * @param name
@@ -111,6 +152,8 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
+	 * @author Chad Morrow
 	 * Lists the employees information.
 	 */
 	public void getEmployees() {
@@ -140,11 +183,20 @@ public class Studio {
 		return null;
 	}
 	
-	public void addApparel(String name, String brand, String color, int id, int stock) {
-		apparel.add(new Apparel(name,brand,color));
+	/**
+	 * @author Sebastian Vang
+	 * @param name
+	 * @param brand
+	 * @param color
+	 * @param id
+	 * @param stock
+	 */
+	public void addApparel(int id,String name, String brand, String color, int stock) {
+		apparel.add(new Apparel(id,name,brand,color));
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Lists the apparel.
 	 */
 	public void getApparel() {
@@ -158,6 +210,7 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Create one of three events.
 	 * @param type
 	 * @param eventName
@@ -188,6 +241,7 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Creates a showing event.
 	 * @param name
 	 * @param date
@@ -199,6 +253,7 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Creates a party event.
 	 * @param name
 	 * @param date
@@ -210,6 +265,7 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Creates a dining event.
 	 * @param name
 	 * @param date
@@ -221,15 +277,18 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Displays a list of hosted events.
 	 */
 	public void displayEvents() {
+		int count = 1;
 		for(Event e : event) {
-			System.out.println(e.getEvent());
+			System.out.println(count++ + ") " + e.getEvent());
 		}
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Displays the available seats.
 	 * @param e event
 	 */
@@ -241,6 +300,11 @@ public class Studio {
 		return true;
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param event
+	 * @return boolean
+	 */
 	public boolean isShowingFull(Event e) {
 		Showing s = (Showing)e;
 		
@@ -250,25 +314,43 @@ public class Studio {
 	}
 
 	/**
-	 *
-	 * @param e
-	 * @param number
-	 * @param customer
-	 * @param date
-	 * @param time
-	 * @return
+	 * @author Sebastian Vang
+	 * Reserves a seat for the customer.
+	 * @param e event
+	 * @param n seatNum
+	 * @param c customerName
+	 * @param d date
+	 * @param t time
 	 */
 	public boolean reserveSeat(Event e, String number, String customer, String date, String time) {
 		Showing s = (Showing)e;
 		return s.reserveSeat(number,customer,date,time);
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param name
+	 * @param e
+	 * @return
+	 */
+	public boolean removeSeatReservation(String name,Event e) {
+		Showing s = (Showing)e;
+		return s.removeSeatReservation(name);
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * @param customerName
+	 * @param e
+	 * @return
+	 */
 	public boolean hasSeatReservation(String customerName,Event e) {
 		Showing s = (Showing)e;
 		return s.hasSeatReservation(customerName);
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * Displays the tables.
 	 * @param e
 	 */
@@ -279,6 +361,12 @@ public class Studio {
 		
 		return true;
 	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * @param e
+	 * @return
+	 */
 	public boolean isDiningFull(Event e) {
 		Dining d = (Dining)e;
 		if(d.getOpenTables() == 0) {
@@ -288,25 +376,43 @@ public class Studio {
 	}
 
 	/**
-	 *
-	 * @param e
-	 * @param number
-	 * @param customer
-	 * @param date
-	 * @param time
-	 * @return
+	 * @author Sebastian Vang
+	 * Reserves a table for the customer.
+	 * @param e event
+	 * @param n tableNum
+	 * @param c customerName
+	 * @param d date
+	 * @param t time
 	 */
 	public boolean reserveTable(Event e, String number, String customer, String date, String time) {
 		Dining d = (Dining)e;
 		return d.reserveTable(number, customer, date, time);
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param customerName
+	 * @param e
+	 * @return
+	 */
 	public boolean hasTableReservation(String customerName, Event e) {
 		Dining d = (Dining)e;
 		return d.hasTableReservation(customerName);
 	}
 	
 	/**
+	 * @author Sebastian Vang
+	 * @param name
+	 * @param e
+	 * @return
+	 */
+	public boolean removeTableReservation(String name, Event e) {
+		Dining d = (Dining)e;
+		return d.removeTableReservation(name);
+	}
+	
+	/**
+	 * @author Sebastian Vang
 	 * Reserves a badge.
 	 * @param e event
 	 * @param name
@@ -318,18 +424,51 @@ public class Studio {
 	}
 	
 	/**
-	 * Checks number of attendees.
+	 * @author Sebastian Vang
+	 * @param name
+	 * @param e
+	 * @return
+	 */
+	public boolean hasBadgeReservation(String name, Event e) {
+		Party p = (Party)e;
+		return p.hasBadgeReservaton(name);
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * @param name
+	 * @param event
+	 * @return badge
+	 */
+	public Badge getBadge(String name, Event e) {
+		Party p = (Party)e;
+		return p.getBadge(name);
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * Checks if party is full.
 	 * @param e
 	 * @return
 	 */
 	public boolean isPartyFull(Event e) {
 		Party p = (Party)e;
-		//System.out.println("There are: " + ((Party)e).getAttendees() + " attendees.");
-		if(p.getAttendees() == p.getCapacity()) return false;
-		return true;
+		if(p.getAttendees() == p.getCapacity()) return true;
+		return false;
 	}
 	
 	/**
+	 * @author Sebastian Vang
+	 * @param event
+	 * @return number of attendees
+	 */
+	public int getNumOfAttendees(Event e) {
+		Party p = (Party)e;
+		return p.getAttendees();
+	}
+	
+	/**
+	 * @author Sebastian Vang
 	 * Charges the card according to the event.
 	 * @param e event
 	 * @param c customer
@@ -355,24 +494,26 @@ public class Studio {
 		return true;
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param customer
+	 * @param e
+	 * @return
+	 */
 	public Seat getSeat(String customer,Event e) {
 		Showing s = (Showing)e;
 		return s.getSeat(customer);
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param customer
+	 * @param e
+	 * @return
+	 */
 	public Table getTable(String customer, Event e) {
 		Dining d = (Dining)e;
 		return d.getTable(customer);
-	}
-	
-	// Populates the seat for a test.
-	public void fillSeats(Event e) {
-		Showing s = (Showing)e;
-		s.fillSeats();
-	}
-	public void fillTables(Event e) {
-		Dining d = (Dining)e;
-		d.fillTables();
 	}
 	
 	/**
@@ -458,23 +599,39 @@ public class Studio {
 	}
 	
 	/**
+	 * @author Sebastian Vang
+	 * Returns a single model.
+	 * @param name
+	 * @return
+	 */
+	public Model getModel(String name) {
+		for(Model m : model) {
+			if(name.equals(m.getName())) {
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Sebastian Vang
 	 * Finds the model.
 	 * @param name
 	 * @return
 	 */
-	public boolean findModel(String name) {
+	public boolean doesModelExist(String name) {
 		for(Model m: model) {
 			if(m.getName().equals(name)) return true;
 		}
-		
 		return false;
 	}
 	
 	/**
+	 * @author Sebastian Vang
 	 * @author Emily Young
-	 * This method retrieves the existing list of models 
+	 * This method retrieves the existing list of models.
 	 */
-	public void getModels() {
+	public void displayModels() {
 		for(Model m : model) {
 			System.out.println(
 			"Model Name: " + m.getName() + "\n" + 
@@ -505,18 +662,31 @@ public class Studio {
 		model.add(new Model(eid,agent,name,jobTitle,phoneNum,payStubInfo));
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * @param modelName
+	 * @param item
+	 */
 	public void changeHead(String modelName, Apparel item) {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeHead(item);
 		}
 	}
-	
+	/**
+	 * @author Sebastian Vang
+	 * @param modelName
+	 * @param item
+	 */
 	public void changeTop(String modelName, Apparel item) {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeTop(item);
 		}
 	}
-	
+	/**
+	 * @author Sebastian Vang
+	 * @param modelName
+	 * @param item
+	 */
 	public void changeBot(String modelName, Apparel item) {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeBot(item);
@@ -528,13 +698,21 @@ public class Studio {
 			if(m.getName().equals(modelName)) m.changeLegs(item);
 		}
 	}
-	
+	/**
+	 * @author Sebastian Vang
+	 * @param modelName
+	 * @param item
+	 */
 	public void changeShoes(String modelName, Apparel item) {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeShoes(item);
 		}
 	}
-	
+	/**
+	 * @author Sebastian Vang
+	 * @param modelName
+	 * @param item
+	 */
 	public void changeAcc(String modelName, Apparel item) {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeAcc(item);

@@ -9,28 +9,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ShowPicture extends JFrame {
+public class Picture extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
+	
+	public static void display(String imgPath, String description) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ShowPicture frame = new ShowPicture();
+					Picture frame = new Picture();
 					frame.setVisible(true);
 					
 					// This creates a test model.
-					String description =
-							"<html>"
-							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
-							+ "</html>";
+					String text ="<html>" + description + "</html>";
 					
-					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
-					
+					frame.add(new JLabel(text,new ImageIcon(imgPath),JLabel.RIGHT));
+					frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -41,7 +35,7 @@ public class ShowPicture extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ShowPicture() {
+	public Picture() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 400);
 		contentPane = new JPanel();

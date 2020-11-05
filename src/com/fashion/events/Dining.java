@@ -29,15 +29,15 @@ public class Dining extends Event{
 		// Initializes empty tables.
 		int tableNum = 1;
 		for(int i = 0; i < table.length; ++i) {
-			table[i] = new Table(String.format("%02d",tableNum),"","","");
+			table[i] = new Table(Integer.toString(tableNum),"","","");
 			++tableNum;
 		}
 		openTables = countTables();
 	}
 	
 	/**
-	 * Gets number of available seats.
-	 * @return number of open seats
+	 * Gets number of available tables.
+	 * @return number of open tables
 	 */
 	public int countTables() {
 		int count = 0;
@@ -81,8 +81,9 @@ public class Dining extends Event{
 		Table t = new Table();
 		
 		for(int i = 0; i < table.length; ++i) {
-			if(table[i].getCustomerName().toLowerCase().equals(name)){
+			if(name.equals(table[i].getCustomerName().toLowerCase())){
 				t = this.table[i];
+				System.out.println("True:" + t.getCustomerName());
 			}
 		}
 		
@@ -100,7 +101,7 @@ public class Dining extends Event{
 		// Convert to upper case before processing.
 		int tableNum = Integer.parseInt(num);
 		
-		// Checks if the seat is in range 1 to 20.
+		// Checks if the table is in range 1 to 20.
 		if(tableNum >= 1 || tableNum <= 20){
 			
 			if(whitelist.containsKey(num)) {
@@ -133,8 +134,20 @@ public class Dining extends Event{
 		for(int i = 0; i < table.length; ++i) {
 			table[i].setCustomerName("customer");
 		}
-		// Update the available seats.
+		// Update the available tables.
 		openTables = countTables();
 		
+	}
+
+	public boolean removeTableReservation(String name) {
+		int num = 1;
+		for(int i = 0; i < table.length; ++i) {
+			if(name.equals(table[i].getCustomerName())) {
+				table[i] = new Table(Integer.toString(num),"","","");
+			}
+			++num;
+		}
+		openTables = countTables();
+		return false;
 	}
 }

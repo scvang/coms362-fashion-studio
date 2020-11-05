@@ -3,6 +3,7 @@ package com.fashion.employees;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fashion.Business;
 import com.fashion.ModelAudition;
@@ -11,6 +12,7 @@ import com.fashion.Studio;
 import com.fashion.events.Event;
 import com.fashion.pay.PayStub;
 import com.fashion.pay.PayStubInfo;
+
 
 /**
  * This class represents the entirety of the Human Resources of the Fashion Studio
@@ -31,12 +33,16 @@ public class HumanResources {
 	private ArrayList<Service> servicesRequested;
 	static ArrayList<PayStub> payStubHistory;
 	private static PayStubInfo p;
+
 	
 	/**
 	 * Constructor
 	 */
 	public HumanResources() {
-		
+		employees = new ArrayList<>();
+		servicesUsed = new ArrayList<>();
+		servicesRequested = new ArrayList<>();
+		payStubHistory = new ArrayList<>();
 	}
 	
 	public Employee modelAudition(String name, String phoneNum, int audNum) {
@@ -93,7 +99,7 @@ public class HumanResources {
 		}
 	}
 	
-	public ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
+	public static ArrayList<Service> checkEventRequests(ArrayList<Service> needs){
 		ArrayList<Service> newServices = new ArrayList<Service>();
 		for(int i = 0; i < needs.size() - 1; i++) {
 			if(!servicesUsed.contains(needs.get(i))) {

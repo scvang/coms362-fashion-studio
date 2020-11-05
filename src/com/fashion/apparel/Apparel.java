@@ -6,7 +6,7 @@ package com.fashion.apparel;
  * Apparel is worn by the models and sold in the studio.
  *
  */
-public class Apparel {
+public class Apparel{
 	
 	/**
 	 * Instance variables.
@@ -17,6 +17,7 @@ public class Apparel {
 	private String itemName;
 	private String brandName;
 	private String color;
+	private int quantity;
 
 	public Apparel(int id, String size, int price, String itemName, String brandName, String color) {
 		this.id = id;
@@ -44,10 +45,28 @@ public class Apparel {
 	 * @param brand
 	 * @param color
 	 */
-	public Apparel(String name, String brand, String color) {
+	public Apparel(int id,String name, String brand, String color) {
+		this.id = id;
 		this.itemName = name;
 		this.brandName = brand;
 		this.color = color;
+		quantity = 1;
+	}
+	
+	public Apparel(int id,String size, int price,String name, String brand, String color, int quantity) {
+		this.id = id;
+		this.itemName = name;
+		this.brandName = brand;
+		this.color = color;
+		this.quantity = quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	public int getQuantity() {
+		return this.quantity;
 	}
 
 	/**
@@ -111,6 +130,12 @@ public class Apparel {
 	 */
 	public String getColor() {
 		return color;
+	}
+	
+	public boolean sameItem(Object o) {
+		if(o == null || o.getClass() != this.getClass()) return false;
+		Apparel a = (Apparel)o;
+		return this.itemName.equals(a.itemName) && this.brandName.equals(a.brandName) && this.color.equals(a.color);
 	}
 
 	/**
