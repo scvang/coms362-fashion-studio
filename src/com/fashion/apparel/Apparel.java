@@ -6,7 +6,7 @@ package com.fashion.apparel;
  * Apparel is worn by the models and sold in the studio.
  *
  */
-public class Apparel {
+public class Apparel{
 	
 	/**
 	 * Instance variables.
@@ -53,7 +53,7 @@ public class Apparel {
 		quantity = 1;
 	}
 	
-	public Apparel(int id,String name, String brand, String color, int quantity) {
+	public Apparel(int id,String size, int price,String name, String brand, String color, int quantity) {
 		this.id = id;
 		this.itemName = name;
 		this.brandName = brand;

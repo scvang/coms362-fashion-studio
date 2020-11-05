@@ -41,12 +41,15 @@ public class Main extends JFrame {
 		String company = "Fashion Inc";
 		String address = "401 Somewhere Ave";
 		String phone = "555-555-5555";
-		double funds = 500000;
+		double balance = 500000;
 		
-		studio = new Studio(company,address,phone,funds);
+
+		studio = new Studio(company,address,phone, balance);
 //		HumanResources.hireBusiness(1, "name", "loc", "photo", "jack", "333-333-3333", 900.0);
 //		HumanResources.getServices();
-		
+
+		studio = new Studio(company,address,phone,balance);
+
 		// Create some new events.
 //		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
 //		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
@@ -97,6 +100,7 @@ public class Main extends JFrame {
 //
 //		studio.addModel(modelName, modNum, audNum);
 		//studio.getEmployees();
+
 		
 		HumanResources.hireBusiness(1, "Name", "Somewhere", "Catering", "Bill", "444-444-4444", 800.0);
 		// Test adding to database.
@@ -122,16 +126,8 @@ public class Main extends JFrame {
 //				}
 //			}
 //		});
+
 		mainScreen();
-	}
-	
-	/**
-	 * Test screen.
-	 * @param description
-	 * @param commands
-	 */
-	public static void Screen(String description, String commands) {
-		
 	}
 	
 	/**
@@ -207,7 +203,8 @@ public class Main extends JFrame {
 			"4) Store clothing item \n" +
 			"5) Store makeup item \n" +
 			"6) Store food item \n" +
-			"7) Go back \n"
+			"7) Search clothing item \n" +
+			"8) Go back \n"
 			);
 			
 			choice = in.next();
@@ -216,10 +213,13 @@ public class Main extends JFrame {
 			
 			int id = 0;
 			String itemName = "";
+			String size = "";
+			int price = 0;
 			String brandName = "";
 			String color = ""; 
 			int quantity = 0;
 			
+			// This retrieves a clothing list from the database.
 			// Establish a connection to the database to query data.
 			try{
 		      // Step 1: "Load" the JDBC driver
@@ -234,17 +234,19 @@ public class Main extends JFrame {
 		      Statement st = conn.createStatement();
 		      
 		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM clothing_stock");
+		      ResultSet rs = st.executeQuery("SELECT * FROM inventory");
 		      
 		      studio.resetInventory();
 		      while(rs.next()) {
 		    	  id = rs.getInt("id");
-		    	  itemName = rs.getString("name");
-		    	  brandName = rs.getString("brand");
+		    	  itemName = rs.getString("itemName");
+		    	  price = rs.getInt("price");
+		    	  size = rs.getString("size");
+		    	  brandName = rs.getString("brandName");
 		    	  color = rs.getString("color");
 		    	  quantity = rs.getInt("quantity");
 		    	  
-		    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,quantity));
+		    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
 		      }
 		      // close the connection.
 		      st.close();
@@ -271,6 +273,10 @@ public class Main extends JFrame {
 					id = in.nextInt(); in.nextLine();
 					System.out.println("Enter the item name:");
 					itemName = in.nextLine();
+					System.out.println("Enter the size:");
+					size = in.nextLine();
+					System.out.println("Enter the price:");
+					price = in.nextInt(); in.nextLine();
 					System.out.println("Enter the brand name:");
 					brandName = in.nextLine();
 					System.out.println("Enter the color:");
@@ -292,13 +298,15 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO clothing_stock (id,name,brand,color,quantity)" + "VALUES (?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,size,price,itemName,brandName,color,quantity)" + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
-				      ps.setString(2, itemName);
-				      ps.setString(3,  brandName);
-				      ps.setString(4, color);
-				      ps.setInt(5, quantity);
+				      ps.setString(2, size);
+				      ps.setInt(3, price);
+				      ps.setString(4,itemName);
+				      ps.setString(5,brandName);
+				      ps.setString(6, color);
+				      ps.setInt(7, quantity);
 				      
 				      ps.execute();
 				      conn.close();
@@ -318,14 +326,33 @@ public class Main extends JFrame {
 				break;
 				
 				case 7:
-					mainScreen();
+					System.out.println("Enter item name:");
+					String n = in.nextLine();
+					
+					System.out.println("Enter brand name:");
+					String b = in.nextLine();
+					
+					System.out.println("Enter color:");
+					String c = in.nextLine();
+					
+					Apparel apparel = studio.getInventory().search(new Apparel(0,n,b,c));
+					
+					if(apparel == null) {
+						System.out.println("Search results:");
+						System.out.println("Item was not found.");
+						break;
+					}
+					System.out.println("Search results:");
+					System.out.println(
+							"Item name: " + apparel.getItemName() + "\n" +
+							"Brand name: " + apparel.getBrandName() + "\n" +
+							"Color: " + apparel.getColor() + "\n" +
+							"Quantity: " + apparel.getQuantity() + "\n"
+							);
 				break;
 				case 8:
-					shoppingScreen();
+					mainScreen();
 				break;
-        case 9:
-          contractScreen();
-        break;
 			}
 		}
 		in.close();
@@ -471,62 +498,62 @@ public class Main extends JFrame {
 	public static void businessScreen() {
 		String choice = "";
 		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
+		while (!choice.equals("q")) {
 			System.out.println(
-					"Select an event ('q' to exit): \n" +
-							"1) View Business Records \n" +
-							"2) Hire a Business \n" +
-							"3) View Event Needs \n"+
-							"4) Confirm a Business \n" +
-							"5) Go back \n"
-			);
-		
+					"Select an event ('q' to exit): \n" + "1) View Business Records \n" + "2) Hire a Business \n"
+							+ "3) View Event Needs \n" + "4) Confirm a Business \n" + "5) Go back \n");
+
 			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-	
-			switch(Integer.parseInt(choice)){
-				case 1:
-					HumanResources.getServices();
+			if (choice.equals("q") || choice.equals("'q'"))
 				break;
-					
-				case 2:
-					System.out.println("What is the service ID?");
-					int sid = in.nextInt();
-					in.nextLine();
-					System.out.println("What is the name of the Business?");
-					String name = in.nextLine();
-					System.out.println("What is the adress?");
-					String loc = in.nextLine();
-					System.out.println("What is the service requested?");
-					String service = in.nextLine();
-					System.out.println("Who do we contact?");
-					String repName = in.nextLine();
-					System.out.println("Please provice their phone number.");
-					String contactInfo = in.nextLine();
-					System.out.println("How much are they charging?");
-					double salary = in.nextDouble();
-					HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
-				break;
-				
-				case 3:
-				//	HumanResources.getServiceRequests();
-					for(int i = 0; i < HumanResources.servicesUsed.size()-1; i++) {
-						if(HumanResources.servicesUsed.get(i).hasBeenContacted()==false) {
-							HumanResources.getServiceRequests();
-							System.out.println("Would you like to contact them now? ('y' or 'n')");
-							String yorn = in.nextLine();
-							if(yorn.equals("y")) {
-								HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));
-							} else {
-								System.out.println("Please be sure to contact them at a different date.");
-							}
+
+			switch (Integer.parseInt(choice)) {
+			case 1:
+				HumanResources.getServices();
+			break;
+
+			case 2:
+				System.out.println("What is the service ID?");
+				int sid = in.nextInt();
+				in.nextLine();
+				System.out.println("What is the name of the Business?");
+				String name = in.nextLine();
+				System.out.println("What is the adress?");
+				String loc = in.nextLine();
+				System.out.println("What is the service requested?");
+				String service = in.nextLine();
+				System.out.println("Who do we contact?");
+				String repName = in.nextLine();
+				System.out.println("Please provice their phone number.");
+				String contactInfo = in.nextLine();
+				System.out.println("How much are they charging?");
+				double salary = in.nextDouble();
+				HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
+			break;
+
+			case 3:
+				//TODO
+			break;
+			
+			case 4:
+				// HumanResources.getServiceRequests();
+				for (int i = 0; i < HumanResources.servicesUsed.size() - 1; i++) {
+					if (HumanResources.servicesUsed.get(i).hasBeenContacted() == false) {
+						HumanResources.getServiceRequests();
+						System.out.println("Would you like to contact them now? ('y' or 'n')");
+						String yorn = in.nextLine();
+						if (yorn.equals("y")) {
+							HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));
+						} else {
+							System.out.println("Please be sure to contact them at a different date.");
 						}
 					}
+				}
+			break;
 
-				
-			}
 			}
 		}
+	}
 	
 	public static void apparelScreen() {
 		//TODO
@@ -880,6 +907,33 @@ public class Main extends JFrame {
 					
 					if(studio.reserveSeat(studio.getEvent(eventName),seat,customerName,date,time)) {
 						studio.chargeCard(studio.getEvent(eventName),customerName);
+						
+						// update the database
+						 // Establish a connection to the database test.
+						try{
+					      // Step 1: "Load" the JDBC driver
+							Class.forName("com.mysql.jdbc.Driver");
+
+					      // Step 2: Establish the connection to the database 
+					      String url = "jdbc:mysql://localhost/fashion_studio"; 
+					      Connection conn = DriverManager.getConnection(url,"root","");
+					      //System.out.println("Connected.");
+					      
+					      // create a prepared statement from the connection
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (name,date,time,seat)" + "VALUES (?,?,?,?)");
+					      
+					      ps.setString(1, customerName);
+					      ps.setString(2, date);
+					      ps.setString(3, time);
+					      ps.setString(4, seat);
+					      
+					      ps.execute();
+					      conn.close();
+					    }
+					    catch (Exception e){
+					      System.err.println(e.getMessage()); 
+					    }
+						System.out.println("Reservation was added into the database.");
 					}
 					else{
 						System.out.println("Seat Reservation failed.");

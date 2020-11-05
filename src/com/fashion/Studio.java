@@ -32,7 +32,7 @@ public class Studio {
 	private String name;
 	private String address;
 	private String phoneNum;
-	private double funds;
+	private double balance;
 
 	private ArrayList<Employee> employees;
 	private ArrayList<Model> model;
@@ -51,11 +51,11 @@ public class Studio {
 	 * @param address
 	 * @param phoneNum
 	 */
-	public Studio(String name, String address, String phoneNum,double funds) {
+	public Studio(String name, String address, String phoneNum,double balance) {
 		this.name = name;
 		this.address = address;
 		this.phoneNum = phoneNum;
-		this.funds = funds;
+		this.balance = balance;
 
 		employees = new ArrayList<>();
 		
@@ -67,7 +67,9 @@ public class Studio {
 		payStubHistory = new ArrayList<>();
 		inventory = new Inventory();
 	}
-	
+	public Inventory getInventory(){
+		return this.inventory;
+	}
 	public void resetInventory() {
 		this.inventory = new Inventory();
 	}

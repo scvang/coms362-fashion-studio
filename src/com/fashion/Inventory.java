@@ -77,4 +77,13 @@ public class Inventory {
 			System.out.println("Item name: " + m.getItemName() + ", Brand name:" + m.getBrandName() + ", Weight: " + m.getWeight() + ", Color: " + m.getColor() + ", Quantity: " + m.getQuantity());
 		}
 	}
+	
+	public Apparel search(Apparel a) {
+		for(int i = 0; i < clothingStock.size(); ++i) {
+			if(a.sameItem(clothingStock.get(i))) {
+				return clothingStock.get(i);
+			}
+		}
+		return null;
+	}
 }
