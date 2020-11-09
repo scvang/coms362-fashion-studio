@@ -135,7 +135,13 @@ public class Main extends JFrame {
 	 * The main screen that prompts first.
 	 */
 	public static void mainScreen() {
+		ListChoices LC = new ListChoices();
+		LC.execute();
+		
+		
+		/**
 		String choice = "";
+		 
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
 			System.out.println(
@@ -185,6 +191,7 @@ public class Main extends JFrame {
 			}
 		}
 		in.close();
+		**/
 	}
 	
 	/**
