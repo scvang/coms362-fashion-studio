@@ -1,5 +1,6 @@
 package com.fashion;
 
+import java.io.*;
 import java.sql.*;
 import com.fashion.apparel.Apparel;
 import com.fashion.employees.HumanResources;
@@ -1481,7 +1482,8 @@ System.out.println("Choose a party event:");
 							"2) Show apparel \n" +
 							"3) Add item to your cart \n" +
 							"4) Go to cart \n" +
-							"5) Go back \n"
+							"5) Process refund \n" +
+							"6) Go back \n"
 			);
 
 			choice = in.next();
@@ -1589,7 +1591,7 @@ System.out.println("Choose a party event:");
 							System.out.println("Purchase? (y/n): ");
 							response = in4.nextLine().trim();
 							if (response.equals("y")) {
-								shoppingSession.updateInventory();
+								shoppingSession.updateInventoryBought();
 								System.out.println();
 							} else if (response.equals("n")) {
 								System.out.println();
@@ -1603,8 +1605,37 @@ System.out.println("Choose a party event:");
 
 					break;
 				case 5:
+					//TODO add refund logic
+					shoppingSession.displayRefundOrders();
+					Scanner in5 = new Scanner (System.in);
+
+					System.out.println("What would you like to return? (enter id number): ");
+					String responseRefund = in5.nextLine().trim();
+					int refundShoppingSession = Integer.parseInt(responseRefund);
+					shoppingSession.getRefundCart().addItem(refundShoppingSession);
+					System.out.println();
+
+					System.out.println("Please select an image for verification: ");
+					JFileChooser jfc = new JFileChooser();
+					jfc.showDialog(null,"Please Select the File");
+					jfc.setVisible(true);
+					File image = jfc.getSelectedFile();
+
+					shoppingSession.pushRefund(image, refundShoppingSession);
+
+					break;
+				case 6:
 					mainScreen();
 			}
+		}
+	}
+
+	private static Boolean isJPEG(File filename) {
+		try (DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+			return ins.readInt() == 0xffd8ffe0;
+		} catch(IOException e){
+			System.out.println("The file you have selected is not a JPEG :(");
+			return false;
 		}
 	}
 

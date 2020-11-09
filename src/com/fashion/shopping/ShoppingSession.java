@@ -13,29 +13,26 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Blob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ShoppingSession {
     private int sid;
     private Cart cart;
+    private RefundCart refundCart;
     private Card card;
     private String shippingAddress;
     private String billingAddress;
     private MySQLController mySQLController = new MySQLController();
 
-    /**
-     * could be used in the future for saving a shoppingsession state
-     * @param sid
-     * @param cart
-     * @param card
-     * @param shippingAddress
-     * @param billingAddress
-     */
-    public ShoppingSession(int sid, Cart cart, Card card, String shippingAddress, String billingAddress) {
+    public ShoppingSession(int sid, Cart cart, RefundCart refundCart, Card card, String shippingAddress, String billingAddress) {
         this.sid = sid;
         this.cart = cart;
+        this.refundCart = refundCart;
         this.card = card;
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
@@ -48,6 +45,7 @@ public class ShoppingSession {
     public ShoppingSession(int sid) {
         this.sid = sid;
         this.cart = new Cart();
+        this.refundCart = new RefundCart();
         this.card = new Card();
     }
 
@@ -57,6 +55,7 @@ public class ShoppingSession {
     public ShoppingSession() {
         this.sid = initSessionId();
         this.cart = new Cart();
+        this.refundCart = new RefundCart();
         this.card = new Card();
     }
 
@@ -94,14 +93,12 @@ public class ShoppingSession {
                         + rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
                         rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
                         + rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
-                System.out.println();
 
                 while (rs.next()) {
                     System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
                             + rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
                             rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
                             + rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
-                    System.out.println();
                 }
             }
 
@@ -157,15 +154,19 @@ public class ShoppingSession {
      * adds the completed shopping session to the database as a record
      */
     public void addShoppingSession(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+
         StringBuilder items = new StringBuilder();
         for(Apparel item : cart.getItems()){
             items.append(item.getItemName()).append("\n");
         }
 
         try {
-            mySQLController.runPushCommand("INSERT INTO SHOPPINGSESSIONS (SID,ITEMS,SUBTOTAL,TAXRATE,CARDNUM," +
-                    "CARDMONTH,CARDYEAR,CARDCODE,SHIPPINGADDRESS,BILLINGADDRESS) VALUES ('" + sid + "','" + items.toString() +
-                    "','" + (cart.getSubtotal() + (cart.getSubtotal() * (cart.getTaxRate() / 100.0))) + "','" + cart.getTaxRate() + "','" + card.getCardNum() + "','" + card.getEndMonth() + "','"
+            mySQLController.runPushCommand("INSERT INTO SHOPPINGSESSIONS (SID,DATE,ITEMS,SUBTOTAL,TAXRATE,CARDNUM," +
+                    "CARDMONTH,CARDYEAR,CARDCODE,SHIPPINGADDRESS,BILLINGADDRESS) VALUES ('" + sid + "','" + formatter.format(date)
+                    + "','"+ items.toString() + "','" + (cart.getSubtotal() + (cart.getSubtotal() * (cart.getTaxRate() / 100.0))) +
+                    "','" + cart.getTaxRate() + "','" + card.getCardNum() + "','" + card.getEndMonth() + "','"
                     + card.getEndYear() + "','" + card.getCode() + "','" + shippingAddress + "','" + billingAddress + "')");
             System.out.println("Purchased!");
             System.out.println();
@@ -177,7 +178,7 @@ public class ShoppingSession {
     /**
      * updates the inventory on the backend to reflect the change in purchased items
      */
-    public void updateInventory(){
+    public void updateInventoryBought(){
         for(Apparel item : cart.getItems()){
             int numLeft = 0;
             try {
@@ -223,6 +224,70 @@ public class ShoppingSession {
         }
         addShoppingSession();
         cart.clearCart();
+    }
+
+    /**
+     * Displays orders at most 30 days back
+     */
+    public void displayRefundOrders(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String currentDate = formatter.format(date);
+        String[] currentDateSplit = currentDate.split("/");
+        int currentDay = Integer.parseInt(currentDateSplit[0]);
+        int currentMonth = Integer.parseInt(currentDateSplit[1]);
+
+        try {
+            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions`");
+
+            if(rs != null) {
+                if(!rs.getString("date").isEmpty()){
+                    String payDate = rs.getString("date");
+                    String[] payDateSplit = payDate.split("/");
+
+                    int payDay = Integer.parseInt(payDateSplit[0]);
+                    int payMonth = Integer.parseInt(payDateSplit[1]);
+
+                    if(isRefundable(currentDay, currentMonth, payDay, payMonth)){
+                        System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items"));
+                        System.out.println();
+                    }
+                }
+
+                while (rs.next()) {
+                    if(!rs.getString("date").isEmpty()){
+                        String payDate = rs.getString("date");
+                        String[] payDateSplit = payDate.split("/");
+
+                        int payDay = Integer.parseInt(payDateSplit[0]);
+                        int payMonth = Integer.parseInt(payDateSplit[1]);
+
+                        if(isRefundable(currentDay, currentMonth, payDay, payMonth)){
+                            System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items"));
+                            System.out.println();
+                        }
+                    }
+                }
+            }
+
+        } catch (SQLException throwables) {
+            System.out.println("Error displaying apparel on our side");
+        }
+    }
+
+    private boolean isRefundable(int currentDay, int currentMonth, int payDay, int payMonth){
+        //if the current month is the same as our pay day or the month after then proceed
+        if(currentMonth == payMonth) {
+            return true;
+        } else if(payMonth == (currentMonth - 1)){
+            int remainder = 30 - currentDay;
+            return (30 - remainder) <= payDay;
+        }
+        return false;
+    }
+
+    public void pushRefund(File image, int refundShoppingSession){
+        mySQLController.runPreparedStatement("UPDATE SHOPPINGSESSION SET isRefunded=?,returnImage=? WHERE SID=?", refundShoppingSession, image);
     }
 
     public int getSid() {
@@ -275,5 +340,13 @@ public class ShoppingSession {
      */
     public void setBillingAddress(String billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public RefundCart getRefundCart() {
+        return refundCart;
+    }
+
+    public void setRefundCart(RefundCart refundCart) {
+        this.refundCart = refundCart;
     }
 }

@@ -1,5 +1,7 @@
 package com.fashion;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.*;
 
 public class MySQLController {
@@ -51,6 +53,22 @@ public class MySQLController {
             return null;
         } catch (Exception e){
             return null;
+        }
+    }
+
+    public boolean runPreparedStatement(String preparedStatement, int refundShoppingSession, File image){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(this.url, this.username, this.password);
+            PreparedStatement ps = con.prepareStatement(preparedStatement);
+            FileInputStream fs = null;
+            ps.setInt(1, 1);
+            ps.setBinaryStream(2, fs, (int) image.length());
+            ps.setInt(3, refundShoppingSession);
+
+            return true;
+        } catch (Exception e){
+            return false;
         }
     }
 
