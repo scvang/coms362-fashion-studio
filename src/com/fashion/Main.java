@@ -20,6 +20,7 @@ public class Main extends JFrame {
 	 * Instance variables.
 	 */
 	public static Studio studio;
+	static HumanResources HR = new HumanResources();
 	
 	public static void main(String[] args) {
 		 
@@ -101,7 +102,6 @@ public class Main extends JFrame {
 //		studio.addModel(modelName, modNum, audNum);
 		//studio.getEmployees();
 
-		
 		HumanResources.hireBusiness(1, "Name", "Somewhere", "Catering", "Bill", "444-444-4444", 800.0);
 		// Test adding to database.
 		
@@ -127,71 +127,9 @@ public class Main extends JFrame {
 //			}
 //		});
 
-		mainScreen();
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * The main screen that prompts first.
-	 */
-	public static void mainScreen() {
 		ListChoices LC = new ListChoices();
 		LC.execute();
 		
-		
-		/**
-		String choice = "";
-		 
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select an option ('q' to exit): \n" +
-			"1) Employees \n" +
-			"2) Inventory \n" +
-			"3) Models \n" +
-			"4) Events \n" +
-			"5) Advertisements \n" +
-			"6) Promotions \n" +
-			"7) Shop \n" +
-			"8) Negotiate Contract\n" +
-			"9) Manage Businesses\n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					employeeScreen();
-				break;
-				case 2:
-					inventoryScreen();
-				break;
-				case 3:
-					modelScreen();
-				break;
-				case 4:
-					eventScreen();
-				break;
-				case 5:
-					advertisementScreen();
-				break;
-				case 6:
-					promotionScreen();
-				break;
-				case 7:
-					shoppingScreen();
-				break;
-				case 8:
-					contractScreen();
-				break;
-				case 9:
-					businessScreen();
-				break;
-			}
-		}
-		in.close();
-		**/
 	}
 	
 	/**
@@ -364,94 +302,10 @@ public class Main extends JFrame {
 							"Quantity: " + apparel.getQuantity() + "\n"
 							);
 				break;
-				case 8:
-					mainScreen();
-				break;
+
 			}
 		}
 		in.close();
-	}
-
-	/**
-	 * @author Chad Morrow
-	 * Employee Screen
-	 */
-	public static void employeeScreen() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-					"Select an event ('q' to exit): \n" +
-							"1) View Employees \n" +
-							"2) Pay Employee \n" +
-							"3) Go back \n"
-			);
-
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-
-			switch(Integer.parseInt(choice)){
-				case 1:
-					studio.getEmployees();
-					System.out.println();
-					System.out.println();
-					break;
-				case 2:
-					Scanner in2 = new Scanner (System.in);
-					System.out.println("Enter the employee id ('q' to exit): ");
-					int eid = -1;
-					while(eid == -1){
-						String temp = in2.next();
-						if(temp.equals("q")) {
-							System.out.println();
-							System.out.println();
-							employeeScreen();
-						}
-
-						try {
-							eid = Integer.parseInt(temp);
-						} catch (NumberFormatException e) {
-							System.out.println("Employee id must be a number ('q' to exit): ");
-						}
-					}
-
-					PayStubInfo payStubInfo = studio.getEmployee(eid).getPayStubInfo();
-
-					System.out.println("Did this employee recieve a bonus? (y/n) ('q' to exit)");
-					String yesno = in2.next();
-
-					double bonus = -1;
-					if(yesno.equals("y")) {
-						System.out.println("How much did they recieve? ('q' to exit)");
-						while(bonus == -1){
-							String temp = in2.next();
-							if(temp.equals("q")) {
-								System.out.println();
-								System.out.println();
-								employeeScreen();
-							}
-
-							try {
-								bonus = Double.parseDouble(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Bonus must be a number ('q' to exit): ");
-							}
-						}
-					}
-					payStubInfo.setBonus(bonus);
-
-					if(studio.payEmployee(eid, payStubInfo)){
-						System.out.println(studio.getEmployee(eid).getName() + " was paid!");
-					} else {
-						System.out.println("Error paying employee, try again later");
-					}
-					System.out.println();
-					System.out.println();
-					break;
-				case 3:
-					mainScreen();
-			}
-		}
 	}
 	
 	/**
@@ -501,9 +355,7 @@ public class Main extends JFrame {
 						System.out.print("We don't currently support that type of advertisement at this time.");
 					}
 				break;
-				
-				case 3:
-					mainScreen();
+
 			}
 		}
 		in.close();
@@ -569,10 +421,7 @@ public class Main extends JFrame {
 			case 4:
 				//TODO
 			break;
-			
-			case 5:
-				mainScreen();
-			break;
+
 			}
 		}
 	}
@@ -608,13 +457,13 @@ public class Main extends JFrame {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displayModels();
+					HR.displayModels();
 				break;
 				
 				case 2:
 					System.out.println("Which model do you want to change?");
 					name = in.next();
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -626,7 +475,7 @@ public class Main extends JFrame {
 					System.out.println("Enter model name:");
 					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -634,7 +483,7 @@ public class Main extends JFrame {
 					System.out.println("Enter contact information:");
 					String phoneNum = in.nextLine();
 					
-					studio.getModel(name).setPhoneNum(phoneNum);
+					HR.getModel(name).setPhoneNum(phoneNum);
 					
 				break;
 				
@@ -642,7 +491,7 @@ public class Main extends JFrame {
 					System.out.println("Enter model name:");
 					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -650,12 +499,9 @@ public class Main extends JFrame {
 					System.out.println("Enter salary:");
 					salary = in.nextDouble();
 					PayStubInfo p = new PayStubInfo(salary,0,0,0);
-					studio.getModel(name).setPayStubInfo(p);;
+					HR.getModel(name).setPayStubInfo(p);;
 				break;
 				
-				case 6:
-					mainScreen();
-				break;
 				
 				case 5:
 					System.out.println("Enter EID: ");
@@ -668,7 +514,7 @@ public class Main extends JFrame {
 					String number = in.nextLine();
 					System.out.println("Enter salary:");
 					salary = in.nextDouble();
-					studio.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
+					HR.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}
@@ -854,9 +700,7 @@ public class Main extends JFrame {
 					studio.createEvent(type,name,date,time);
 				break;
 				
-				case 6:
-					mainScreen();
-				break;
+
 				
 				case 5:
 					studio.displayEvents();
@@ -1466,8 +1310,7 @@ System.out.println("Choose a party event:");
 					System.out.println();
 					System.out.println();
 					break;
-				case 4:
-					mainScreen();
+
 			}
 		}
 	}
@@ -1609,8 +1452,7 @@ System.out.println("Choose a party event:");
 					}
 
 					break;
-				case 5:
-					mainScreen();
+
 			}
 		}
 	}
@@ -1646,8 +1488,7 @@ System.out.println("Choose a party event:");
 				case 3:
 					contractSession.viewCurrentContract();
 					break;
-				case 4:
-					mainScreen();
+
 			}
 		}
 	}
