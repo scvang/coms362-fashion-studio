@@ -234,7 +234,7 @@ public class Main extends JFrame {
 		      Statement st = conn.createStatement();
 		      
 		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM inventory2");
+		      ResultSet rs = st.executeQuery("SELECT * FROM inventory");
 		      
 		      studio.resetInventory();
 		      while(rs.next()) {
@@ -298,7 +298,7 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
 				      ps.setString(2, size);
