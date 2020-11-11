@@ -129,8 +129,11 @@ public class Main extends JFrame {
 //			}
 //		});
 
-		ListChoices LC = new ListChoices();
-		LC.execute();
+		CommandDisplay cd = new CommandDisplay();
+		cd.addCommand(new ListEmployeeOptions());
+		cd.addSubEmp(new ViewEmployees());
+		cd.addSubEmp(new PayEmployee());
+		cd.displaycommands();
 		
 	}
 	

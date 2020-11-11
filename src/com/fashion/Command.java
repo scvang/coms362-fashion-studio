@@ -13,16 +13,15 @@ import com.fashion.events.Showing;
 import com.fashion.pay.PayStubInfo;
 
 public interface Command {
+	public String getDescription();
 	public void execute();
 }
 
+/**
 class ListChoices implements Command {
-	ListEmployeeOptions LEO;
-	ListEventOptions LEvO;
 
 	public ListChoices() {
-		LEO = new ListEmployeeOptions();
-		LEvO = new ListEventOptions();
+
 	}
 
 	@Override
@@ -35,49 +34,35 @@ class ListChoices implements Command {
 					+ "8) Negotiate Contract\n" + "9) Manage Businesses\n");
 
 			choice = in.next();
-			if (choice.equals("1")) {
-				LEO.execute();
-				break;
-			} else if (choice.equals("4")) {
-				LEvO.execute();
-			}
 		}
 		in.close();
 	}
+
+	@Override
+	public String getDescription() {
+		return "Display Initial Choices";
+	}
 }
+**/
 
-interface EmployeeCommands extends Command {
-
-}
-
-class ListEmployeeOptions implements EmployeeCommands {
-	ViewEmployees VE;
-	PayEmployee PE;
+class ListEmployeeOptions implements Command {
 
 	public ListEmployeeOptions() {
-		VE = new ViewEmployees();
-		PE = new PayEmployee();
+
 	}
 
 	@Override
 	public void execute() {
-		Scanner in = new Scanner(System.in);
-		String choice = "";
-		while (!choice.contentEquals("q")) {
-			System.out.println("Select an event ('q' to exit): \n" + "1) View Employees \n" + "2) Pay Employee \n"
-					+ "3) Go back \n");
-			choice = in.next();
-			if (choice.equals("1")) {
-				VE.execute();
-			} else if (choice.equals("2")) {
-				PE.execute();
-			}
-		}
-		in.close();
+
+	}
+
+	@Override
+	public String getDescription() {
+		return "List Employee Commands";
 	}
 }
 
-class ViewEmployees implements EmployeeCommands {
+class ViewEmployees implements Command {
 	HumanResources HR;
 
 	public ViewEmployees() {
@@ -90,9 +75,14 @@ class ViewEmployees implements EmployeeCommands {
 		System.out.println();
 		System.out.println();
 	}
+
+	@Override
+	public String getDescription() {
+		return "View Current Employees";
+	}
 }
 
-class PayEmployee implements EmployeeCommands {
+class PayEmployee implements Command {
 	HumanResources HR;
 
 	/**
@@ -144,33 +134,18 @@ class PayEmployee implements EmployeeCommands {
 		System.out.println();
 
 	}
+
+	@Override
+	public String getDescription() {
+		return "Pay Employee";
+	}
 }
 
-interface InventoryCommands extends Command {
 
-}
-
-interface ModelCommands extends Command {
-
-}
-
-interface EventCommands extends Command {
-
-}
-
-class ListEventOptions implements EventCommands {
-	private ShowingEventCommands SEO;
-	private DiningEventCommands DEO;
-	private PartyEventCommands PEO;
-	private CreateNewEvent CNE;
-	private DisplayEvents DE;
+class ListEventOptions implements Command {
 
 	public ListEventOptions() {
-		SEO = new ShowingEventCommands();
-		DEO = new DiningEventCommands();
-		PEO = new PartyEventCommands();
-		CNE = new CreateNewEvent();
-		DE = new DisplayEvents();
+
 	}
 
 	@Override
@@ -184,369 +159,75 @@ class ListEventOptions implements EventCommands {
 			choice = in.next();
 			if (choice.equals("q") || choice.equals("'q'"))
 				break;
-			else
-				in.nextLine(); // Clear the buffer.
-			if (choice.equals("1")) {
-				SEO.execute();
-			} else if (choice.equals("2")) {
-				DEO.execute();
-			} else if (choice.equals("3")) {
-				PEO.execute();
-			} else if (choice.equals("4")) {
-				CNE.execute();
-			} else if (choice.equals("4")) {
-				DE.execute();
-			}
 		}
 		in.close();
 	}
+
+	@Override
+	public String getDescription() {
+		return "List Event Commands";
+	}
 }
 
-class ShowingEventCommands implements EventCommands {
-	private ShowingSubCommands SSC;
-	private Event E;
-	private ListEventOptions LEO;
-
+class ShowingEventCommands implements Command {
+	
 	public ShowingEventCommands() {
-		E = new Event();
+		
+	}
 
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return "List SHowing Commands";
 	}
 
 	@Override
 	public void execute() {
-		System.out.println("Choose a showing event:");
-
-		int count = 1;
-		ArrayList<Showing> showingList = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Showing) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
-				++count;
-				showingList.add((Showing) E.getEventList().get(i));
-			}
-		}
-		if (showingList.isEmpty()) {
-			System.out.println("There are no showings!");
-			//LEO.execute();
-		}
-		Scanner in3 = new Scanner(System.in);
-		int i = in3.nextInt();
-
-		String eventName = showingList.get(i - 1).getEvent();
-		in3.close();
-		SSC = new ShowingSubCommands(eventName);
-		SSC.execute();
+		// TODO Auto-generated method stub
+		
 	}
-
+	
 }
 
-class ShowingSubCommands implements EventCommands {
-	private Event E;
-	private String eventName = "";
-
-	public ShowingSubCommands(String eventName) {
-		this.eventName = eventName;
-		E = new Event();
-	}
-
-	@Override
-	public void execute() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while (!choice.equals("q")) {
-			System.out.println("Select a choice ('q' to exit): \n" + "1) Display available seats \n"
-					+ "2) Reserve a seat \n" + "3) Check a seat \n" + "4) Refund \n" + "5) Go back \n");
-
-			choice = in.next();
-			if (choice.equals("q") || choice.equals("'q'"))
-				break;
-			else
-				in.nextLine(); // Clear the buffer.
-
-			String name = "";
-
-			if (choice.equals("1")) {
-				E.displaySeats(E.getEvent(eventName));
-			} else if (choice.equals("2")) {
-				if (E.isShowingFull(E.getEvent(eventName))) {
-					System.out.println("No available seats.");
-					break;
-				}
-				System.out.println("Enter your customer name: ");
-				String customerName = in.nextLine();
-				System.out.println("Enter your desired seat (A1~I9): ");
-				String seat = in.nextLine();
-				System.out.println("Enter your desired date (mm-dd-yy): ");
-				String date = in.nextLine();
-				System.out.println("Enter your desired time (hh:mm am/pm): ");
-				String time = in.nextLine();
-
-				if (E.reserveSeat(E.getEvent(eventName), seat, customerName, date, time)) {
-					E.chargeCard(E.getEvent(eventName), customerName);
-
-					// update the database
-					// Establish a connection to the database test.
-					try {
-						// Step 1: "Load" the JDBC driver
-						Class.forName("com.mysql.cj.jdbc.Driver");
-
-						// Step 2: Establish the connection to the database
-						String url = "jdbc:mysql://localhost/fashion_studio";
-						Connection conn = DriverManager.getConnection(url, "root", "");
-						// System.out.println("Connected.");
-
-						// create a prepared statement from the connection
-						PreparedStatement ps = conn
-								.prepareStatement("INSERT INTO showing (name,date,time,seat)" + "VALUES (?,?,?,?)");
-
-						ps.setString(1, customerName);
-						ps.setString(2, date);
-						ps.setString(3, time);
-						ps.setString(4, seat);
-
-						ps.execute();
-						conn.close();
-					} catch (Exception e) {
-						System.err.println(e.getMessage());
-					}
-					System.out.println("Reservation was added into the database.");
-				} else {
-					System.out.println("Seat Reservation failed.");
-				}
-			} else if (choice.equals("3")) {
-				System.out.println("Enter your customer name:");
-				name = in.nextLine();
-				if (E.hasSeatReservation(name, E.getEvent(eventName))) {
-					System.out.println("Name: " + E.getSeat(name, E.getEvent(eventName)).getCustomerName() + "\n"
-							+ "Date: " + E.getSeat(name, E.getEvent(eventName)).getDate() + "\n" + "Time: "
-							+ E.getSeat(name, E.getEvent(eventName)).getTime() + "\n" + "Seat: "
-							+ E.getSeat(name, E.getEvent(eventName)).getSeatNum() + "\n");
-				} else {
-					System.out.println("No reservation found for " + name);
-				}
-			} else if (choice.equals("4")) {
-				System.out.println("Enter the customer name:");
-				name = in.nextLine();
-				if (E.hasSeatReservation(name, E.getEvent(eventName))) {
-					System.out.println("Reservation found.");
-					E.removeSeatReservation(name, E.getEvent(eventName));
-					System.out.println("Reservation removed.");
-				} else {
-					System.out.println("Could not find reservaton.");
-				}
-			}
-		}
-		in.close();
-	}
-}
-
-class DiningEventCommands implements EventCommands {
-	private Event E;
-	private DiningSubCommands DSC;
-	private ListEventOptions LEO;
+class DiningEventCommands implements Command {
 	
 	public DiningEventCommands() {
-		E = new Event();
+		
 	}
 
 	@Override
 	public void execute() {
 
-		System.out.println("Choose a dining event:");
-
-		int count = 1;
-		ArrayList<Dining> list = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Dining) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
-				++count;
-				list.add((Dining) E.getEventList().get(i));
-			}
-		}
-		if (list.isEmpty()) {
-			System.out.println("There are no dinings!");
-			//LEO.execute();
-		}
-		Scanner in = new Scanner(System.in);
-		int i = in.nextInt();
-
-		String eventName = list.get(i - 1).getEvent();
-		DSC = new DiningSubCommands(eventName);
-		DSC.execute();
-		in.close();
-	}
-
-}
-
-class DiningSubCommands implements EventCommands {
-	private String eventName = "";
-	private Event E;
-
-	public DiningSubCommands(String eventName) {
-		this.eventName = eventName;
-		E = new Event();
 	}
 
 	@Override
-	public void execute() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while (!choice.equals("q")) {
-			System.out.println("Select a choice ('q' to exit): \n" + "1) Display available tables \n"
-					+ "2) Reserve a table \n" + "3) Check a table \n" + "4) Refund \n" + "5) Go back \n");
-
-			choice = in.next();
-			if (choice.equals("q") || choice.equals("'q'"))
-				break;
-			else
-				in.nextLine();
-
-			String name = "";
-			if (choice.equals("1")) {
-				E.displayTables(E.getEvent(eventName));
-			} else if (choice.equals("2")) {
-				if (E.isDiningFull(E.getEvent(eventName))) {
-					System.out.println("There are no available tables.");
-					break;
-				}
-				System.out.println("Enter your customer name: ");
-				String customerName = in.nextLine();
-				System.out.println("Enter your desired table (1~20): ");
-				String table = in.nextLine();
-				System.out.println("Enter your desired date (mm-dd-yy): ");
-				String date = in.nextLine();
-				System.out.println("Enter your desired time (hh:mm am/pm): ");
-				String time = in.nextLine();
-
-				if (E.reserveTable(E.getEvent(eventName), table, customerName, date, time)) {
-					E.chargeCard(E.getEvent(eventName), customerName);
-				} else {
-					System.out.println("Table reservation failed.");
-				}
-			} else if (choice.equals("3")) {
-				System.out.println("Enter your customer name:");
-				name = in.nextLine();
-				if (E.hasTableReservation(name, E.getEvent(eventName))) {
-					System.out.println("Name: " + E.getTable(name, E.getEvent(eventName)).getCustomerName() + "\n"
-							+ "Date: " + E.getTable(name, E.getEvent(eventName)).getDate() + "\n" + "Time: "
-							+ E.getTable(name, E.getEvent(eventName)).getTime() + "\n" + "Table: "
-							+ E.getTable(name, E.getEvent(eventName)).getTableNum() + "\n");
-				} else {
-					System.out.println("No reservation found for " + name);
-				}
-			} else if (choice.equals("4")) {
-				System.out.println("Enter the customer name:");
-				name = in.nextLine();
-				if (E.hasTableReservation(name, E.getEvent(eventName))) {
-					System.out.println("Reservation found.");
-					E.removeTableReservation(name, E.getEvent(eventName));
-					System.out.println("Reservation removed.");
-				} else {
-					System.out.println("Could not find reservaton.");
-				}
-			}
-		}
-		in.close();
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }
 
-class PartyEventCommands implements EventCommands {
-	private Event E;
-	private ListEventOptions LEO;
-	private PartySubCommands PSC;
-
+class PartyEventCommands implements Command {
+	
 	public PartyEventCommands() {
-		E = new Event();
+
 	}
 
 	@Override
 	public void execute() {
-		System.out.println("Choose a party event:");
-
-		int count = 1;
-		ArrayList<Party> list = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Party) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
-				++count;
-				list.add((Party) E.getEventList().get(i));
-			}
-		}
-		if (list.isEmpty()) {
-			System.out.println("There are no parties!");
-			//LEO.execute();
-		}
-		Scanner in3 = new Scanner(System.in);
-		int i = in3.nextInt();
-
-		String eventName = list.get(i - 1).getEvent();
-		PSC = new PartySubCommands(eventName);
-		PSC.execute();
-		in3.close();
-	}
-
-}
-
-class PartySubCommands implements EventCommands {
-	private String eventName = "";
-	private Event E;
-
-	public PartySubCommands(String eventName) {
-		this.eventName = eventName;
-		E = new Event();
+		
 	}
 
 	@Override
-	public void execute() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while (!choice.equals("q")) {
-			System.out.println("Select a choice ('q' to exit): \n" + "1) Display number of attendees \n"
-					+ "2) Reserve a badge \n" + "3) Check reservation \n" + "4) Refund \n" + "5) Go back \n");
-
-			choice = in.next();
-			if (choice.equals("q") || choice.equals("'q'"))
-				break;
-			else
-				in.nextLine();
-
-			String name = "";
-			if (choice.equals("1")) {
-				System.out
-						.println("There are: " + E.getNumOfAttendees(E.getEvent(eventName)) + " number of attendees.");
-			} else if (choice.equals("2")) {
-				if (E.isPartyFull(E.getEvent(eventName))) {
-					System.out.println("The venue is full.");
-					break;
-				}
-
-				System.out.println("Enter your customer name: ");
-				String customerName = in.nextLine();
-				System.out.println("Enter your desired date (mm-dd-yy): ");
-				String date = in.nextLine();
-				System.out.println("Enter your desired time (hh:mm am/pm): ");
-				String time = in.nextLine();
-
-				E.reserveBadge(E.getEvent(eventName), customerName, date, time);
-			} else if (choice.equals("3")) {
-				System.out.println("Enter your customer name:");
-				name = in.nextLine();
-				if (E.hasBadgeReservation(name, E.getEvent(eventName))) {
-					System.out.println("Name: " + E.getBadge(name, E.getEvent(eventName)).getName() + "\n" + "Date: "
-							+ E.getBadge(name, E.getEvent(eventName)).getDate() + "\n" + "Time: "
-							+ E.getBadge(name, E.getEvent(eventName)).getTime() + "\n");
-				} else {
-					System.out.println("No reservation found.");
-				}
-			} else if (choice.equals("4")) {
-
-			}
-		}
-		in.close();
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }
 
-class CreateNewEvent implements EventCommands {
+class CreateNewEvent implements Command {
 	private Event E;
 
 	public CreateNewEvent() {
@@ -572,9 +253,15 @@ class CreateNewEvent implements EventCommands {
 		in.close();
 	}
 
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return "Create New Event";
+	}
+
 }
 
-class DisplayEvents implements EventCommands {
+class DisplayEvents implements Command {
 	private Event E;
 
 	public DisplayEvents() {
@@ -586,24 +273,9 @@ class DisplayEvents implements EventCommands {
 		E.displayEvents();
 	}
 
-}
-
-interface AdvertismentCommands extends Command {
-
-}
-
-interface PromotionCommands extends Command {
-
-}
-
-interface ShopCommands extends Command {
-
-}
-
-interface ContractCommands extends Command {
-
-}
-
-interface BusinessCommands extends Command {
+	@Override
+	public String getDescription() {
+		return "Display Current Events";
+	}
 
 }
