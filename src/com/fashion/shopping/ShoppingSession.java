@@ -58,6 +58,9 @@ public class ShoppingSession {
         this.card = new Card();
     }
 
+    /**
+     * sets the shopping id based upon the current sessions in the dB
+     */
     public void initSessionId(){
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` ORDER BY `shoppingsessions`.`sid` DESC");
@@ -209,6 +212,9 @@ public class ShoppingSession {
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` WHERE `isRefunded` = 0");
 
+            /**
+             * displays all the orders within the last 30 days that haven't been refunded
+             */
             if(rs != null) {
                 if(!rs.getString("date").isEmpty()){
                     haveRefundItems = true;
@@ -292,10 +298,16 @@ public class ShoppingSession {
         }
     }
 
+    /**
+     * @return the shopping id of our created shopping session
+     */
     public int getSid() {
         return sid;
     }
 
+    /**
+     * @param sid is the new sid assigned to this shoppingsession
+     */
     public void setSid(int sid) {
         this.sid = sid;
     }

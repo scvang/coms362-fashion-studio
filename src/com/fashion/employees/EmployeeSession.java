@@ -16,7 +16,6 @@ import java.util.Scanner;
 
 public class EmployeeSession {
     Employee manager;
-    Employee editEmployee;
     private MySQLController mySQLController = new MySQLController();
 
     private String[] firstNames = {"Bob", "Joe", "Sally", "Hailey", "Molly", "Johan", "Ricky"};
@@ -27,6 +26,11 @@ public class EmployeeSession {
     public EmployeeSession() {
     }
 
+    /**
+     * @param username of login
+     * @param password of login
+     * @return true if the user has access to the manager screen, otherwise false
+     */
     public boolean getAccessRights(String username, String password){
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `employees` WHERE `username` = '" + username + "'");
@@ -50,6 +54,9 @@ public class EmployeeSession {
         }
     }
 
+    /**
+     * goes through the process of hiring a random employee
+     */
     public void hireEmployee(){
         Scanner in = new Scanner(System.in);
         Random rand = new Random();
@@ -96,7 +103,7 @@ public class EmployeeSession {
     }
 
     /**
-     * @return
+     * @return the new employee id based upon the eid's in the dB
      */
     private int initEmployeeId(){
         try {
@@ -113,6 +120,9 @@ public class EmployeeSession {
         return -1;
     }
 
+    /**
+     * displays the important information of the all the active employees
+     */
     public void viewEmployees(){
         Scanner in = new Scanner(System.in);
         try {
@@ -128,11 +138,21 @@ public class EmployeeSession {
                     System.out.println("Salary: " + ": " + rs.getString("salary") + "\n");
                 }
             }
+        } catch (SQLException throwables) {
+            System.out.println("Error displaying employees on our side");
+        }
+    }
 
+    /**
+     * displays the employee's headshot from dB
+     */
+    public void displayHeadshot(){
+        Scanner in = new Scanner(System.in);
+        try {
             System.out.println("Would you like to view a specific employees headshot? (y/n)");
             if(in.next().equals("y")){
                 System.out.println("Which one?");
-                rs = mySQLController.runPullCommand("SELECT * FROM `employees` WHERE `eid` = '" + Integer.parseInt(in.next()) + "'");
+                ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `employees` WHERE `eid` = '" + Integer.parseInt(in.next()) + "'");
 
                 if(rs != null) {
                     mySQLController.displayImageFromDatabase("Headshot", rs.getString("firstName"), rs.getBlob("headshot"));
@@ -144,28 +164,16 @@ public class EmployeeSession {
         }
     }
 
-    //TODO
+
+    /**
+     * runs through the sequence of firing one employee from the company
+     */
     public void fireEmployee(){
         Scanner in = new Scanner(System.in);
-        try {
-            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `employees` WHERE `isActive`=1");
+        viewEmployees();
 
-            if(rs != null) {
-                System.out.println(rs.getInt("eid") + ": " + rs.getString("firstName") + " " + rs.getString("lastName"));
-                System.out.println("Job Title: " + ": " + rs.getString("jobTitle"));
-                System.out.println("Salary: " + ": " + rs.getString("salary") + "\n");
-                while (rs.next()) {
-                    System.out.println(rs.getInt("eid") + ": " + rs.getString("firstName") + " " + rs.getString("lastName"));
-                    System.out.println("Job Title: " + ": " + rs.getString("jobTitle"));
-                    System.out.println("Salary: " + ": " + rs.getString("salary") + "\n");
-                }
-            }
-
-            System.out.println("Who's getting fired?");
-            mySQLController.runPushCommand("UPDATE `employees` SET `isActive`=0 WHERE `eid`= '" + Integer.parseInt(in.next()) + "'");
-            System.out.println("They have been fired :(\n");
-        } catch (SQLException throwables) {
-            System.out.println("Error displaying employees on our side");
-        }
+        System.out.println("Who's getting fired?");
+        mySQLController.runPushCommand("UPDATE `employees` SET `isActive`=0 WHERE `eid`= '" + Integer.parseInt(in.next()) + "'");
+        System.out.println("They have been fired :(\n");
     }
 }

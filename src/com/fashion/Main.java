@@ -390,7 +390,7 @@ public class Main extends JFrame {
 				case 1:
 					EmployeeSession employeeSession1 = new EmployeeSession();
 					employeeSession1.viewEmployees();
-
+					employeeSession1.displayHeadshot();
 					break;
 				case 2:
 					Scanner in2 = new Scanner (System.in);
@@ -456,7 +456,8 @@ public class Main extends JFrame {
 						System.out.println(
 								"Select an action: \n" +
 										"1) Hire employee \n" +
-										"2) Fire employee \n"
+										"2) Fire employee \n" +
+										"3) Back"
 						);
 
 						switch(Integer.parseInt(in3.next())){
@@ -466,8 +467,10 @@ public class Main extends JFrame {
 							case 2:
 								employeeSession.fireEmployee();
 								break;
+							default:
+								System.out.println();
+								break;
 						}
-
 					}
 					break;
 				case 4:
