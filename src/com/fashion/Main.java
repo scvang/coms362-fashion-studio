@@ -388,9 +388,9 @@ public class Main extends JFrame {
 
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.getEmployees();
-					System.out.println();
-					System.out.println();
+					EmployeeSession employeeSession1 = new EmployeeSession();
+					employeeSession1.viewEmployees();
+
 					break;
 				case 2:
 					Scanner in2 = new Scanner (System.in);
@@ -447,12 +447,28 @@ public class Main extends JFrame {
 				case 3:
 					EmployeeSession employeeSession = new EmployeeSession();
 					Scanner in3 = new Scanner (System.in);
+
 					System.out.println("Username: ");
 					String username = in3.next();
 					System.out.println("Password: ");
 					String password = in3.next();
-					employeeSession.getAccessRights(username, password);
+					if(employeeSession.getAccessRights(username, password)){
+						System.out.println(
+								"Select an action: \n" +
+										"1) Hire employee \n" +
+										"2) Fire employee \n"
+						);
 
+						switch(Integer.parseInt(in3.next())){
+							case 1:
+								employeeSession.hireEmployee();
+								break;
+							case 2:
+								employeeSession.fireEmployee();
+								break;
+						}
+
+					}
 					break;
 				case 4:
 					mainScreen();

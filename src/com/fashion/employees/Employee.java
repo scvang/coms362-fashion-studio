@@ -37,7 +37,9 @@ public class Employee {
 		this.payStubInfo = payStubInfo;
 	}
 
-	public Employee(){}
+	public Employee(){
+		payStubInfo = new PayStubInfo();
+	}
 
 	/**
 	 * @return a random sales employee

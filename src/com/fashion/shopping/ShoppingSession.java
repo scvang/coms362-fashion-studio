@@ -58,9 +58,6 @@ public class ShoppingSession {
         this.card = new Card();
     }
 
-    /**
-     * @return the next available session id value
-     */
     public void initSessionId(){
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` ORDER BY `shoppingsessions`.`sid` DESC");
@@ -112,7 +109,7 @@ public class ShoppingSession {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory` WHERE `itemName` = '" + itemName + "'");
 
             if(rs != null){
-                displayImageFromDatabase("Apparel Image", rs.getString("itemName"), rs.getBlob("image"));
+                mySQLController.displayImageFromDatabase("Apparel Image", rs.getString("itemName"), rs.getBlob("image"));
             } else {
                 System.out.println("Unable to find your product");
             }
@@ -288,47 +285,10 @@ public class ShoppingSession {
                 System.out.println("Processed on: " + rs.getString("date"));
                 System.out.print("Items: " + rs.getString("items"));
                 System.out.println("Subtotal: $" + rs.getInt("subtotal"));
-                displayImageFromDatabase("Return Item", rs.getString("items"), rs.getBlob("returnImage"));
+                mySQLController.displayImageFromDatabase("Return Item", rs.getString("items"), rs.getBlob("returnImage"));
             }
         } catch (SQLException throwables) {
             System.out.println("Error displaying apparel on our side");
-        }
-    }
-
-    /**
-     * @param title is the title of the JFrame image
-     * @param dbItemName is the name of the saved jpg
-     * @param dbImage is the image pulled from the database
-     */
-    private void displayImageFromDatabase(String title, String dbItemName, Blob dbImage){
-        /**
-         * creates a JFrame for our apparel image
-         */
-        try {
-            File file = new File(dbItemName.trim() + ".png");
-            FileOutputStream fos = new FileOutputStream(file);
-            byte b[];
-            Blob blob = dbImage;
-            b= blob.getBytes(1,(int) blob.length());
-            fos.write(b);
-            fos.close();
-
-            JFrame editorFrame = new JFrame(title);
-            editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-            BufferedImage image = null;
-            image = ImageIO.read(new File(dbItemName.trim() + ".png"));
-
-            ImageIcon imageIcon = new ImageIcon(image);
-            JLabel jLabel = new JLabel();
-            jLabel.setIcon(imageIcon);
-            editorFrame.getContentPane().add(jLabel, BorderLayout.CENTER);
-
-            editorFrame.pack();
-            editorFrame.setLocationRelativeTo(null);
-            editorFrame.setVisible(true);
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
         }
     }
 
