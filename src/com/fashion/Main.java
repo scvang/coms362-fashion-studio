@@ -133,6 +133,24 @@ public class Main extends JFrame {
 		cd.addCommand(new ListEmployeeOptions());
 		cd.addSubEmp(new ViewEmployees());
 		cd.addSubEmp(new PayEmployee());
+		cd.addCommand(new ListEventOptions());
+		cd.addSubEvent(new ShowingEventCommands());
+		cd.addSubEvent(new DiningEventCommands());
+		cd.addSubEvent(new PartyEventCommands());
+		cd.addSubEvent(new CreateNewEvent());
+		cd.addSubEvent(new DisplayEvents());
+		cd.addSubShowEvent(new DisplaySeat());
+		cd.addSubShowEvent(new ReserveSeat());
+		cd.addSubShowEvent(new CheckSeat());
+		cd.addSubShowEvent(new Refund());
+		cd.addSubDiningEvent(new DisplayTable());
+		cd.addSubDiningEvent(new ReserveTable());
+		cd.addSubDiningEvent(new CheckTable());
+		cd.addSubDiningEvent(new RefundTable());
+		cd.addSubPartyEvent(new DisplayAttendees());
+		cd.addSubPartyEvent(new ReserveBadge());
+		cd.addSubPartyEvent(new CheckBadge());
+		cd.addSubPartyEvent(new RefundBadge());
 		cd.displaycommands();
 		
 	}
