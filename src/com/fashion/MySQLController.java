@@ -28,7 +28,7 @@ public class MySQLController {
             Connection con = DriverManager.getConnection(this.url, this.username, this.password);
             Statement mystatement = con.createStatement();
             mystatement.execute(command);
-
+            con.close();
         } catch (Exception e){
             System.out.println("Unable to connect");
         }
@@ -49,22 +49,25 @@ public class MySQLController {
             if(response.next()){
                 return response;
             }
-
+            con.close();
             return null;
         } catch (Exception e){
             return null;
         }
     }
 
-    public boolean runPreparedStatement(String preparedStatement, int refundShoppingSession, File image){
+    public boolean pushRefund(String preparedStatement, int refundShoppingSession, File image){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(this.url, this.username, this.password);
             PreparedStatement ps = con.prepareStatement(preparedStatement);
-            FileInputStream fs = null;
             ps.setInt(1, 1);
-            ps.setBinaryStream(2, fs, (int) image.length());
+            ps.setBinaryStream(2, new FileInputStream(image), (int) image.length());
             ps.setInt(3, refundShoppingSession);
+            ps.executeUpdate();
+            con.close();
+
+            System.out.println("\nYour return has been accepted :)\n");
 
             return true;
         } catch (Exception e){

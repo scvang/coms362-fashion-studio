@@ -3,6 +3,7 @@ package com.fashion;
 import java.io.*;
 import java.sql.*;
 import com.fashion.apparel.Apparel;
+import com.fashion.employees.EmployeeSession;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.*;
 import com.fashion.negotiations.ContractSession;
@@ -378,7 +379,8 @@ public class Main extends JFrame {
 					"Select an event ('q' to exit): \n" +
 							"1) View Employees \n" +
 							"2) Pay Employee \n" +
-							"3) Go back \n"
+							"3) Manager screen \n" +
+							"4) Go back \n"
 			);
 
 			choice = in.next();
@@ -443,6 +445,16 @@ public class Main extends JFrame {
 					System.out.println();
 					break;
 				case 3:
+					EmployeeSession employeeSession = new EmployeeSession();
+					Scanner in3 = new Scanner (System.in);
+					System.out.println("Username: ");
+					String username = in3.next();
+					System.out.println("Password: ");
+					String password = in3.next();
+					employeeSession.getAccessRights(username, password);
+
+					break;
+				case 4:
 					mainScreen();
 			}
 		}
@@ -1476,6 +1488,7 @@ System.out.println("Choose a party event:");
 		String choice = "";
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
+			shoppingSession.initSessionId();
 			System.out.println(
 					"Select a choice ('q' to exit): \n" +
 							"1) Display apparel information \n" +
@@ -1483,7 +1496,8 @@ System.out.println("Choose a party event:");
 							"3) Add item to your cart \n" +
 							"4) Go to cart \n" +
 							"5) Process refund \n" +
-							"6) Go back \n"
+							"6) View last refund \n" +
+							"7) Go back \n"
 			);
 
 			choice = in.next();
@@ -1542,14 +1556,14 @@ System.out.println("Choose a party event:");
 							itemName = in4.nextLine().trim();
 							if(itemName.equals("q")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 
 							System.out.println("What size? ('q' to exit): ");
 							size = in4.nextLine().trim();
 							if(size.equals("q")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
 
@@ -1592,50 +1606,50 @@ System.out.println("Choose a party event:");
 							response = in4.nextLine().trim();
 							if (response.equals("y")) {
 								shoppingSession.updateInventoryBought();
+								shoppingSession.getCart().clearCart();
 								System.out.println();
 							} else if (response.equals("n")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 						} else if (response.equals("n")) {
 							System.out.println();
-							shoppingScreen();
+							break;
 						}
 					}
 
 					break;
 				case 5:
 					//TODO add refund logic
-					shoppingSession.displayRefundOrders();
-					Scanner in5 = new Scanner (System.in);
+					if(shoppingSession.displayRefundOrders()){
+						Scanner in5 = new Scanner (System.in);
 
-					System.out.println("What would you like to return? (enter id number): ");
-					String responseRefund = in5.nextLine().trim();
-					int refundShoppingSession = Integer.parseInt(responseRefund);
-					shoppingSession.getRefundCart().addItem(refundShoppingSession);
-					System.out.println();
+						System.out.println("What would you like to return? (enter id number): ");
+						String responseRefund = in5.nextLine().trim();
+						int refundShoppingSession = Integer.parseInt(responseRefund);
+						shoppingSession.getRefundCart().addItem(refundShoppingSession);
+						System.out.println();
 
-					System.out.println("Please select an image for verification: ");
-					JFileChooser jfc = new JFileChooser();
-					jfc.showDialog(null,"Please Select the File");
-					jfc.setVisible(true);
-					File image = jfc.getSelectedFile();
+						System.out.println("Please select an image for verification: ");
+						JFileChooser jfc = new JFileChooser();
+						jfc.showDialog(null,"Please Select the File");
+						jfc.setVisible(true);
+						File image = jfc.getSelectedFile();
+						System.out.println(image.getName());
 
-					shoppingSession.pushRefund(image, refundShoppingSession);
-
+						shoppingSession.pushRefund(image, refundShoppingSession);
+					} else {
+						System.out.println("No eligible items to return :(\n");
+					}
 					break;
 				case 6:
+					//TODO display the most recent refund
+					shoppingSession.viewLastRefund();
+					System.out.println();
+					break;
+				case 7:
 					mainScreen();
 			}
-		}
-	}
-
-	private static Boolean isJPEG(File filename) {
-		try (DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-			return ins.readInt() == 0xffd8ffe0;
-		} catch(IOException e){
-			System.out.println("The file you have selected is not a JPEG :(");
-			return false;
 		}
 	}
 

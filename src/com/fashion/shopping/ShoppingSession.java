@@ -53,7 +53,6 @@ public class ShoppingSession {
      * basic constructor that takes in no values, but instantiates it with the next option or base option
      */
     public ShoppingSession() {
-        this.sid = initSessionId();
         this.cart = new Cart();
         this.refundCart = new RefundCart();
         this.card = new Card();
@@ -62,23 +61,19 @@ public class ShoppingSession {
     /**
      * @return the next available session id value
      */
-    private int initSessionId(){
-        int sid = -1;
+    public void initSessionId(){
         try {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` ORDER BY `shoppingsessions`.`sid` DESC");
 
             if(rs != null){
-                sid = rs.getInt("sid") + 1;
+                this.sid = rs.getInt("sid") + 1;
             } else {
                 System.out.println("Unable to create a shopping session");
-                return -1;
             }
 
         } catch (SQLException throwables) {
             System.out.println("Error creating a shopping session");
         }
-
-        return sid;
     }
 
     /**
@@ -117,35 +112,11 @@ public class ShoppingSession {
             ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory` WHERE `itemName` = '" + itemName + "'");
 
             if(rs != null){
-                File file = new File(rs.getString("itemName") + ".png");
-                FileOutputStream fos = new FileOutputStream(file);
-                byte b[];
-                Blob blob;
-
-                blob = rs.getBlob("image");
-                b=blob.getBytes(1,(int)blob.length());
-                fos.write(b);
-                fos.close();
-
-                /**
-                 * creates a JFrame for our apparel image
-                 */
-                JFrame editorFrame = new JFrame("Apparel Image");
-                editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-                BufferedImage image = ImageIO.read(new File(rs.getString("itemName") + ".png"));
-                ImageIcon imageIcon = new ImageIcon(image);
-                JLabel jLabel = new JLabel();
-                jLabel.setIcon(imageIcon);
-                editorFrame.getContentPane().add(jLabel, BorderLayout.CENTER);
-
-                editorFrame.pack();
-                editorFrame.setLocationRelativeTo(null);
-                editorFrame.setVisible(true);
+                displayImageFromDatabase("Apparel Image", rs.getString("itemName"), rs.getBlob("image"));
             } else {
                 System.out.println("Unable to find your product");
             }
-        } catch (SQLException | IOException throwables) {
+        } catch (SQLException throwables) {
             System.out.println("Error displaying apparel on our side");
         }
     }
@@ -164,10 +135,10 @@ public class ShoppingSession {
 
         try {
             mySQLController.runPushCommand("INSERT INTO SHOPPINGSESSIONS (SID,DATE,ITEMS,SUBTOTAL,TAXRATE,CARDNUM," +
-                    "CARDMONTH,CARDYEAR,CARDCODE,SHIPPINGADDRESS,BILLINGADDRESS) VALUES ('" + sid + "','" + formatter.format(date)
+                    "CARDMONTH,CARDYEAR,CARDCODE,SHIPPINGADDRESS,BILLINGADDRESS,ISREFUNDED) VALUES ('" + sid + "','" + formatter.format(date)
                     + "','"+ items.toString() + "','" + (cart.getSubtotal() + (cart.getSubtotal() * (cart.getTaxRate() / 100.0))) +
                     "','" + cart.getTaxRate() + "','" + card.getCardNum() + "','" + card.getEndMonth() + "','"
-                    + card.getEndYear() + "','" + card.getCode() + "','" + shippingAddress + "','" + billingAddress + "')");
+                    + card.getEndYear() + "','" + card.getCode() + "','" + shippingAddress + "','" + billingAddress + "','" + 0 + "')");
             System.out.println("Purchased!");
             System.out.println();
         } catch (Exception e) {
@@ -229,19 +200,21 @@ public class ShoppingSession {
     /**
      * Displays orders at most 30 days back
      */
-    public void displayRefundOrders(){
+    public boolean displayRefundOrders(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         String currentDate = formatter.format(date);
         String[] currentDateSplit = currentDate.split("/");
         int currentDay = Integer.parseInt(currentDateSplit[0]);
         int currentMonth = Integer.parseInt(currentDateSplit[1]);
+        boolean haveRefundItems = false;
 
         try {
-            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions`");
+            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` WHERE `isRefunded` = 0");
 
             if(rs != null) {
                 if(!rs.getString("date").isEmpty()){
+                    haveRefundItems = true;
                     String payDate = rs.getString("date");
                     String[] payDateSplit = payDate.split("/");
 
@@ -249,13 +222,13 @@ public class ShoppingSession {
                     int payMonth = Integer.parseInt(payDateSplit[1]);
 
                     if(isRefundable(currentDay, currentMonth, payDay, payMonth)){
-                        System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items"));
-                        System.out.println();
+                        System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items").trim());
                     }
                 }
 
                 while (rs.next()) {
                     if(!rs.getString("date").isEmpty()){
+                        haveRefundItems = true;
                         String payDate = rs.getString("date");
                         String[] payDateSplit = payDate.split("/");
 
@@ -263,18 +236,28 @@ public class ShoppingSession {
                         int payMonth = Integer.parseInt(payDateSplit[1]);
 
                         if(isRefundable(currentDay, currentMonth, payDay, payMonth)){
-                            System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items"));
-                            System.out.println();
+                            System.out.println(rs.getInt("sid") + ": " + payDate + " $" + rs.getInt("subtotal") + " " + rs.getString("items").trim());
                         }
                     }
                 }
+                System.out.println();
+                return haveRefundItems;
+            } else {
+                return haveRefundItems;
             }
-
         } catch (SQLException throwables) {
             System.out.println("Error displaying apparel on our side");
+            return false;
         }
     }
 
+    /**
+     * @param currentDay is the day the user is trying to process the return
+     * @param currentMonth is the month the user is trying to process the return
+     * @param payDay is the day when the user bought the item
+     * @param payMonth is the the month when the user bought the item
+     * @return
+     */
     private boolean isRefundable(int currentDay, int currentMonth, int payDay, int payMonth){
         //if the current month is the same as our pay day or the month after then proceed
         if(currentMonth == payMonth) {
@@ -286,8 +269,67 @@ public class ShoppingSession {
         return false;
     }
 
+    /**
+     * @param image is the returned item image
+     * @param refundShoppingSession is the shoppingsession when the user purchased the item
+     */
     public void pushRefund(File image, int refundShoppingSession){
-        mySQLController.runPreparedStatement("UPDATE SHOPPINGSESSION SET isRefunded=?,returnImage=? WHERE SID=?", refundShoppingSession, image);
+        mySQLController.pushRefund("UPDATE `shoppingsessions` SET `isRefunded` = ?, `returnImage` = ? WHERE `sid` = ?", refundShoppingSession, image);
+    }
+
+    /**
+     * Displays the relevant information for the last refund
+     */
+    public void viewLastRefund(){
+        try {
+            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `shoppingsessions` WHERE `isRefunded` = 1 ORDER BY `shoppingsessions`.`sid` DESC");
+
+            if(rs != null) {
+                System.out.println("Processed on: " + rs.getString("date"));
+                System.out.print("Items: " + rs.getString("items"));
+                System.out.println("Subtotal: $" + rs.getInt("subtotal"));
+                displayImageFromDatabase("Return Item", rs.getString("items"), rs.getBlob("returnImage"));
+            }
+        } catch (SQLException throwables) {
+            System.out.println("Error displaying apparel on our side");
+        }
+    }
+
+    /**
+     * @param title is the title of the JFrame image
+     * @param dbItemName is the name of the saved jpg
+     * @param dbImage is the image pulled from the database
+     */
+    private void displayImageFromDatabase(String title, String dbItemName, Blob dbImage){
+        /**
+         * creates a JFrame for our apparel image
+         */
+        try {
+            File file = new File(dbItemName.trim() + ".png");
+            FileOutputStream fos = new FileOutputStream(file);
+            byte b[];
+            Blob blob = dbImage;
+            b= blob.getBytes(1,(int) blob.length());
+            fos.write(b);
+            fos.close();
+
+            JFrame editorFrame = new JFrame(title);
+            editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            BufferedImage image = null;
+            image = ImageIO.read(new File(dbItemName.trim() + ".png"));
+
+            ImageIcon imageIcon = new ImageIcon(image);
+            JLabel jLabel = new JLabel();
+            jLabel.setIcon(imageIcon);
+            editorFrame.getContentPane().add(jLabel, BorderLayout.CENTER);
+
+            editorFrame.pack();
+            editorFrame.setLocationRelativeTo(null);
+            editorFrame.setVisible(true);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getSid() {
