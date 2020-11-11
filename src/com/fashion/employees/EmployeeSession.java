@@ -146,6 +146,26 @@ public class EmployeeSession {
 
     //TODO
     public void fireEmployee(){
+        Scanner in = new Scanner(System.in);
+        try {
+            ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `employees` WHERE `isActive`=1");
 
+            if(rs != null) {
+                System.out.println(rs.getInt("eid") + ": " + rs.getString("firstName") + " " + rs.getString("lastName"));
+                System.out.println("Job Title: " + ": " + rs.getString("jobTitle"));
+                System.out.println("Salary: " + ": " + rs.getString("salary") + "\n");
+                while (rs.next()) {
+                    System.out.println(rs.getInt("eid") + ": " + rs.getString("firstName") + " " + rs.getString("lastName"));
+                    System.out.println("Job Title: " + ": " + rs.getString("jobTitle"));
+                    System.out.println("Salary: " + ": " + rs.getString("salary") + "\n");
+                }
+            }
+
+            System.out.println("Who's getting fired?");
+            mySQLController.runPushCommand("UPDATE `employees` SET `isActive`=0 WHERE `eid`= '" + Integer.parseInt(in.next()) + "'");
+            System.out.println("They have been fired :(\n");
+        } catch (SQLException throwables) {
+            System.out.println("Error displaying employees on our side");
+        }
     }
 }
