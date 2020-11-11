@@ -1624,7 +1624,7 @@ System.out.println("Choose a party event:");
 							System.out.println("Purchase? (y/n): ");
 							response = in4.nextLine().trim();
 							if (response.equals("y")) {
-								shoppingSession.updateInventoryBought();
+								shoppingSession.updateInventory();
 								shoppingSession.getCart().clearCart();
 								System.out.println();
 							} else if (response.equals("n")) {
@@ -1639,7 +1639,6 @@ System.out.println("Choose a party event:");
 
 					break;
 				case 5:
-					//TODO add refund logic
 					if(shoppingSession.displayRefundOrders()){
 						Scanner in5 = new Scanner (System.in);
 
@@ -1662,7 +1661,6 @@ System.out.println("Choose a party event:");
 					}
 					break;
 				case 6:
-					//TODO display the most recent refund
 					shoppingSession.viewLastRefund();
 					System.out.println();
 					break;

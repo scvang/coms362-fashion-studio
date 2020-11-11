@@ -149,7 +149,7 @@ public class ShoppingSession {
     /**
      * updates the inventory on the backend to reflect the change in purchased items
      */
-    public void updateInventoryBought(){
+    public void updateInventory(){
         for(Apparel item : cart.getItems()){
             int numLeft = 0;
             try {
