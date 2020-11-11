@@ -1,59 +1,51 @@
 package com.fashion.apparel;
 
+import com.fashion.Item;
+
 /**
  * @author Sebastian Vang
  * 
  * Apparel is worn by the models and sold in the studio.
  *
  */
-public class Apparel{
+public class Apparel implements Item{
 	
 	/**
 	 * Instance variables.
 	 */
 	private int id;
-	private String size;
-	private int price;
 	private String itemName;
 	private String brandName;
 	private String color;
+	private String size;
+	private double price;
 	private int quantity;
-
-	public Apparel(int id, String size, int price, String itemName, String brandName, String color) {
-		this.id = id;
-		this.size = size;
-		this.price = price;
-		this.itemName = itemName;
-		this.brandName = brandName;
-		this.color = color;
-	}
-
+	
 	/**
-	 * @param size describes the size of clothing being added
-	 * @param itemName is the name of the product being added
+	 * Empty constructor.
 	 */
-	public Apparel(String size, String itemName) {
-		this.size = size;
-		this.itemName = itemName;
+	public Apparel() {
+		this.id = 0;
+		this.itemName = "";
+		this.brandName = "";
+		this.color = "";
+		this.size = "";
+		this.price = 0;
+		this.quantity = 0;
 	}
-
+	
 	/**
-	 * 
+	 * @author Sebastian Vang
 	 * Constructor for the apparel.
-	 * 
+	 * @param id
 	 * @param name
 	 * @param brand
 	 * @param color
+	 * @param size
+	 * @param price
+	 * @param quantity
 	 */
-	public Apparel(int id,String name, String brand, String color) {
-		this.id = id;
-		this.itemName = name;
-		this.brandName = brand;
-		this.color = color;
-		quantity = 1;
-	}
-	
-	public Apparel(int id,String size, int price,String name, String brand, String color, int quantity) {
+	public Apparel(int id, String name, String brand, String color, String size, double price, int quantity) {
 		this.id = id;
 		this.size = size;
 		this.price = price;
@@ -88,7 +80,7 @@ public class Apparel{
 	/**
 	 * @return the price of our product
 	 */
-	public int getPrice() {
+	public double getPrice() {
 		return this.price;
 	}
 
@@ -137,11 +129,11 @@ public class Apparel{
 	public boolean sameItem(Object o) {
 		if(o == null || o.getClass() != this.getClass()) return false;
 		Apparel a = (Apparel)o;
-		return 	this.size.equals(a.size) &&
-				this.price == a.price && 
-				this.itemName.equals(a.itemName) && 
+		return 	this.itemName.equals(a.itemName) && 
 				this.brandName.equals(a.brandName) && 
-				this.color.equals(a.color);
+				this.color.equals(a.color) &&
+				this.size.equals(a.size) &&
+				this.price == a.price;
 	}
 
 	/**

@@ -33,12 +33,12 @@ public class Model extends Employee{
 		super(eid,name,jobTitle,phone,payStubInfo);
 		this.agent = agent;
 		
-		this.head = new Apparel(0,"none","none","none");
-		this.top = new Apparel(0,"none","none","none");
-		this.bot = new Apparel(0,"none","none","none");
-		this.legs = new Apparel(0,"none","none","none");
-		this.shoes = new Apparel(0,"none","none","none");
-		this.acc = new Apparel(0,"none","none","none");
+		this.head = new Apparel();
+		this.top = new Apparel();
+		this.bot = new Apparel();
+		this.legs = new Apparel();
+		this.shoes = new Apparel();
+		this.acc = new Apparel();
 	}
 	
 	public Apparel getHeadPiece() {

@@ -70,6 +70,9 @@ public class Studio {
 	public Inventory getInventory(){
 		return this.inventory;
 	}
+	public void resetEventList() {
+		this.event = new ArrayList<>();
+	}
 	public void resetInventory() {
 		this.inventory = new Inventory();
 	}
@@ -181,18 +184,6 @@ public class Studio {
 
 		System.out.println("Employee doesn't exist");
 		return null;
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * @param name
-	 * @param brand
-	 * @param color
-	 * @param id
-	 * @param stock
-	 */
-	public void addApparel(int id,String name, String brand, String color, int stock) {
-		apparel.add(new Apparel(id,name,brand,color));
 	}
 	
 	/**

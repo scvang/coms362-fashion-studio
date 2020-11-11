@@ -212,11 +212,11 @@ public class Main extends JFrame {
 			else in.nextLine(); // Clear the buffer.
 			
 			int id = 0;
-			String size = "";
-			int price = 0;
 			String itemName = "";
 			String brandName = "";
-			String color = ""; 
+			String color = "";
+			String size = "";
+			double price = 0;
 			int quantity = 0;
 			
 			// This retrieves a clothing list from the database.
@@ -239,14 +239,14 @@ public class Main extends JFrame {
 		      studio.resetInventory();
 		      while(rs.next()) {
 		    	  id = rs.getInt("id");
-		    	  size = rs.getString("size");
-		    	  price = rs.getInt("price");
 		    	  itemName = rs.getString("itemName");
 		    	  brandName = rs.getString("brandName");
 		    	  color = rs.getString("color");
+		    	  size = rs.getString("size");
+		    	  price = rs.getInt("price");
 		    	  quantity = rs.getInt("quantity");
 		    	  
-		    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
+		    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,size,price,quantity));
 		      }
 		      // close the connection.
 		      st.close();
@@ -254,6 +254,7 @@ public class Main extends JFrame {
 		    catch (Exception e){
 		      System.err.println(e.getMessage()); 
 		    }
+			
 			switch(Integer.parseInt(choice)){
 				case 1:
 					studio.displayClothingInventory();
@@ -297,11 +298,11 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
 				      ps.setString(2, size);
-				      ps.setInt(3, price);
+				      ps.setDouble(3, price);
 				      ps.setString(4,itemName);
 				      ps.setString(5,brandName);
 				      ps.setString(6, color);
@@ -325,12 +326,6 @@ public class Main extends JFrame {
 				break;
 				
 				case 7:
-					System.out.println("Enter the price:");
-					int p = in.nextInt(); in.nextLine();
-					
-					System.out.println("Enter size");
-					String s = in.nextLine();
-					
 					System.out.println("Enter item name:");
 					String n = in.nextLine();
 					
@@ -340,7 +335,13 @@ public class Main extends JFrame {
 					System.out.println("Enter color:");
 					String c = in.nextLine();
 					
-					Apparel apparel = studio.getInventory().search(new Apparel(0,s,p,n,b,c,0));
+					System.out.println("Enter size");
+					String s = in.nextLine();
+					
+					System.out.println("Enter the price:");
+					double p = in.nextInt(); in.nextLine();
+					
+					Apparel apparel = studio.getInventory().search(new Apparel(0,n,b,c,s,p,0));
 					
 					if(apparel == null) {
 						System.out.println("Search results:");
@@ -570,10 +571,6 @@ public class Main extends JFrame {
 		}
 	}
 	
-	public static void apparelScreen() {
-		//TODO
-	}
-	
 	/**
 	 * @author Sebastian Vang
 	 * Model screen.
@@ -669,6 +666,34 @@ public class Main extends JFrame {
 		
 	}
 	
+	public static Apparel makeApparel() {
+		System.out.println("Enter the item id:");
+		Scanner in = new Scanner(System.in);
+		int id = in.nextInt(); in.nextLine();
+		
+		System.out.println("Enter the item name:");
+		String name = in.nextLine();
+		
+		System.out.println("Enter the brand name:");
+		String brand = in.nextLine();
+		
+		System.out.println("Enter the color:");
+		String color = in.nextLine();
+		
+		System.out.println("Enter the size:");
+		String size = in.nextLine();
+		
+		System.out.println("Enter the price:");
+		double price = in.nextDouble(); in.nextLine();
+		
+		System.out.println("Enter the quantity:");
+		int quantity = in.nextInt(); in.nextLine();
+		
+		Apparel item = new Apparel(id,name, brand, color,size,price,quantity);
+		
+		return item;
+	}
+	
 	/**
 	 * @author Sebastian Vang
 	 * Change Apparel Screen
@@ -697,92 +722,39 @@ public class Main extends JFrame {
 			String name = "";
 			String brand = "";
 			String color = "";
+			String size = "";
+			double price = 0;
+			int quantity = 0;
+			Apparel item;
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					System.out.println("Enter the item id:");
-					id = in.nextInt(); in.nextLine();
-					
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					Apparel item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeHead(modelName,item);
 				break;
 				
 				case 2:
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeTop(modelName,item);
 				break;
 				
 				case 3:
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeBot(modelName,item);
 				break;
 				
 				case 4:
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeLegs(modelName,item);
 				break;
 				
 				case 5:
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeShoes(modelName,item);
 				break;
 				
 				case 6:
-					System.out.println("Enter the item name:");
-					name = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brand = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					item = new Apparel(id,name, brand, color);
+					item = makeApparel();
 					studio.changeAcc(modelName,item);
 				break;
 				
@@ -800,6 +772,44 @@ public class Main extends JFrame {
 	 * Event screen.
 	 */
 	public static void eventScreen() {
+		
+		// Fetch the data from the database.
+		String type;
+		String name;
+		String date;
+		String time;
+		
+		try{
+		      // Step 1: "Load" the JDBC driver
+				Class.forName("com.mysql.cj.jdbc.Driver");
+
+		      // Step 2: Establish the connection to the database 
+		      String url = "jdbc:mysql://localhost/fashion_studio"; 
+		      Connection conn = DriverManager.getConnection(url,"root","");
+		      //System.out.println("Connected.");
+		      
+		      // create a Statement from the connection
+		      Statement st = conn.createStatement();
+		      
+		      // query the data
+		      ResultSet rs = st.executeQuery("SELECT * FROM events");
+		      
+		      // Clear the event list before fetching to avoid duplicating.
+		      studio.resetEventList();
+		      while(rs.next()) {
+		    	  type = rs.getString("type");
+		    	  name = rs.getString("name");
+		    	  date = rs.getString("date");
+		    	  time = rs.getString("time");
+		    	  
+		    	  studio.createEvent(type,name,date,time);
+		      }
+		      // close the connection.
+		      st.close();
+		    }
+		catch (Exception e){
+		      System.err.println(e.getMessage()); 
+		    }
 		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
@@ -833,18 +843,44 @@ public class Main extends JFrame {
 				
 				case 4:
 					System.out.println("What type of event (showing, dining, party)? ");
-					String type = in.nextLine();
+					type = in.nextLine();
 					
 					System.out.println("Event name?");
-					String name = in.nextLine();
+					name = in.nextLine();
 					
 					System.out.println("What date (mm-dd-yy)? ");
-					String date = in.nextLine();
+					date = in.nextLine();
 					
 					System.out.println("What time (hh:mm am/pm)? ");
-					String time = in.nextLine();
+					time = in.nextLine();
 					
 					studio.createEvent(type,name,date,time);
+					
+					// Establish a connection to the database test.
+					try{
+				      // Step 1: "Load" the JDBC driver
+						Class.forName("com.mysql.cj.jdbc.Driver");
+
+				      // Step 2: Establish the connection to the database 
+				      String url = "jdbc:mysql://localhost/fashion_studio"; 
+				      Connection conn = DriverManager.getConnection(url,"root","");
+				      //System.out.println("Connected.");
+				      
+				      // create a prepared statement from the connection
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO events (type,name,date,time) " + "VALUES (?,?,?,?)");
+				      
+				      ps.setString(1, type);
+				      ps.setString(2, name);
+				      ps.setString(3, date);
+				      ps.setString(4, time);
+				      
+				      ps.execute();
+				      conn.close();
+				    }
+				    catch (Exception e){
+				      System.err.println(e.getMessage()); 
+				    }
+					
 				break;
 				
 				case 6:
@@ -1522,7 +1558,7 @@ System.out.println("Choose a party event:");
 						System.out.println();
 						shoppingScreen();
 					}
-					shoppingSession.getCart().addItem(new Apparel(size, itemName));
+					//shoppingSession.getCart().addItem(new Apparel(size, itemName));
 					System.out.println();
 					break;
 				case 4:
@@ -1549,7 +1585,7 @@ System.out.println("Choose a party event:");
 								System.out.println();
 								shoppingScreen();
 							}
-							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
+							//shoppingSession.getCart().removeItem(new Apparel(size, itemName));
 
 							if(shoppingSession.getCart().getItems().size() == 0)
 								System.out.println();
