@@ -12,6 +12,7 @@ public class CommandDisplay {
 	private ArrayList<Command> subShowEventCommands = new ArrayList<>();
 	private ArrayList<Command> subDiningEventCommands = new ArrayList<>();
 	private ArrayList<Command> subPartyEventCommands = new ArrayList<>();
+	private ArrayList<Command> subShopCommands = new ArrayList<>();
 
 	public CommandDisplay() {
 	}
@@ -43,6 +44,10 @@ public class CommandDisplay {
 	public void addSubPartyEvent(Command c) {
 		subPartyEventCommands.add(c);
 	}
+	
+	public void addSubShopCommands(Command c) {
+		subShopCommands.add(c);
+	}
 
 	public void displaycommands() {
 		for (int i = 0; i < commandList.size(); i++) {
@@ -63,7 +68,8 @@ public class CommandDisplay {
 				}
 				int manNext = in.nextInt();
 				manageCommands.get(manNext - 1).execute();
-			} else if (commandList.get(next - 1).getDescription().equals("List Event Commands")) {
+			} 
+		} else if (commandList.get(next - 1).getDescription().equals("List Event Commands")) {
 				for (int i = 0; i < subEventCommands.size(); i++) {
 					System.out.println(i + 1 + ": " + subEventCommands.get(i).getDescription());
 				}
@@ -92,9 +98,13 @@ public class CommandDisplay {
 						System.out.println(i + 1 + ": " + commandList.get(i).getDescription());
 					}
 				}
-				in.close();
+			} else if(commandList.get(next - 1).getDescription().equals("List Shopping Commands")) {
+				for (int i = 0; i < subShopCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subShopCommands.get(i).getDescription());
+				}
+				int shopNext = in.nextInt();
+				subShopCommands.get(shopNext - 1).execute();
 			}
+		in.close();
 		}
-
 	}
-}

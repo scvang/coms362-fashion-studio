@@ -1,10 +1,15 @@
 package com.fashion;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+
+import com.fashion.apparel.Apparel;
 import com.fashion.employees.EmployeeSession;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.Dining;
@@ -12,6 +17,7 @@ import com.fashion.events.Event;
 import com.fashion.events.Party;
 import com.fashion.events.Showing;
 import com.fashion.pay.PayStubInfo;
+import com.fashion.shopping.ShoppingSession;
 
 public interface Command {
 	public String getDescription();
@@ -708,4 +714,249 @@ class DisplayEvents implements Command {
 		return "Display Current Events";
 	}
 
+}
+
+class ListShoppingOptions implements Command {
+	ShoppingSession shoppingSession = new ShoppingSession();
+	
+	public ListShoppingOptions() {
+		shoppingSession.initSessionId();
+	}
+	
+	@Override
+	public String getDescription() {
+		return "List Shopping Commands";
+	}
+
+	@Override
+	public void execute() {
+
+	}
+	
+	public ShoppingSession getShop() {
+		return shoppingSession;
+	}
+	
+}
+
+class ApparelInfo implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+	
+	@Override
+	public String getDescription() {
+		return "Display apparel information";
+	}
+
+	@Override
+	public void execute() {
+		System.out.println();
+		LSO.getShop().displayApparel();
+		System.out.println();
+	}
+	
+}
+
+class ShowApparel implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+	String itemName;
+	
+	public ShowApparel() {
+		
+	}
+
+	@Override
+	public String getDescription() {
+		return "Show Apparel";
+	}
+
+	@Override
+	public void execute() {
+		System.out.println();
+		Scanner in2 = new Scanner (System.in);
+		System.out.println("What apparel item would you like to view? ('q' to exit): ");
+		itemName = in2.nextLine().trim();
+		if(itemName.equals("q")) {
+			System.out.println();
+		}
+		LSO.getShop().apparelImage(itemName);
+		System.out.println();
+		in2.close();
+	}
+	
+	public String getItemName() {
+		return itemName;
+	}
+	
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+}
+
+class AddCart implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+	ShowApparel SA = new ShowApparel();
+
+	@Override
+	public String getDescription() {
+		return "Add to cart";
+	}
+
+	@Override
+	public void execute() {
+		System.out.println();
+		Scanner in3 = new Scanner (System.in);
+
+		System.out.println("What item would you like to add to your cart? ('q' to exit): ");
+		SA.setItemName(in3.nextLine().trim());
+		if(SA.getItemName().equals("q")) {
+			System.out.println();
+		}
+
+		System.out.println("What size? ('q' to exit): ");
+		String size = in3.nextLine().trim();
+		if(size.equals("q")) {
+			System.out.println();
+		}
+		LSO.getShop().getCart().addItem(new Apparel(size, SA.getItemName()));
+		System.out.println();	
+		in3.close();
+	}
+	
+}
+
+class GoCart implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+	ShowApparel SA = new ShowApparel();
+
+	@Override
+	public String getDescription() {
+		return "Go to cart";
+	}
+
+	@Override
+	public void execute() {
+		System.out.println(LSO.getShop().getCart().toString());
+		System.out.println();
+
+		Scanner in4 = new Scanner (System.in);
+
+		if(!LSO.getShop().getCart().getItems().isEmpty()) {
+			System.out.println("Edit Cart? (y/n): ");
+
+			String response = in4.nextLine().trim();
+			if (response.equals("y")) {
+				System.out.println("What item would you like to remove from your cart? ('q' to exit): ");
+				SA.setItemName(in4.nextLine().trim());
+				if(SA.getItemName().equals("q")) {
+					System.out.println();
+				}
+
+				System.out.println("What size? ('q' to exit): ");
+				String size = in4.nextLine().trim();
+				if(size.equals("q")) {
+					System.out.println();
+				}
+				LSO.getShop().getCart().removeItem(new Apparel(size, SA.getItemName()));
+
+				if(LSO.getShop().getCart().getItems().size() == 0)
+					System.out.println();
+			} else if (response.equals("n")) {
+				System.out.println();
+			}
+
+			System.out.println("Checkout? (y/n): ");
+			response = in4.nextLine().trim();
+			if (response.equals("y")) {
+				System.out.println("Card Number: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().getCard().setCardNum(response);
+
+				System.out.println("Card Exp Month: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().getCard().setEndMonth(response);
+
+				System.out.println("Card Exp Year: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().getCard().setEndYear(response);
+
+				System.out.println("Card Security Code: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().getCard().setCode(response);
+
+				System.out.println("Shipping Address: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().setShippingAddress(response);
+
+				System.out.println("Billing Address: ");
+				response = in4.nextLine().trim();
+				LSO.getShop().getCard().setBillingAddress(response);
+				LSO.getShop().setBillingAddress(response);
+
+				System.out.println("Purchase? (y/n): ");
+				response = in4.nextLine().trim();
+				if (response.equals("y")) {
+					LSO.getShop().updateInventory();
+					LSO.getShop().getCart().clearCart();
+					System.out.println();
+				} else if (response.equals("n")) {
+					System.out.println();
+				}
+			} else if (response.equals("n")) {
+				System.out.println();
+			}
+			in4.close();
+		}
+	}
+	
+}
+
+class ProcessRefund implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+	
+	@Override
+	public String getDescription() {
+		return "Process a refund";
+	}
+
+	@Override
+	public void execute() {
+		if(LSO.getShop().displayRefundOrders()){
+			Scanner in5 = new Scanner (System.in);
+
+			System.out.println("What would you like to return? (enter id number): ");
+			String responseRefund = in5.nextLine().trim();
+			int refundShoppingSession = Integer.parseInt(responseRefund);
+			LSO.getShop().getRefundCart().addItem(refundShoppingSession);
+			System.out.println();
+
+			System.out.println("Please select an image for verification: ");
+			JFileChooser jfc = new JFileChooser();
+			jfc.showDialog(null,"Please Select the File");
+			jfc.setVisible(true);
+			File image = jfc.getSelectedFile();
+			System.out.println(image.getName());
+
+			LSO.getShop().pushRefund(image, refundShoppingSession);
+			in5.close();
+		} else {
+			System.out.println("No eligible items to return :(\n");
+		}
+	}
+	
+}
+
+class ViewRefund implements Command {
+	ListShoppingOptions LSO = new ListShoppingOptions();
+
+	@Override
+	public String getDescription() {
+		return "View last refund";
+	}
+
+	@Override
+	public void execute() {
+		LSO.getShop().viewLastRefund();
+		System.out.println();
+	}
+	
 }
