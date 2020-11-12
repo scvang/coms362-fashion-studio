@@ -30,7 +30,16 @@ public class Employee {
 		this.payStubInfo = payStubInfo;
 	}
 
-	public Employee(){}
+	public Employee(int eid, String name, String jobTitle, PayStubInfo payStubInfo) {
+		this.eid = eid;
+		this.name = name;
+		this.jobTitle = jobTitle;
+		this.payStubInfo = payStubInfo;
+	}
+
+	public Employee(){
+		payStubInfo = new PayStubInfo();
+	}
 
 	/**
 	 * @return a random sales employee
