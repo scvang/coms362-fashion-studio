@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Scanner;
+import com.fashion.employees.EmployeeSession;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.Dining;
 import com.fashion.events.Event;
@@ -56,17 +57,12 @@ class ListEmployeeOptions implements Command {
 }
 
 class ViewEmployees implements Command {
-	HumanResources HR;
-
-	public ViewEmployees() {
-		HR = new HumanResources();
-	}
 
 	@Override
 	public void execute() {
-		HR.getEmployees();
-		System.out.println();
-		System.out.println();
+		EmployeeSession employeeSession1 = new EmployeeSession();
+		employeeSession1.viewEmployees();
+		employeeSession1.displayHeadshot();
 	}
 
 	@Override
@@ -128,6 +124,77 @@ class PayEmployee implements Command {
 	public String getDescription() {
 		return "Pay Employee";
 	}
+}
+
+class Management implements Command {
+	String username;
+	String password;
+	
+	public Management() {
+		
+	}
+
+	@Override
+	public String getDescription() {
+		return "Go to management screen";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in3 = new Scanner (System.in);
+
+		System.out.println("Username: ");
+		username = in3.next();
+		System.out.println("Password: ");
+		password = in3.next();
+		
+		in3.close();
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+}
+
+class HireEmployee implements Command {
+	Management M = new Management();
+
+	@Override
+	public String getDescription() {
+		return "Hire an employee";
+	}
+
+	@Override
+	public void execute() {
+		EmployeeSession employeeSession = new EmployeeSession();
+		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
+			employeeSession.hireEmployee();
+		}
+	}
+	
+}
+
+class FireEmployee implements Command {
+	Management M = new Management();
+
+	@Override
+	public String getDescription() {
+		return "Fire an employee";
+	}
+
+	@Override
+	public void execute() {
+		EmployeeSession employeeSession = new EmployeeSession();
+		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
+			employeeSession.fireEmployee();
+		}
+	}
+	
 }
 
 class ListEventOptions implements Command {
