@@ -6,6 +6,7 @@ import com.fashion.apparel.Apparel;
 import com.fashion.employees.EmployeeSession;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.*;
+import com.fashion.events.Event;
 import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
@@ -22,6 +23,8 @@ public class Main extends JFrame {
 	 * Instance variables.
 	 */
 	public static Studio studio;
+	public static HumanResources HR = new HumanResources();
+	public static Event E;
 	
 	public static void main(String[] args) {
 		 
@@ -103,7 +106,6 @@ public class Main extends JFrame {
 //		studio.addModel(modelName, modNum, audNum);
 		//studio.getEmployees();
 
-		
 		HumanResources.hireBusiness(1, "Name", "Somewhere", "Catering", "Bill", "444-444-4444", 800.0);
 		// Test adding to database.
 		
@@ -129,64 +131,30 @@ public class Main extends JFrame {
 //			}
 //		});
 
-		mainScreen();
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * The main screen that prompts first.
-	 */
-	public static void mainScreen() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select an option ('q' to exit): \n" +
-			"1) Employees \n" +
-			"2) Inventory \n" +
-			"3) Models \n" +
-			"4) Events \n" +
-			"5) Advertisements \n" +
-			"6) Promotions \n" +
-			"7) Shop \n" +
-			"8) Negotiate Contract\n" +
-			"9) Manage Businesses\n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					employeeScreen();
-				break;
-				case 2:
-					inventoryScreen();
-				break;
-				case 3:
-					modelScreen();
-				break;
-				case 4:
-					eventScreen();
-				break;
-				case 5:
-					advertisementScreen();
-				break;
-				case 6:
-					promotionScreen();
-				break;
-				case 7:
-					shoppingScreen();
-				break;
-				case 8:
-					contractScreen();
-				break;
-				case 9:
-					businessScreen();
-				break;
-			}
-		}
-		in.close();
+		CommandDisplay cd = new CommandDisplay();
+		cd.addCommand(new ListEmployeeOptions());
+		cd.addSubEmp(new ViewEmployees());
+		cd.addSubEmp(new PayEmployee());
+		cd.addCommand(new ListEventOptions());
+		cd.addSubEvent(new ShowingEventCommands());
+		cd.addSubEvent(new DiningEventCommands());
+		cd.addSubEvent(new PartyEventCommands());
+		cd.addSubEvent(new CreateNewEvent());
+		cd.addSubEvent(new DisplayEvents());
+		cd.addSubShowEvent(new DisplaySeat());
+		cd.addSubShowEvent(new ReserveSeat());
+		cd.addSubShowEvent(new CheckSeat());
+		cd.addSubShowEvent(new Refund());
+		cd.addSubDiningEvent(new DisplayTable());
+		cd.addSubDiningEvent(new ReserveTable());
+		cd.addSubDiningEvent(new CheckTable());
+		cd.addSubDiningEvent(new RefundTable());
+		cd.addSubPartyEvent(new DisplayAttendees());
+		cd.addSubPartyEvent(new ReserveBadge());
+		cd.addSubPartyEvent(new CheckBadge());
+		cd.addSubPartyEvent(new RefundBadge());
+		cd.displaycommands();
+		
 	}
 	
 	/**
@@ -359,124 +327,6 @@ public class Main extends JFrame {
 							"Quantity: " + apparel.getQuantity() + "\n"
 							);
 				break;
-				case 8:
-					mainScreen();
-				break;
-			}
-		}
-		in.close();
-	}
-
-	/**
-	 * @author Chad Morrow
-	 * Employee Screen
-	 */
-	public static void employeeScreen() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-					"Select an event ('q' to exit): \n" +
-							"1) View Employees \n" +
-							"2) Pay Employee \n" +
-							"3) Manager screen \n" +
-							"4) Go back \n"
-			);
-
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-
-			switch(Integer.parseInt(choice)){
-				case 1:
-					EmployeeSession employeeSession1 = new EmployeeSession();
-					employeeSession1.viewEmployees();
-					employeeSession1.displayHeadshot();
-					break;
-				case 2:
-					Scanner in2 = new Scanner (System.in);
-					System.out.println("Enter the employee id ('q' to exit): ");
-					int eid = -1;
-					while(eid == -1){
-						String temp = in2.next();
-						if(temp.equals("q")) {
-							System.out.println();
-							System.out.println();
-							employeeScreen();
-						}
-
-						try {
-							eid = Integer.parseInt(temp);
-						} catch (NumberFormatException e) {
-							System.out.println("Employee id must be a number ('q' to exit): ");
-						}
-					}
-
-					PayStubInfo payStubInfo = studio.getEmployee(eid).getPayStubInfo();
-
-					System.out.println("Did this employee recieve a bonus? (y/n) ('q' to exit)");
-					String yesno = in2.next();
-
-					double bonus = -1;
-					if(yesno.equals("y")) {
-						System.out.println("How much did they recieve? ('q' to exit)");
-						while(bonus == -1){
-							String temp = in2.next();
-							if(temp.equals("q")) {
-								System.out.println();
-								System.out.println();
-								employeeScreen();
-							}
-
-							try {
-								bonus = Double.parseDouble(temp);
-							} catch (NumberFormatException e) {
-								System.out.println("Bonus must be a number ('q' to exit): ");
-							}
-						}
-					}
-					payStubInfo.setBonus(bonus);
-
-					if(studio.payEmployee(eid, payStubInfo)){
-						System.out.println(studio.getEmployee(eid).getName() + " was paid!");
-					} else {
-						System.out.println("Error paying employee, try again later");
-					}
-					System.out.println();
-					System.out.println();
-					break;
-				case 3:
-					EmployeeSession employeeSession = new EmployeeSession();
-					Scanner in3 = new Scanner (System.in);
-
-					System.out.println("Username: ");
-					String username = in3.next();
-					System.out.println("Password: ");
-					String password = in3.next();
-					if(employeeSession.getAccessRights(username, password)){
-						System.out.println(
-								"Select an action: \n" +
-										"1) Hire employee \n" +
-										"2) Fire employee \n" +
-										"3) Back"
-						);
-
-						switch(Integer.parseInt(in3.next())){
-							case 1:
-								employeeSession.hireEmployee();
-								break;
-							case 2:
-								employeeSession.fireEmployee();
-								break;
-							default:
-								System.out.println();
-								break;
-						}
-					}
-					break;
-				case 4:
-					mainScreen();
-			}
-		}
 	}
 	
 	/**
@@ -526,9 +376,7 @@ public class Main extends JFrame {
 						System.out.print("We don't currently support that type of advertisement at this time.");
 					}
 				break;
-				
-				case 3:
-					mainScreen();
+
 			}
 		}
 		in.close();
@@ -594,10 +442,7 @@ public class Main extends JFrame {
 			case 4:
 				//TODO
 			break;
-			
-			case 5:
-				mainScreen();
-			break;
+
 			}
 		}
 	}
@@ -633,13 +478,13 @@ public class Main extends JFrame {
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displayModels();
+					HR.displayModels();
 				break;
 				
 				case 2:
 					System.out.println("Which model do you want to change?");
 					name = in.next();
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -651,7 +496,7 @@ public class Main extends JFrame {
 					System.out.println("Enter model name:");
 					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -659,7 +504,7 @@ public class Main extends JFrame {
 					System.out.println("Enter contact information:");
 					String phoneNum = in.nextLine();
 					
-					studio.getModel(name).setPhoneNum(phoneNum);
+					HR.getModel(name).setPhoneNum(phoneNum);
 					
 				break;
 				
@@ -667,7 +512,7 @@ public class Main extends JFrame {
 					System.out.println("Enter model name:");
 					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
+					if(!HR.doesModelExist(name)) {
 						System.out.println("Model was not found, try again.");
 						break;
 					}
@@ -675,12 +520,9 @@ public class Main extends JFrame {
 					System.out.println("Enter salary:");
 					salary = in.nextDouble();
 					PayStubInfo p = new PayStubInfo(salary,0,0,0);
-					studio.getModel(name).setPayStubInfo(p);;
+					HR.getModel(name).setPayStubInfo(p);;
 				break;
 				
-				case 6:
-					mainScreen();
-				break;
 				
 				case 5:
 					System.out.println("Enter EID: ");
@@ -693,7 +535,7 @@ public class Main extends JFrame {
 					String number = in.nextLine();
 					System.out.println("Enter salary:");
 					salary = in.nextDouble();
-					studio.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
+					HR.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}
@@ -826,406 +668,6 @@ public class Main extends JFrame {
 		in.close();
 		
 	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * Event screen.
-	 */
-	public static void eventScreen() {
-		
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select an event ('q' to exit): \n" +
-			"1) Showing \n" +
-			"2) Dining \n" +
-			"3) Party \n" +
-			"4) Create new Event \n" +
-			"5) Display events \n" +
-			"6) Go back"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			else in.nextLine(); // Clear the buffer.
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					showingScreen();
-				break;
-				
-				case 2:
-					diningScreen();
-				break;
-				
-				case 3:
-					partyScreen();
-				break;
-				
-				case 4:
-					System.out.println("What type of event (showing, dining, party)? ");
-					String type = in.nextLine();
-					
-					System.out.println("Event name?");
-					String name = in.nextLine();
-					
-					System.out.println("What date (mm-dd-yy)? ");
-					String date = in.nextLine();
-					
-					System.out.println("What time (hh:mm am/pm)? ");
-					String time = in.nextLine();
-					
-					studio.createEvent(type,name,date,time);
-				break;
-				
-				case 6:
-					mainScreen();
-				break;
-				
-				case 5:
-					studio.displayEvents();
-			}
-		}
-		in.close();
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * Showing screen.
-	 */
-	public static void showingScreen() {
-		System.out.println("Choose a showing event:");
-		
-		int count = 1;
-		ArrayList<Showing> showingList = new ArrayList<>();
-		for(int i = 0; i < studio.getEventList().size(); ++i) {
-			if(studio.getEventList().get(i) instanceof Showing) {
-				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
-				++count;
-				showingList.add((Showing)studio.getEventList().get(i));
-			}
-		}
-		if(showingList.isEmpty()) {
-			System.out.println("There are no showings!");
-			eventScreen();
-		}
-		Scanner in3 = new Scanner(System.in);
-		int i = in3.nextInt();
-		
-		String eventName = showingList.get(i-1).getEvent();
-		
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select a choice ('q' to exit): \n" +
-			"1) Display available seats \n" +
-			"2) Reserve a seat \n" +
-			"3) Check a seat \n" +
-			"4) Refund \n" +
-			"5) Go back \n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			else in.nextLine(); // Clear the buffer.
-			
-			String name = "";
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					studio.displaySeats(studio.getEvent(eventName));
-				break;
-				
-				case 2:
-					if(studio.isShowingFull(studio.getEvent(eventName))) {
-						System.out.println("No available seats.");
-						break;
-					}
-					System.out.println("Enter your customer name: ");
-					String customerName = in.nextLine();
-					System.out.println("Enter your desired seat (A1~I9): ");
-					String seat = in.nextLine();
-					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in.nextLine();
-					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in.nextLine();
-					
-					if(studio.reserveSeat(studio.getEvent(eventName),seat,customerName,date,time)) {
-						studio.chargeCard(studio.getEvent(eventName),customerName);
-						
-						// update the database
-						 // Establish a connection to the database test.
-						try{
-					      // Step 1: "Load" the JDBC driver
-							Class.forName("com.mysql.cj.jdbc.Driver");
-
-					      // Step 2: Establish the connection to the database 
-					      String url = "jdbc:mysql://localhost/fashion_studio"; 
-					      Connection conn = DriverManager.getConnection(url,"root","");
-					      //System.out.println("Connected.");
-					      
-					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (name,date,time,seat)" + "VALUES (?,?,?,?)");
-					      
-					      ps.setString(1, customerName);
-					      ps.setString(2, date);
-					      ps.setString(3, time);
-					      ps.setString(4, seat);
-					      
-					      ps.execute();
-					      conn.close();
-					    }
-					    catch (Exception e){
-					      System.err.println(e.getMessage()); 
-					    }
-						System.out.println("Reservation was added into the database.");
-					}
-					else{
-						System.out.println("Seat Reservation failed.");
-					}
-				break;
-				
-				case 3:
-					System.out.println("Enter your customer name:");
-					name = in.nextLine();
-					if(studio.hasSeatReservation(name,studio.getEvent(eventName))) {
-						System.out.println(
-						"Name: " + studio.getSeat(name,studio.getEvent(eventName)).getCustomerName() + "\n" +
-						"Date: " + studio.getSeat(name,studio.getEvent(eventName)).getDate() + "\n" + 
-						"Time: " + studio.getSeat(name,studio.getEvent(eventName)).getTime() + "\n" + 
-						"Seat: " + studio.getSeat(name,studio.getEvent(eventName)).getSeatNum() + "\n"
-						);
-					}
-					else {
-						System.out.println("No reservation found for " + name);
-					}
-				break;
-				
-				case 4:
-					System.out.println("Enter the customer name:");
-					name = in.nextLine();
-					if(studio.hasSeatReservation(name,studio.getEvent(eventName))) {
-						System.out.println("Reservation found.");
-						studio.removeSeatReservation(name,studio.getEvent(eventName));
-						System.out.println("Reservation removed.");
-					}
-					else {
-						System.out.println("Could not find reservaton.");
-					}
-					
-				break;
-				
-				case 5:
-					eventScreen();
-				break;
-			}
-		}
-		in.close();
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * Dining screen.
-	 */
-	public static void diningScreen() {
-		
-		System.out.println("Choose a dining event:");
-		
-		int count = 1;
-		ArrayList<Dining> list = new ArrayList<>();
-		for(int i = 0; i < studio.getEventList().size(); ++i) {
-			if(studio.getEventList().get(i) instanceof Dining) {
-				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
-				++count;
-				list.add((Dining)studio.getEventList().get(i));
-			}
-		}
-		if(list.isEmpty()) {
-			System.out.println("There are no dinings!");
-			eventScreen();
-		}
-		Scanner in = new Scanner(System.in);
-		int i = in.nextInt();
-		
-		String eventName = list.get(i-1).getEvent();
-		String choice = "";
-		
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select a choice ('q' to exit): \n" +
-			"1) Display available tables \n" +
-			"2) Reserve a table \n" +
-			"3) Check a table \n" +
-			"4) Refund \n" +
-			"5) Go back \n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			else in.nextLine();
-			
-			String name = "";
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					studio.displayTables(studio.getEvent(eventName));
-				break;
-				
-				case 2:
-					if(studio.isDiningFull(studio.getEvent(eventName))) {
-						System.out.println("There are no available tables.");
-						break;
-					}
-					System.out.println("Enter your customer name: ");
-					String customerName = in.nextLine();
-					System.out.println("Enter your desired table (1~20): ");
-					String table = in.nextLine();
-					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in.nextLine();
-					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in.nextLine();
-					
-					if(studio.reserveTable(studio.getEvent(eventName),table,customerName,date,time)) {
-						studio.chargeCard(studio.getEvent(eventName),customerName);
-					}
-					else {
-						System.out.println("Table reservation failed.");
-					}
-					
-					
-				break;
-				
-				case 3:
-					System.out.println("Enter your customer name:");
-					name = in.nextLine();
-					if(studio.hasTableReservation(name,studio.getEvent(eventName))) {
-						System.out.println(
-						"Name: " + studio.getTable(name,studio.getEvent(eventName)).getCustomerName() + "\n" +
-						"Date: " + studio.getTable(name,studio.getEvent(eventName)).getDate() + "\n" + 
-						"Time: " + studio.getTable(name,studio.getEvent(eventName)).getTime() + "\n" + 
-						"Table: " + studio.getTable(name,studio.getEvent(eventName)).getTableNum() + "\n"
-						);
-					}
-					else {
-						System.out.println("No reservation found for " + name);
-					}
-				break;
-				
-				case 4:
-					System.out.println("Enter the customer name:");
-					name = in.nextLine();
-					if(studio.hasTableReservation(name,studio.getEvent(eventName))) {
-						System.out.println("Reservation found.");
-						studio.removeTableReservation(name,studio.getEvent(eventName));
-						System.out.println("Reservation removed.");
-					}
-					else {
-						System.out.println("Could not find reservaton.");
-					}
-				break;
-				
-				case 5:
-					eventScreen();
-				break;
-			}
-		}
-		in.close();
-	}
-	
-	/**
-	 * @author Sebastian Vang
-	 * Party screen.
-	 */
-	public static void partyScreen() {
-		
-System.out.println("Choose a party event:");
-		
-		int count = 1;
-		ArrayList<Party> list = new ArrayList<>();
-		for(int i = 0; i < studio.getEventList().size(); ++i) {
-			if(studio.getEventList().get(i) instanceof Party) {
-				System.out.println(count + ") " + studio.getEventList().get(i).getEvent());
-				++count;
-				list.add((Party)studio.getEventList().get(i));
-			}
-		}
-		if(list.isEmpty()) {
-			System.out.println("There are no parties!");
-			eventScreen();
-		}
-		Scanner in3 = new Scanner(System.in);
-		int i = in3.nextInt();
-		
-		String eventName = list.get(i-1).getEvent();
-		
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select a choice ('q' to exit): \n" +
-			"1) Display number of attendees \n" +
-			"2) Reserve a badge \n" +
-			"3) Check reservation \n" +
-			"4) Refund \n" +
-			"5) Go back \n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			else in.nextLine();
-			
-			String name = "";
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					System.out.println("There are: " + studio.getNumOfAttendees(studio.getEvent(eventName)) + " number of attendees.");
-				break;
-				
-				case 2:
-					if(studio.isPartyFull(studio.getEvent(eventName))) {
-						System.out.println("The venue is full.");
-						break;
-					}
-					
-					System.out.println("Enter your customer name: ");
-					String customerName = in.nextLine();
-					System.out.println("Enter your desired date (mm-dd-yy): ");
-					String date = in.nextLine();
-					System.out.println("Enter your desired time (hh:mm am/pm): ");
-					String time = in.nextLine();
-					
-					studio.reserveBadge(studio.getEvent(eventName),customerName,date,time);
-				break;
-				
-				case 3:
-					System.out.println("Enter your customer name:");
-					name = in.nextLine();
-					if(studio.hasBadgeReservation(name,studio.getEvent(eventName))) {
-						System.out.println(
-								"Name: " + studio.getBadge(name,studio.getEvent(eventName)).getName() + "\n" +
-								"Date: " + studio.getBadge(name,studio.getEvent(eventName)).getDate() + "\n" + 
-								"Time: " + studio.getBadge(name,studio.getEvent(eventName)).getTime() + "\n"
-								);
-					}
-					else {
-						System.out.println("No reservation found.");
-					}
-				break;
-				
-				case 4:
-					
-				break;
-				
-				case 5:
-					eventScreen();
-				break;
-			}
-		}
-		in.close();
-		
-	}
 
 	/**
 	 * @author Chad Morrow
@@ -1248,7 +690,7 @@ System.out.println("Choose a party event:");
 
 			switch(Integer.parseInt(choice)){
 				case 1:
-					studio.displayEvents();
+					E.displayEvents();
 					System.out.println();
 					System.out.println();
 					break;
@@ -1262,7 +704,7 @@ System.out.println("Choose a party event:");
 						promotionScreen();
 					}
 
-					while(studio.getEvent(eventName) == null){
+					while(E.getEvent(eventName) == null){
 						System.out.println("Sorry! we could not find your event, please re-enter a new event ('q' to exit): ");
 						eventName = in2.nextLine().trim();
 						if(eventName.equals("q")) {
@@ -1272,61 +714,61 @@ System.out.println("Choose a party event:");
 						}
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(1)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(1)){
 						System.out.println("1:  Open");
 					} else {
 						System.out.println("1:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(2)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(2)){
 						System.out.println("2:  Open");
 					} else {
 						System.out.println("2:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(3)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(3)){
 						System.out.println("3:  Open");
 					} else {
 						System.out.println("3:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(4)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(4)){
 						System.out.println("4:  Open");
 					} else {
 						System.out.println("4:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(5)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(5)){
 						System.out.println("5:  Open");
 					} else {
 						System.out.println("5:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(6)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(6)){
 						System.out.println("6:  Open");
 					} else {
 						System.out.println("6:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(7)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(7)){
 						System.out.println("7:  Open");
 					} else {
 						System.out.println("7:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(8)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(8)){
 						System.out.println("8:  Open");
 					} else {
 						System.out.println("8:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(9)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(9)){
 						System.out.println("9:  Open");
 					} else {
 						System.out.println("9:  Taken");
 					}
 
-					if(studio.getEvent(eventName).isPromotionSpotOpen(10)){
+					if(E.getEvent(eventName).isPromotionSpotOpen(10)){
 						System.out.println("10: Open");
 					} else {
 						System.out.println("10: Taken");
@@ -1344,7 +786,7 @@ System.out.println("Choose a party event:");
 						System.out.println();
 						promotionScreen();
 					}
-					while(studio.getEvent(eventNameReserve) == null) {
+					while(E.getEvent(eventNameReserve) == null) {
 						System.out.println("Sorry! we could not find your event, please re-enter a new event  ('q' to exit): ");
 						eventNameReserve = in3.nextLine().trim();
 						if(eventNameReserve.equals("q")) {
@@ -1484,15 +926,14 @@ System.out.println("Choose a party event:");
 						}
 					}
 
-					if(studio.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
+					if(E.getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
 						System.out.println("Promotion added!");
 					}
 
 					System.out.println();
 					System.out.println();
 					break;
-				case 4:
-					mainScreen();
+
 			}
 		}
 	}
@@ -1638,6 +1079,7 @@ System.out.println("Choose a party event:");
 					}
 
 					break;
+
 				case 5:
 					if(shoppingSession.displayRefundOrders()){
 						Scanner in5 = new Scanner (System.in);
@@ -1701,8 +1143,7 @@ System.out.println("Choose a party event:");
 				case 3:
 					contractSession.viewCurrentContract();
 					break;
-				case 4:
-					mainScreen();
+
 			}
 		}
 	}

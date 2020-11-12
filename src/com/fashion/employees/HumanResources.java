@@ -28,6 +28,7 @@ public class HumanResources {
 	private Employee emp;
 	private static Business bus;
 	private ArrayList<Employee> employees;
+	private ArrayList<Model> model;
 	private static Service serv;
 	public static ArrayList<Service> servicesUsed = new ArrayList<>();
 	private ArrayList<Service> servicesRequested;
@@ -147,4 +148,109 @@ public class HumanResources {
 			);
 		}
 	}
+	
+	/**
+	 @author Chad Morrow
+	 pay the employee
+	 */
+	public boolean payEmployee(int eid, PayStubInfo p){
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+
+		PayStub payStub = new PayStub(eid, dtf.format(now), p);
+		return payStubHistory.add(payStub);
+	}
+	/**
+	 * @author Emily Young
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param audNum-model audition number
+	 * 
+	 * This method adds a new model to a list of existing employees
+	 */
+	public void addModel(String name, String phoneNum, int audNum) {
+		ModelAudition model = new ModelAudition(name, phoneNum, audNum);
+		employees.add(new Employee(nextEID(), model.getName(), "Model", model.getPhoneNum(), new PayStubInfo(50000, 0, 0, 0)));
+	}
+	
+	/**
+	 * @author Chad Morrow
+	 * @return the next eid for indexing the employees
+	 */
+	private int nextEID(){
+		int nextEID = 0;
+
+		for(Employee employee : employees){
+			if(nextEID < employee.getEid()){
+				nextEID = employee.getEid();
+			}
+		}
+
+		return nextEID + 1;
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * Returns a single model.
+	 * @param name
+	 * @return
+	 */
+	public Model getModel(String name) {
+		for(Model m : model) {
+			if(name.equals(m.getName())) {
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * Finds the model.
+	 * @param name
+	 * @return
+	 */
+	public boolean doesModelExist(String name) {
+		for(Model m: model) {
+			if(m.getName().equals(name)) return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * @author Emily Young
+	 * This method retrieves the existing list of models.
+	 */
+	public void displayModels() {
+		for(Model m : model) {
+			System.out.println(
+			"Model Name: " + m.getName() + "\n" + 
+			"Agent: " + m.getAgent() + "\n" +
+			"Phone: " + m.getPhoneNum() + "\n" +
+			"Salary: " + m.getPayStubInfo().getSalary() + "\n" +
+			"Head: " + m.getHeadPiece().getItemName() + ", Brand: " + m.getHeadPiece().getBrandName() + ", Color: " + m.getHeadPiece().getColor() + "\n" +
+			"Top: " + m.getTopPiece().getItemName() + ", Brand: " + m.getTopPiece().getBrandName() + ", Color: " + m.getTopPiece().getColor() + "\n" +
+			"Bottoms: " + m.getBotPiece().getItemName() + ", Brand: " + m.getBotPiece().getBrandName() + ", Color: " + m.getBotPiece().getColor() + "\n" +
+			"Leggings: " + m.getLegsPiece().getItemName() + ", Brand: " + m.getLegsPiece().getBrandName() + ", Color: " + m.getLegsPiece().getColor() + "\n" +
+			"Shoes: " + m.getShoes().getItemName() + ", Brand: " + m.getShoes().getBrandName() + ", Color: " + m.getShoes().getColor() + "\n" +
+			"Accessory: " + m.getAcc().getItemName() + ", Brand: " + m.getAcc().getBrandName() + ", Color: " + m.getAcc().getColor() + "\n"
+			
+			);
+		}
+	}
+	
+	/**
+	 * @author Emily Young
+	 * @param agent-agent name
+	 * @param name-model name
+	 * @param phoneNum-model phone number
+	 * @param payStubInfo-model pay info
+	 * 
+	 * This method adds a new model to a list of existing models
+	 */
+	public void createModel(int eid,String agent, String name, String jobTitle, String phoneNum, PayStubInfo payStubInfo) {
+		model.add(new Model(eid,agent,name,jobTitle,phoneNum,payStubInfo));
+	}
+
 }
