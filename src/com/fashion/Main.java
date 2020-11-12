@@ -1058,11 +1058,37 @@ public class Main extends JFrame {
 					
 					if(studio.reserveTable(studio.getEvent(eventName),table,customerName,date,time)) {
 						studio.chargeCard(studio.getEvent(eventName),customerName);
+						
+						 // Establish a connection to the database test.
+						try{
+					      // Step 1: "Load" the JDBC driver
+							Class.forName("com.mysql.cj.jdbc.Driver");
+
+					      // Step 2: Establish the connection to the database 
+					      String url = "jdbc:mysql://localhost/fashion_studio"; 
+					      Connection conn = DriverManager.getConnection(url,"root","");
+					      //System.out.println("Connected.");
+					      
+					      // create a prepared statement from the connection
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO dining (name,date,time,table)" + "VALUES (?,?,?,?)");
+					      
+					      ps.setString(1, customerName);
+					      ps.setString(2, date);
+					      ps.setString(3, time);
+					      ps.setString(4, table);
+					      
+					      ps.execute();
+					      conn.close();
+					    }
+					    catch (Exception e){
+					      System.err.println(e.getMessage()); 
+					    }
+						System.out.println("Reservation was added into the database.");
+						
 					}
 					else {
 						System.out.println("Table reservation failed.");
 					}
-					
 					
 				break;
 				
