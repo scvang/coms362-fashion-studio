@@ -198,13 +198,10 @@ public class Main extends JFrame {
 			System.out.println(
 			"Select an option ('q' to exit): \n" +
 			"1) View clothing listing \n" +
-			"2) View makeup listing \n" +
-			"3) View food listing \n" +
-			"4) Store clothing item \n" +
-			"5) Store makeup item \n" +
-			"6) Store food item \n" +
-			"7) Search clothing item \n" +
-			"8) Go back \n"
+			"2) Store clothing item \n" +
+			"3) Update clothing item \n" +
+			"4) Search clothing item \n" +
+			"5) Go back \n"
 			);
 			
 			choice = in.next();
@@ -261,14 +258,6 @@ public class Main extends JFrame {
 				break;
 				
 				case 2:
-					//TODO
-				break;
-				
-				case 3:
-					//TODO
-				break;
-				
-				case 4:
 					System.out.println("Enter the id:");
 					id = in.nextInt(); in.nextLine();
 					System.out.println("Enter the size:");
@@ -317,15 +306,56 @@ public class Main extends JFrame {
 					System.out.println("Item was added into the database.");
 				break;
 				
-				case 5:
+				case 3:
+					System.out.println("Enter the id:");
+					id = in.nextInt(); in.nextLine();
+					System.out.println("Enter the size:");
+					size = in.nextLine();
+					System.out.println("Enter the price:");
+					price = in.nextInt(); in.nextLine();
+					System.out.println("Enter the item name:");
+					itemName = in.nextLine();
+					System.out.println("Enter the brand name:");
+					brandName = in.nextLine();
+					System.out.println("Enter the color:");
+					color = in.nextLine();
+					System.out.println("Enter the quantity:");
+					quantity = in.nextInt(); in.nextLine();
 					
+					studio.resetInventory();
+					//studio.storeClothingItem(new Apparel(itemName,brandName,color));
+					
+					 // Establish a connection to the database test.
+					try{
+				      // Step 1: "Load" the JDBC driver
+						Class.forName("com.mysql.cj.jdbc.Driver");
+
+				      // Step 2: Establish the connection to the database 
+				      String url = "jdbc:mysql://localhost/fashion_studio"; 
+				      Connection conn = DriverManager.getConnection(url,"root","");
+				      //System.out.println("Connected.");
+				      
+				      // create a prepared statement from the connection
+				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      
+				      ps.setInt(1,id);
+				      ps.setString(4,itemName);
+				      ps.setString(5,brandName);
+				      ps.setString(6, color);
+				      ps.setString(2, size);
+				      ps.setDouble(3, price);
+				      ps.setInt(7, quantity);
+				      
+				      ps.execute();
+				      conn.close();
+				    }
+				    catch (Exception e){
+				      System.err.println(e.getMessage()); 
+				    }
+					System.out.println("Item was updated in the database.");
 				break;
 				
-				case 6:
-					//TODO
-				break;
-				
-				case 7:
+				case 4:
 					System.out.println("Enter item name:");
 					String n = in.nextLine();
 					
@@ -341,24 +371,28 @@ public class Main extends JFrame {
 					System.out.println("Enter the price:");
 					double p = in.nextInt(); in.nextLine();
 					
-					Apparel apparel = studio.getInventory().search(new Apparel(0,n,b,c,s,p,0));
+					ArrayList<Apparel> list = studio.getInventory().search(new Apparel(0,n,b,c,s,p,0));
 					
-					if(apparel == null) {
+					if(list == null) {
 						System.out.println("Search results:");
-						System.out.println("Item was not found.");
+						System.out.println("No items were found.");
 						break;
 					}
 					System.out.println("Search results:");
+					
+					for(Apparel apparel : list) {
 					System.out.println(
 							"Item name: " + apparel.getItemName() + "\n" +
 							"Brand name: " + apparel.getBrandName() + "\n" +
-							"Size: " + apparel.getSize() + "\n" +
 							"Color: " + apparel.getColor() + "\n" +
+							"Size: " + apparel.getSize() + "\n" +
 							"Price: " + apparel.getPrice() + "\n" +
 							"Quantity: " + apparel.getQuantity() + "\n"
 							);
+					}
 				break;
-				case 8:
+				
+				case 5:
 					mainScreen();
 				break;
 			}
@@ -666,6 +700,11 @@ public class Main extends JFrame {
 		
 	}
 	
+	/**
+	 * @author Sebastian Vang
+	 * Helper method to create apparel.
+	 * @return
+	 */
 	public static Apparel makeApparel() {
 		System.out.println("Enter the item id:");
 		Scanner in = new Scanner(System.in);

@@ -106,12 +106,29 @@ public class Inventory {
 		}
 	}
 	
-	public Apparel search(Apparel a) {
+	public ArrayList<Apparel> search(Apparel apparel) {
+		
+		ArrayList<Apparel> list = new ArrayList<>();
+		
+		// Iterate through clothing stock list.
 		for(int i = 0; i < clothingStock.size(); ++i) {
-			if(a.sameItem(clothingStock.get(i))) {
-				return clothingStock.get(i);
+			if(apparel.getItemName().equals(clothingStock.get(i).getItemName())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
 			}
+			if(apparel.getBrandName().equals(clothingStock.get(i).getBrandName())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getColor().equals(clothingStock.get(i).getColor())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getSize().equals(clothingStock.get(i).getSize())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getPrice() == (clothingStock.get(i).getPrice())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			
 		}
-		return null;
+		return list;
 	}
 }
