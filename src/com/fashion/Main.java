@@ -1,7 +1,9 @@
 package com.fashion;
 
+import java.io.*;
 import java.sql.*;
 import com.fashion.apparel.Apparel;
+import com.fashion.employees.EmployeeSession;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.*;
 import com.fashion.events.Event;
@@ -328,12 +330,9 @@ public class Main extends JFrame {
 							"Quantity: " + apparel.getQuantity() + "\n"
 							);
 				break;
-
-			}
-		}
-		in.close();
 	}
-	
+		}
+	}
 	/**
 	 * @author Emily Young
 	 * Advertisement Screen
@@ -953,13 +952,16 @@ public class Main extends JFrame {
 		String choice = "";
 		Scanner in = new Scanner(System.in);
 		while(!choice.equals("q")) {
+			shoppingSession.initSessionId();
 			System.out.println(
 					"Select a choice ('q' to exit): \n" +
 							"1) Display apparel information \n" +
 							"2) Show apparel \n" +
 							"3) Add item to your cart \n" +
 							"4) Go to cart \n" +
-							"5) Go back \n"
+							"5) Process refund \n" +
+							"6) View last refund \n" +
+							"7) Go back \n"
 			);
 
 			choice = in.next();
@@ -1018,14 +1020,14 @@ public class Main extends JFrame {
 							itemName = in4.nextLine().trim();
 							if(itemName.equals("q")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 
 							System.out.println("What size? ('q' to exit): ");
 							size = in4.nextLine().trim();
 							if(size.equals("q")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
 
@@ -1068,18 +1070,47 @@ public class Main extends JFrame {
 							response = in4.nextLine().trim();
 							if (response.equals("y")) {
 								shoppingSession.updateInventory();
+								shoppingSession.getCart().clearCart();
 								System.out.println();
 							} else if (response.equals("n")) {
 								System.out.println();
-								shoppingScreen();
+								break;
 							}
 						} else if (response.equals("n")) {
 							System.out.println();
-							shoppingScreen();
+							break;
 						}
 					}
 
 					break;
+
+				case 5:
+					if(shoppingSession.displayRefundOrders()){
+						Scanner in5 = new Scanner (System.in);
+
+						System.out.println("What would you like to return? (enter id number): ");
+						String responseRefund = in5.nextLine().trim();
+						int refundShoppingSession = Integer.parseInt(responseRefund);
+						shoppingSession.getRefundCart().addItem(refundShoppingSession);
+						System.out.println();
+
+						System.out.println("Please select an image for verification: ");
+						JFileChooser jfc = new JFileChooser();
+						jfc.showDialog(null,"Please Select the File");
+						jfc.setVisible(true);
+						File image = jfc.getSelectedFile();
+						System.out.println(image.getName());
+
+						shoppingSession.pushRefund(image, refundShoppingSession);
+					} else {
+						System.out.println("No eligible items to return :(\n");
+					}
+					break;
+				case 6:
+					shoppingSession.viewLastRefund();
+					System.out.println();
+					break;
+				case 7:
 
 			}
 		}
