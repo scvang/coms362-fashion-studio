@@ -156,6 +156,13 @@ public class Main extends JFrame {
 		cd.addSubPartyEvent(new ReserveBadge());
 		cd.addSubPartyEvent(new CheckBadge());
 		cd.addSubPartyEvent(new RefundBadge());
+		cd.addCommand(new ListShoppingOptions());
+		cd.addSubShopCommands(new ApparelInfo());
+		cd.addSubShopCommands(new ShowApparel());
+		cd.addSubShopCommands(new AddCart());
+		cd.addSubShopCommands(new GoCart());
+		cd.addSubShopCommands(new ProcessRefund());
+		cd.addSubShopCommands(new ViewRefund());
 		cd.displaycommands();
 		
 	}
@@ -447,6 +454,112 @@ public class Main extends JFrame {
 				//TODO
 			break;
 
+			}
+		}
+	}
+	
+	public static void employeeScreen() {
+		String choice = "";
+		Scanner in = new Scanner(System.in);
+		while(!choice.equals("q")) {
+			System.out.println(
+					"Select an event ('q' to exit): \n" +
+							"1) View Employees \n" +
+							"2) Pay Employee \n" +
+							"3) Manager screen \n" +
+							"4) Go back \n"
+			);
+
+			choice = in.next();
+			if(choice.equals("q") || choice.equals("'q'")) break;
+
+			switch(Integer.parseInt(choice)){
+				case 1:
+					EmployeeSession employeeSession1 = new EmployeeSession();
+					employeeSession1.viewEmployees();
+					employeeSession1.displayHeadshot();
+					break;
+				case 2:
+					Scanner in2 = new Scanner (System.in);
+					System.out.println("Enter the employee id ('q' to exit): ");
+					int eid = -1;
+					while(eid == -1){
+						String temp = in2.next();
+						if(temp.equals("q")) {
+							System.out.println();
+							System.out.println();
+							employeeScreen();
+						}
+
+						try {
+							eid = Integer.parseInt(temp);
+						} catch (NumberFormatException e) {
+							System.out.println("Employee id must be a number ('q' to exit): ");
+						}
+					}
+
+					PayStubInfo payStubInfo = studio.getEmployee(eid).getPayStubInfo();
+
+					System.out.println("Did this employee recieve a bonus? (y/n) ('q' to exit)");
+					String yesno = in2.next();
+
+					double bonus = -1;
+					if(yesno.equals("y")) {
+						System.out.println("How much did they recieve? ('q' to exit)");
+						while(bonus == -1){
+							String temp = in2.next();
+							if(temp.equals("q")) {
+								System.out.println();
+								System.out.println();
+								employeeScreen();
+							}
+
+							try {
+								bonus = Double.parseDouble(temp);
+							} catch (NumberFormatException e) {
+								System.out.println("Bonus must be a number ('q' to exit): ");
+							}
+						}
+					}
+					payStubInfo.setBonus(bonus);
+
+					if(HR.payEmployee(eid, payStubInfo)){
+						System.out.println(studio.getEmployee(eid).getName() + " was paid!");
+					} else {
+						System.out.println("Error paying employee, try again later");
+					}
+					System.out.println();
+					System.out.println();
+					break;
+				case 3:
+					EmployeeSession employeeSession = new EmployeeSession();
+					Scanner in3 = new Scanner (System.in);
+
+					System.out.println("Username: ");
+					String username = in3.next();
+					System.out.println("Password: ");
+					String password = in3.next();
+					if(employeeSession.getAccessRights(username, password)){
+						System.out.println(
+								"Select an action: \n" +
+										"1) Hire employee \n" +
+										"2) Fire employee \n" +
+										"3) Back"
+						);
+
+						switch(Integer.parseInt(in3.next())){
+							case 1:
+								employeeSession.hireEmployee();
+								break;
+							case 2:
+								employeeSession.fireEmployee();
+								break;
+							default:
+								System.out.println();
+								break;
+						}
+					}
+					break;
 			}
 		}
 	}
