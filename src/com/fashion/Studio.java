@@ -213,17 +213,17 @@ public class Studio {
 		switch(type) {
 		case "showing":
 			createShowingEvent(eventName,date,time);
-			System.out.println("Showing event successfully created.");
+			//System.out.println("Showing event successfully created.");
 		break;
 		
 		case "party":
 			createPartyEvent(eventName,date,time);
-			System.out.println("Dining event successfully created.");
+			//System.out.println("Dining event successfully created.");
 		break;
 		
 		case "dining":
 			createDiningEvent(eventName,date,time);
-			System.out.println("Dining event successfully created.");
+			//System.out.println("Dining event successfully created.");
 		break;
 		
 		default:
@@ -708,6 +708,10 @@ public class Studio {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeAcc(item);
 		}
+	}
+	public boolean removeBadgeReservation(String name, Event e) {
+		Party p = (Party)e;
+		return p.removeBadgeReservation(name);
 	}
 }
 

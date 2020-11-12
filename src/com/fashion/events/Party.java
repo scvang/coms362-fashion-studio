@@ -21,6 +21,15 @@ public class Party extends Event {
 		this.capacity = 200;
 	}
 	
+	public boolean removeBadgeReservation(String name) {
+		if(whitelist.containsKey(name)) {
+			whitelist.remove(name);
+			--attendees;
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean reserveBadge(String customer, String date, String time) {
 		Badge b = new Badge(customer,date,time);
 		

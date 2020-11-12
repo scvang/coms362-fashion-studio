@@ -22,20 +22,6 @@ public class Main extends JFrame {
 	public static Studio studio;
 	
 	public static void main(String[] args) {
-		 
-//		Random random = new Random();
-//
-//		/*
-//		Create 3-10 businesses randomly
-//		 */
-//		ArrayList<Business> businesses = new ArrayList<>();
-//		for(int i = 0; i < random.nextInt(maxBusinesses); i++){
-//			Business business = new Business(businessName[random.nextInt(businessName.length)],
-//					businessAddresses[random.nextInt(businessAddresses.length)], generateNum());
-//			businesses.add(business);
-//		}
-
-		//System.out.println(businesses);
 		
 		// Create a studio
 		String company = "Fashion Inc";
@@ -45,78 +31,18 @@ public class Main extends JFrame {
 		
 
 		studio = new Studio(company,address,phone, balance);
-//		HumanResources.hireBusiness(1, "name", "loc", "photo", "jack", "333-333-3333", 900.0);
-//		HumanResources.getServices();
-
-		studio = new Studio(company,address,phone,balance);
-
-		// Create some new events.
-//		studio.createShowingEvent("FashionCon 2020", "10-15-20", "04:10PM");
-//		studio.createPartyEvent("Company Party 2020", "10-15-20", "5:20PM");
-//		studio.createDiningEvent("Fashion Dining 2020", "10-15-20", "6:20PM");
-		
-		// Make a display model.
-		//studio.createModel("Jack","Eve","555-555-5555",100000);
-		
-		// Add an employee test
-		/*
-		String name = "John";
-		String jobTitle = "Designer";
-		double salary = 50000;
-		String phoneNum = "N/A";
-
-		studio.addEmployee(eid, name, jobTitle, phoneNum, salary, 0, 0);
-		
-		studio.addEmployee(name, jobTitle, phoneNum,salary);
-		studio.getEmployees();
-		*/
-
-		// Add a shirt test
-		/*
-		String itemName = "T-Shirt";
-		String brandName = "DEUX";
-		String color = "White";
-		int id = 50021;
-		int stock = 1;
-		
-		studio.addApparel(itemName,brandName,color,id,stock);
-		studio.getApparel();
-		*/
-		
-		//Add an Ad test
-		int eidAd = 123;
-		String eventName = "Spring";
-		String loc = "401 Somewhere Ave";
-		String time = "11:00 AM - 3:00 PM";
-		String contactInfo = "555-555-5555";
-		
-		//studio.addAd(eidAd, eventName, loc, time, contactInfo);
-		//studio.getAd();
-		
-		//Add a new Model test
-//		String modelName = "Jenna";
-//		String modNum = "111-111-1111";
-//		int audNum = 456;
-//
-//		studio.addModel(modelName, modNum, audNum);
-		//studio.getEmployees();
-
-		
-		HumanResources.hireBusiness(1, "Name", "Somewhere", "Catering", "Bill", "444-444-4444", 800.0);
-		// Test adding to database.
-		
 		
 		// Test picture.
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				try {
-//					ShowPicture frame = new ShowPicture();
+//					Picture frame = new Picture();
 //					frame.setVisible(true);
 //					
 //					// This creates a test model.
 //					String description =
 //							"<html>"
-//							+ "Model Name: Testie <br/> Agent: Jack Sparrow <br/> Phone Number: 555-555-5555"
+//							+ "Model Name: Jennifer <br/> Agent: Jack Smith <br/> Phone Number: 555-555-5555"
 //							+ "</html>";
 //					
 //					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
@@ -1258,7 +1184,9 @@ System.out.println("Choose a party event:");
 				break;
 				
 				case 4:
-					
+					System.out.println("Enter the customer name:");
+					name = in.nextLine();
+					studio.removeBadgeReservation(name,studio.getEvent(eventName));
 				break;
 				
 				case 5:
