@@ -186,16 +186,16 @@ public class Main extends JFrame {
 				case 2:
 					System.out.println("Enter the id:");
 					id = in.nextInt(); in.nextLine();
-					System.out.println("Enter the size:");
-					size = in.nextLine();
-					System.out.println("Enter the price:");
-					price = in.nextInt(); in.nextLine();
 					System.out.println("Enter the item name:");
 					itemName = in.nextLine();
 					System.out.println("Enter the brand name:");
 					brandName = in.nextLine();
 					System.out.println("Enter the color:");
 					color = in.nextLine();
+					System.out.println("Enter the size:");
+					size = in.nextLine();
+					System.out.println("Enter the price:");
+					price = in.nextDouble(); in.nextLine();
 					System.out.println("Enter the quantity:");
 					quantity = in.nextInt(); in.nextLine();
 					
@@ -216,11 +216,11 @@ public class Main extends JFrame {
 				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
-				      ps.setString(2, size);
-				      ps.setDouble(3, price);
-				      ps.setString(4,itemName);
-				      ps.setString(5,brandName);
-				      ps.setString(6, color);
+				      ps.setString(2,itemName);
+				      ps.setString(3,brandName);
+				      ps.setString(4, color);
+				      ps.setString(5, size);
+				      ps.setDouble(6, price);
 				      ps.setInt(7, quantity);
 				      
 				      ps.execute();
@@ -265,11 +265,11 @@ public class Main extends JFrame {
 				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,id);
-				      ps.setString(4,itemName);
-				      ps.setString(5,brandName);
-				      ps.setString(6, color);
-				      ps.setString(2, size);
-				      ps.setDouble(3, price);
+				      ps.setString(2,itemName);
+				      ps.setString(3,brandName);
+				      ps.setString(4, color);
+				      ps.setString(5, size);
+				      ps.setDouble(6, price);
 				      ps.setInt(7, quantity);
 				      
 				      ps.execute();
@@ -936,12 +936,13 @@ public class Main extends JFrame {
 					      //System.out.println("Connected.");
 					      
 					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (name,date,time,seat)" + "VALUES (?,?,?,?)");
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (eventName,name,date,time,seat)" + "VALUES (?,?,?,?,?)");
 					      
-					      ps.setString(1, customerName);
-					      ps.setString(2, date);
-					      ps.setString(3, time);
-					      ps.setString(4, seat);
+					      ps.setString(1, eventName);
+					      ps.setString(2, customerName);
+					      ps.setString(3, date);
+					      ps.setString(4, time);
+					      ps.setString(5, seat);
 					      
 					      ps.execute();
 					      conn.close();
@@ -1175,6 +1176,11 @@ System.out.println("Choose a party event:");
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
+					System.out.println("Attendees:");
+					ArrayList<String> attList = studio.getAttendeesList(studio.getEvent(eventName));
+					for(String s : attList) {
+						System.out.println(s);
+					}
 					System.out.println("There are: " + studio.getNumOfAttendees(studio.getEvent(eventName)) + " number of attendees.");
 				break;
 				
@@ -1192,6 +1198,32 @@ System.out.println("Choose a party event:");
 					String time = in.nextLine();
 					
 					studio.reserveBadge(studio.getEvent(eventName),customerName,date,time);
+					
+					// Establish a connection to the database test.
+					try{
+				      // Step 1: "Load" the JDBC driver
+						Class.forName("com.mysql.cj.jdbc.Driver");
+
+				      // Step 2: Establish the connection to the database 
+				      String url = "jdbc:mysql://localhost/fashion_studio"; 
+				      Connection conn = DriverManager.getConnection(url,"root","");
+				      //System.out.println("Connected.");
+				      
+				      // create a prepared statement from the connection
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO party (name,date,time)" + "VALUES (?,?,?)");
+				      
+				      ps.setString(1, customerName);
+				      ps.setString(2, date);
+				      ps.setString(3, time);;
+				      
+				      ps.execute();
+				      conn.close();
+				    }
+				    catch (Exception e){
+				      System.err.println(e.getMessage()); 
+				    }
+					System.out.println("Reservation was added into the database.");
+					
 				break;
 				
 				case 3:

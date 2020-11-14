@@ -411,7 +411,8 @@ public class Studio {
 	 * @param time
 	 */
 	public void reserveBadge(Event e, String name, String date, String time) {
-		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
+		Party p = (Party) e;
+		p.reserveBadge(name, date, time);
 	}
 	
 	/**
@@ -446,6 +447,11 @@ public class Studio {
 		Party p = (Party)e;
 		if(p.getAttendees() == p.getCapacity()) return true;
 		return false;
+	}
+	
+	public ArrayList<String> getAttendeesList(Event e){
+		Party p = (Party)e;
+		return p.getAttendeesList();
 	}
 	
 	/**
