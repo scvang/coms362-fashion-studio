@@ -59,8 +59,8 @@ public class Inventory {
 			System.out.println(
 					"Item name: " + a.getItemName() + "\n" +
 					"Brand name: " + a.getBrandName() + "\n" +
-					"Size: " + a.getSize() + "\n" +
 					"Color: " + a.getColor() + "\n" +
+					"Size: " + a.getSize() + "\n" +
 					"Price: " + a.getPrice() + "\n" +
 					"Quantity: " + a.getQuantity() + "\n"
 					);

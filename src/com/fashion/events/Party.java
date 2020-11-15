@@ -46,11 +46,19 @@ public class Party extends Event {
 	}
 	
 	public boolean reserveBadge(String customer, String date, String time) {
+		
+		// Check if customer already exists.
+		if(whitelist.containsKey(customer)) return false;
+		
+		// Create a new badge object.
 		Badge b = new Badge(customer,date,time);
 		
-		// Add to whitelist.
+		// Add customer to whitelist.
 		if(attendees != capacity) {
 			whitelist.put(customer,b);
+		}
+		else {
+			return false;
 		}
 		
 		++attendees;

@@ -127,7 +127,8 @@ public class Main extends JFrame {
 			"2) Store clothing item \n" +
 			"3) Update clothing item \n" +
 			"4) Search clothing item \n" +
-			"5) Go back \n"
+			"5) Remove clothing item \n" +
+			"6) Go back \n"
 			);
 			
 			choice = in.next();
@@ -319,6 +320,44 @@ public class Main extends JFrame {
 				break;
 				
 				case 5:
+					System.out.println("Enter the item name:");
+					itemName = in.nextLine();
+					
+					System.out.println("Enter the brand name:");
+					brandName = in.nextLine();
+					
+					System.out.println("Enter the color:");
+					color = in.nextLine();
+					
+					System.out.println("Enter the size:");
+					size = in.nextLine();
+					
+					// Remove the entry from database.
+					try{
+					      // Step 1: "Load" the JDBC driver
+							Class.forName("com.mysql.cj.jdbc.Driver");
+
+					      // Step 2: Establish the connection to the database 
+					      String url = "jdbc:mysql://localhost/fashion_studio"; 
+					      Connection conn = DriverManager.getConnection(url,"root","");
+					      //System.out.println("Connected.");
+					      
+					      // create a prepared statement from the connection
+					      PreparedStatement ps = conn.prepareStatement("DELETE FROM inventory WHERE itemName = ? AND brandName = ? AND color = ? AND size = ?");
+					      ps.setString(1, itemName);
+					      ps.setString(2, brandName);
+					      ps.setString(3, color);
+					      ps.setString(4, size);
+					      
+					      ps.execute();
+					      conn.close();
+					    }
+					catch (Exception e){
+					      System.err.println(e.getMessage()); 
+					    }
+				break;
+				
+				case 6:
 					mainScreen();
 				break;
 			}
@@ -864,6 +903,7 @@ public class Main extends JFrame {
 	 * Showing screen.
 	 */
 	public static void showingScreen() {
+
 		System.out.println("Choose a showing event:");
 		
 		int count = 1;
@@ -883,6 +923,39 @@ public class Main extends JFrame {
 		int i = in3.nextInt();
 		
 		String eventName = showingList.get(i-1).getEvent();
+		
+		// This retrieves a showing venue list from the database.
+		// Establish a connection to the database to query data.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT * FROM showing");
+	      
+	      while(rs.next()) {
+	    	  String eventNameD = rs.getString("event");
+	    	  String nameD = rs.getString("name");
+	    	  String dateD = rs.getString("date");
+	    	  String timeD = rs.getString("time");
+	    	  String seatD = rs.getString("seat");
+	    	  
+	    	  if(studio.reserveSeat(studio.getEvent(eventNameD),seatD,nameD,dateD,timeD));
+	      }
+	      // close the connection.
+	      st.close();
+	    }
+	    catch (Exception e){
+	      System.err.println(e.getMessage()); 
+	    }
 		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
@@ -936,7 +1009,7 @@ public class Main extends JFrame {
 					      //System.out.println("Connected.");
 					      
 					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (eventName,name,date,time,seat)" + "VALUES (?,?,?,?,?)");
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO showing (event,name,date,time,seat)" + "VALUES (?,?,?,?,?)");
 					      
 					      ps.setString(1, eventName);
 					      ps.setString(2, customerName);
@@ -980,6 +1053,28 @@ public class Main extends JFrame {
 						System.out.println("Reservation found.");
 						studio.removeSeatReservation(name,studio.getEvent(eventName));
 						System.out.println("Reservation removed.");
+						
+						// Remove the entry from database.
+						try{
+						      // Step 1: "Load" the JDBC driver
+								Class.forName("com.mysql.cj.jdbc.Driver");
+
+						      // Step 2: Establish the connection to the database 
+						      String url = "jdbc:mysql://localhost/fashion_studio"; 
+						      Connection conn = DriverManager.getConnection(url,"root","");
+						      //System.out.println("Connected.");
+						      
+						      // create a prepared statement from the connection
+						      PreparedStatement ps = conn.prepareStatement("DELETE FROM showing WHERE event = ? AND name = ?");
+						      ps.setString(1, eventName);
+						      ps.setString(2, name);
+						      
+						      ps.execute();
+						      conn.close();
+						    }
+						catch (Exception e){
+						      System.err.println(e.getMessage()); 
+						    }
 					}
 					else {
 						System.out.println("Could not find reservaton.");
@@ -1020,8 +1115,41 @@ public class Main extends JFrame {
 		int i = in.nextInt();
 		
 		String eventName = list.get(i-1).getEvent();
-		String choice = "";
 		
+		// This retrieves a dining venue list from the database.
+		// Establish a connection to the database to query data.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT * FROM dining");
+	      
+	      while(rs.next()) {
+	    	  String eventNameD = rs.getString("event");
+	    	  String nameD = rs.getString("name");
+	    	  String dateD = rs.getString("date");
+	    	  String timeD = rs.getString("time");
+	    	  String tableD = rs.getString("table");
+	    	  
+	    	  if(studio.reserveTable(studio.getEvent(eventNameD),tableD,nameD,dateD,timeD));
+	      }
+	      // close the connection.
+	      st.close();
+	    }
+	    catch (Exception e){
+	      System.err.println(e.getMessage()); 
+	    }
+				
+		String choice = "";
 		while(!choice.equals("q")) {
 			System.out.println(
 			"Select a choice ('q' to exit): \n" +
@@ -1071,12 +1199,13 @@ public class Main extends JFrame {
 					      //System.out.println("Connected.");
 					      
 					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("INSERT INTO dining (name,date,time,table)" + "VALUES (?,?,?,?)");
+					      PreparedStatement ps = conn.prepareStatement("INSERT INTO dining (eventName,name,date,time,table)" + "VALUES (?,?,?,?)");
 					      
-					      ps.setString(1, customerName);
-					      ps.setString(2, date);
-					      ps.setString(3, time);
-					      ps.setString(4, table);
+					      ps.setString(1, eventName);
+					      ps.setString(2, customerName);
+					      ps.setString(3, date);
+					      ps.setString(4, time);
+					      ps.setString(5, table);
 					      
 					      ps.execute();
 					      conn.close();
@@ -1116,6 +1245,28 @@ public class Main extends JFrame {
 						System.out.println("Reservation found.");
 						studio.removeTableReservation(name,studio.getEvent(eventName));
 						System.out.println("Reservation removed.");
+						
+						// Remove the entry from database.
+						try{
+						      // Step 1: "Load" the JDBC driver
+								Class.forName("com.mysql.cj.jdbc.Driver");
+
+						      // Step 2: Establish the connection to the database 
+						      String url = "jdbc:mysql://localhost/fashion_studio"; 
+						      Connection conn = DriverManager.getConnection(url,"root","");
+						      //System.out.println("Connected.");
+						      
+						      // create a prepared statement from the connection
+						      PreparedStatement ps = conn.prepareStatement("DELETE FROM party WHERE event = ? AND name = ?");
+						      ps.setString(1, eventName);
+						      ps.setString(2, name);
+						      
+						      ps.execute();
+						      conn.close();
+						    }
+						catch (Exception e){
+						      System.err.println(e.getMessage()); 
+						    }
 					}
 					else {
 						System.out.println("Could not find reservaton.");
@@ -1155,6 +1306,39 @@ System.out.println("Choose a party event:");
 		int i = in3.nextInt();
 		
 		String eventName = list.get(i-1).getEvent();
+		
+		// This retrieves a party venue list from the database.
+				// Establish a connection to the database to query data.
+				try{
+			      // Step 1: "Load" the JDBC driver
+					Class.forName("com.mysql.cj.jdbc.Driver");
+
+			      // Step 2: Establish the connection to the database 
+			      String url = "jdbc:mysql://localhost/fashion_studio"; 
+			      Connection conn = DriverManager.getConnection(url,"root","");
+			      //System.out.println("Connected.");
+			      
+			      // create a Statement from the connection
+			      Statement st = conn.createStatement();
+			      
+			      // query the data
+			      ResultSet rs = st.executeQuery("SELECT * FROM party");
+			      
+			      while(rs.next()) {
+			    	  String eventNameD = rs.getString("event");
+			    	  String nameD = rs.getString("name");
+			    	  String dateD = rs.getString("date");
+			    	  String timeD = rs.getString("time");;
+			    	  
+			    	  if(eventNameD == null)break;
+			    	  if(studio.reserveBadge(studio.getEvent(eventNameD),nameD,dateD,timeD));
+			      }
+			      // close the connection.
+			      st.close();
+			    }
+			    catch (Exception e){
+			      System.err.println(e.getMessage()); 
+			    }
 		
 		String choice = "";
 		Scanner in = new Scanner(System.in);
@@ -1210,11 +1394,12 @@ System.out.println("Choose a party event:");
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO party (name,date,time)" + "VALUES (?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO party (event,name,date,time)" + "VALUES (?,?,?,?)");
 				      
-				      ps.setString(1, customerName);
-				      ps.setString(2, date);
-				      ps.setString(3, time);;
+				      ps.setString(1, eventName);
+				      ps.setString(2, customerName);
+				      ps.setString(3, date);
+				      ps.setString(4, time);;
 				      
 				      ps.execute();
 				      conn.close();
@@ -1244,7 +1429,33 @@ System.out.println("Choose a party event:");
 				case 4:
 					System.out.println("Enter the customer name:");
 					name = in.nextLine();
-					studio.removeBadgeReservation(name,studio.getEvent(eventName));
+					if(studio.removeBadgeReservation(name,studio.getEvent(eventName))) {
+					
+					// Remove the entry from database.
+					try{
+					      // Step 1: "Load" the JDBC driver
+							Class.forName("com.mysql.cj.jdbc.Driver");
+
+					      // Step 2: Establish the connection to the database 
+					      String url = "jdbc:mysql://localhost/fashion_studio"; 
+					      Connection conn = DriverManager.getConnection(url,"root","");
+					      //System.out.println("Connected.");
+					      
+					      // create a prepared statement from the connection
+					      PreparedStatement ps = conn.prepareStatement("DELETE FROM party WHERE event = ? AND name = ?");
+					      ps.setString(1, eventName);
+					      ps.setString(2, name);
+					      
+					      ps.execute();
+					      conn.close();
+					    }
+					catch (Exception e){
+					      System.err.println(e.getMessage()); 
+					    }
+					}
+					else {
+						System.out.println("Reservation was not found.");
+					}
 				break;
 				
 				case 5:

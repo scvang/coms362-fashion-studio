@@ -410,9 +410,9 @@ public class Studio {
 	 * @param date
 	 * @param time
 	 */
-	public void reserveBadge(Event e, String name, String date, String time) {
+	public boolean reserveBadge(Event e, String name, String date, String time) {
 		Party p = (Party) e;
-		p.reserveBadge(name, date, time);
+		return p.reserveBadge(name, date, time);
 	}
 	
 	/**
