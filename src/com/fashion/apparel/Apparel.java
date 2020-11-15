@@ -55,6 +55,11 @@ public class Apparel implements Item{
 		this.quantity = quantity;
 	}
 	
+	public Apparel(String size, String itemName) {
+		this.size = size;
+		this.itemName = itemName;
+	}
+	
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}

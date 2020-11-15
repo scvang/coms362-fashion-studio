@@ -158,7 +158,7 @@ public class Main extends JFrame {
 		      Statement st = conn.createStatement();
 		      
 		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM inventory");
+		      ResultSet rs = st.executeQuery("SELECT * FROM clothing");
 		      
 		      studio.resetInventory();
 		      while(rs.next()) {
@@ -212,7 +212,7 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("INSERT INTO clothing (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
 				      ps.setInt(1,++id);
 				      ps.setString(2,itemName);
@@ -259,7 +259,7 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO inventory (itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO clothing (itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?)");
 				      
 				      ps.setString(1,itemName);
 				      ps.setString(2,brandName);
@@ -338,7 +338,7 @@ public class Main extends JFrame {
 					      //System.out.println("Connected.");
 					      
 					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("DELETE FROM inventory WHERE itemName = ? AND brandName = ? AND color = ? AND size = ?");
+					      PreparedStatement ps = conn.prepareStatement("DELETE FROM clothing WHERE itemName = ? AND brandName = ? AND color = ? AND size = ?");
 					      ps.setString(1, itemName);
 					      ps.setString(2, brandName);
 					      ps.setString(3, color);
@@ -1789,7 +1789,7 @@ System.out.println("Choose a party event:");
 						System.out.println();
 						shoppingScreen();
 					}
-					//shoppingSession.getCart().addItem(new Apparel(size, itemName));
+					shoppingSession.getCart().addItem(new Apparel(size, itemName));
 					System.out.println();
 					break;
 				case 4:
@@ -1816,7 +1816,7 @@ System.out.println("Choose a party event:");
 								System.out.println();
 								shoppingScreen();
 							}
-							//shoppingSession.getCart().removeItem(new Apparel(size, itemName));
+							shoppingSession.getCart().removeItem(new Apparel(size, itemName));
 
 							if(shoppingSession.getCart().getItems().size() == 0)
 								System.out.println();
