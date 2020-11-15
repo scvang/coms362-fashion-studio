@@ -185,8 +185,6 @@ public class Main extends JFrame {
 				break;
 				
 				case 2:
-					System.out.println("Enter the id:");
-					id = in.nextInt(); in.nextLine();
 					System.out.println("Enter the item name:");
 					itemName = in.nextLine();
 					System.out.println("Enter the brand name:");
@@ -216,7 +214,7 @@ public class Main extends JFrame {
 				      // create a prepared statement from the connection
 				      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
 				      
-				      ps.setInt(1,id);
+				      ps.setInt(1,++id);
 				      ps.setString(2,itemName);
 				      ps.setString(3,brandName);
 				      ps.setString(4, color);
@@ -234,8 +232,6 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-					System.out.println("Enter the id:");
-					id = in.nextInt(); in.nextLine();
 					System.out.println("Enter the size:");
 					size = in.nextLine();
 					System.out.println("Enter the price:");
@@ -263,15 +259,14 @@ public class Main extends JFrame {
 				      //System.out.println("Connected.");
 				      
 				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO inventory (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO inventory (itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?)");
 				      
-				      ps.setInt(1,id);
-				      ps.setString(2,itemName);
-				      ps.setString(3,brandName);
-				      ps.setString(4, color);
-				      ps.setString(5, size);
-				      ps.setDouble(6, price);
-				      ps.setInt(7, quantity);
+				      ps.setString(1,itemName);
+				      ps.setString(2,brandName);
+				      ps.setString(3, color);
+				      ps.setString(4, size);
+				      ps.setDouble(5, price);
+				      ps.setInt(6, quantity);
 				      
 				      ps.execute();
 				      conn.close();
