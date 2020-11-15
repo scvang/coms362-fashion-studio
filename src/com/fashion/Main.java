@@ -2,340 +2,73 @@ package com.fashion;
 
 import java.sql.*;
 import com.fashion.apparel.Apparel;
+import com.fashion.commands.*;
 import com.fashion.employees.HumanResources;
 import com.fashion.events.*;
 import com.fashion.negotiations.ContractSession;
-import com.fashion.pay.Card;
-import com.fashion.pay.PayStubInfo;
+import com.fashion.pay.*;
+import com.fashion.screens.*;
 import com.fashion.shopping.ShoppingSession;
-import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.*;
-import java.awt.*;
 import java.util.Scanner;
 
 public class Main extends JFrame {
-	/**
-	 * Instance variables.
-	 */
+
 	public static Studio studio;
-	
 	public static void main(String[] args) {
 		
-		// Create a studio
+		// Create a studio.
 		String company = "Fashion Inc";
 		String address = "401 Somewhere Ave";
 		String phone = "555-555-5555";
 		double balance = 500000;
 
 		studio = new Studio(company,address,phone, balance);
-
-		mainScreen();
+		
+		// Execute the program.
+		Screen();
 	}
 	
 	/**
 	 * @author Sebastian Vang
 	 * The main screen that prompts first.
 	 */
-	public static void mainScreen() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select an option ('q' to exit): \n" +
-			"1) Employees \n" +
-			"2) Inventory \n" +
-			"3) Models \n" +
-			"4) Events \n" +
-			"5) Advertisements \n" +
-			"6) Promotions \n" +
-			"7) Shop \n" +
-			"8) Negotiate Contract\n" +
-			"9) Manage Businesses\n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					employeeScreen();
-				break;
-				case 2:
-					inventoryScreen();
-				break;
-				case 3:
-					modelScreen();
-				break;
-				case 4:
-					eventScreen();
-				break;
-				case 5:
-					advertisementScreen();
-				break;
-				case 6:
-					promotionScreen();
-				break;
-				case 7:
-					shoppingScreen();
-				break;
-				case 8:
-					contractScreen();
-				break;
-				case 9:
-					businessScreen();
-				break;
-			}
-		}
-		in.close();
+	public static void Screen() {
+		CommandDisplay cmd = new CommandDisplay();
+		cmd.addCommand(new InventoryScreen(studio));
+		cmd.addCommand(new EventScreen(studio));
+		cmd.displayCommands();
 	}
 	
 	/**
 	 * @author Sebastian Vang
 	 * Inventory Screen.
 	 */
-	public static void inventoryScreen() {
-		String choice = "";
-		Scanner in = new Scanner(System.in);
-		while(!choice.equals("q")) {
-			System.out.println(
-			"Select an option ('q' to exit): \n" +
-			"1) View clothing listing \n" +
-			"2) Store clothing item \n" +
-			"3) Update clothing item \n" +
-			"4) Search clothing item \n" +
-			"5) Remove clothing item \n" +
-			"6) Go back \n"
-			);
-			
-			choice = in.next();
-			if(choice.equals("q") || choice.equals("'q'")) break;
-			else in.nextLine(); // Clear the buffer.
-			
-			int id = 0;
-			String itemName = "";
-			String brandName = "";
-			String color = "";
-			String size = "";
-			double price = 0;
-			int quantity = 0;
-			
-			// This retrieves a clothing list from the database.
-			// Establish a connection to the database to query data.
-			try{
-		      // Step 1: "Load" the JDBC driver
-				Class.forName("com.mysql.cj.jdbc.Driver");
-
-		      // Step 2: Establish the connection to the database 
-		      String url = "jdbc:mysql://localhost/fashion_studio"; 
-		      Connection conn = DriverManager.getConnection(url,"root","");
-		      //System.out.println("Connected.");
-		      
-		      // create a Statement from the connection
-		      Statement st = conn.createStatement();
-		      
-		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM clothing");
-		      
-		      studio.resetInventory();
-		      while(rs.next()) {
-		    	  id = rs.getInt("id");
-		    	  itemName = rs.getString("itemName");
-		    	  brandName = rs.getString("brandName");
-		    	  color = rs.getString("color");
-		    	  size = rs.getString("size");
-		    	  price = rs.getInt("price");
-		    	  quantity = rs.getInt("quantity");
-		    	  
-		    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,size,price,quantity));
-		      }
-		      // close the connection.
-		      st.close();
-		    }
-		    catch (Exception e){
-		      System.err.println(e.getMessage()); 
-		    }
-			
-			switch(Integer.parseInt(choice)){
-				case 1:
-					studio.displayClothingInventory();
-				break;
-				
-				case 2:
-					System.out.println("Enter the item name:");
-					itemName = in.nextLine();
-					System.out.println("Enter the brand name:");
-					brandName = in.nextLine();
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					System.out.println("Enter the size:");
-					size = in.nextLine();
-					System.out.println("Enter the price:");
-					price = in.nextDouble(); in.nextLine();
-					System.out.println("Enter the quantity:");
-					quantity = in.nextInt(); in.nextLine();
-					
-					studio.resetInventory();
-					//studio.storeClothingItem(new Apparel(itemName,brandName,color));
-					
-					 // Establish a connection to the database test.
-					try{
-				      // Step 1: "Load" the JDBC driver
-						Class.forName("com.mysql.cj.jdbc.Driver");
-
-				      // Step 2: Establish the connection to the database 
-				      String url = "jdbc:mysql://localhost/fashion_studio"; 
-				      Connection conn = DriverManager.getConnection(url,"root","");
-				      //System.out.println("Connected.");
-				      
-				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("INSERT INTO clothing (id,itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?,?)");
-				      
-				      ps.setInt(1,++id);
-				      ps.setString(2,itemName);
-				      ps.setString(3,brandName);
-				      ps.setString(4, color);
-				      ps.setString(5, size);
-				      ps.setDouble(6, price);
-				      ps.setInt(7, quantity);
-				      
-				      ps.execute();
-				      conn.close();
-				    }
-				    catch (Exception e){
-				      System.err.println(e.getMessage()); 
-				    }
-					System.out.println("Item was added into the database.");
-				break;
-				
-				case 3:
-					System.out.println("Enter the size:");
-					size = in.nextLine();
-					System.out.println("Enter the price:");
-					price = in.nextInt(); in.nextLine();
-					System.out.println("Enter the item name:");
-					itemName = in.nextLine();
-					System.out.println("Enter the brand name:");
-					brandName = in.nextLine();
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					System.out.println("Enter the quantity:");
-					quantity = in.nextInt(); in.nextLine();
-					
-					studio.resetInventory();
-					//studio.storeClothingItem(new Apparel(itemName,brandName,color));
-					
-					 // Establish a connection to the database test.
-					try{
-				      // Step 1: "Load" the JDBC driver
-						Class.forName("com.mysql.cj.jdbc.Driver");
-
-				      // Step 2: Establish the connection to the database 
-				      String url = "jdbc:mysql://localhost/fashion_studio"; 
-				      Connection conn = DriverManager.getConnection(url,"root","");
-				      //System.out.println("Connected.");
-				      
-				      // create a prepared statement from the connection
-				      PreparedStatement ps = conn.prepareStatement("UPDATE INTO clothing (itemName,brandName,color,size,price,quantity) " + "VALUES (?,?,?,?,?,?)");
-				      
-				      ps.setString(1,itemName);
-				      ps.setString(2,brandName);
-				      ps.setString(3, color);
-				      ps.setString(4, size);
-				      ps.setDouble(5, price);
-				      ps.setInt(6, quantity);
-				      
-				      ps.execute();
-				      conn.close();
-				    }
-				    catch (Exception e){
-				      System.err.println(e.getMessage()); 
-				    }
-					System.out.println("Item was updated in the database.");
-				break;
-				
-				case 4:
-					System.out.println("Enter item name:");
-					String n = in.nextLine();
-					
-					System.out.println("Enter brand name:");
-					String b = in.nextLine();
-					
-					System.out.println("Enter color:");
-					String c = in.nextLine();
-					
-					System.out.println("Enter size");
-					String s = in.nextLine();
-					
-					System.out.println("Enter the price:");
-					double p = in.nextInt(); in.nextLine();
-					
-					ArrayList<Apparel> list = studio.getInventory().search(new Apparel(0,n,b,c,s,p,0));
-					
-					if(list == null) {
-						System.out.println("Search results:");
-						System.out.println("No items were found.");
-						break;
-					}
-					System.out.println("Search results:");
-					
-					for(Apparel apparel : list) {
-					System.out.println(
-							"Item name: " + apparel.getItemName() + "\n" +
-							"Brand name: " + apparel.getBrandName() + "\n" +
-							"Color: " + apparel.getColor() + "\n" +
-							"Size: " + apparel.getSize() + "\n" +
-							"Price: " + apparel.getPrice() + "\n" +
-							"Quantity: " + apparel.getQuantity() + "\n"
-							);
-					}
-				break;
-				
-				case 5:
-					System.out.println("Enter the item name:");
-					itemName = in.nextLine();
-					
-					System.out.println("Enter the brand name:");
-					brandName = in.nextLine();
-					
-					System.out.println("Enter the color:");
-					color = in.nextLine();
-					
-					System.out.println("Enter the size:");
-					size = in.nextLine();
-					
-					// Remove the entry from database.
-					try{
-					      // Step 1: "Load" the JDBC driver
-							Class.forName("com.mysql.cj.jdbc.Driver");
-
-					      // Step 2: Establish the connection to the database 
-					      String url = "jdbc:mysql://localhost/fashion_studio"; 
-					      Connection conn = DriverManager.getConnection(url,"root","");
-					      //System.out.println("Connected.");
-					      
-					      // create a prepared statement from the connection
-					      PreparedStatement ps = conn.prepareStatement("DELETE FROM clothing WHERE itemName = ? AND brandName = ? AND color = ? AND size = ?");
-					      ps.setString(1, itemName);
-					      ps.setString(2, brandName);
-					      ps.setString(3, color);
-					      ps.setString(4, size);
-					      
-					      ps.execute();
-					      conn.close();
-					    }
-					catch (Exception e){
-					      System.err.println(e.getMessage()); 
-					    }
-				break;
-				
-				case 6:
-					mainScreen();
-				break;
-			}
-		}
-		in.close();
+	public static void InventoryScreen() {
+		CommandDisplay cmd = new CommandDisplay();
+		cmd.addCommand(new ViewClothingCmd(studio));
+		cmd.addCommand(new StoreClothingCmd(studio));
+		cmd.addCommand(new UpdateClothingCmd(studio));
+		cmd.addCommand(new SearchClothingCmd(studio));
+		cmd.addCommand(new RemoveClothingCmd(studio));
+		cmd.addCommand(new MainScreenCmd());
+		cmd.displayCommands();
+	}
+	
+	/**
+	 * @author Sebastian Vang
+	 * Event Screen.
+	 */
+	public static void EventScreen() {
+		CommandDisplay cmd = new CommandDisplay();
+		cmd.addCommand(new ShowingVenueCmd(studio));
+		cmd.addCommand(new DiningVenueCmd(studio));
+		cmd.addCommand(new PartyVenueCmd(studio));
+		cmd.addCommand(new CreateEventCmd(studio));
+		cmd.addCommand(new DisplayEventsCmd(studio));
+		cmd.addCommand(new MainScreenCmd());
+		cmd.displayCommands();
 	}
 
 	/**
@@ -415,7 +148,7 @@ public class Main extends JFrame {
 					System.out.println();
 					break;
 				case 3:
-					mainScreen();
+					//mainScreen();
 			}
 		}
 	}
@@ -469,7 +202,7 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-					mainScreen();
+					//mainScreen();
 			}
 		}
 		in.close();
@@ -537,7 +270,7 @@ public class Main extends JFrame {
 			break;
 			
 			case 5:
-				mainScreen();
+				//mainScreen();
 			break;
 			}
 		}
@@ -639,7 +372,7 @@ public class Main extends JFrame {
 				break;
 				
 				case 6:
-					mainScreen();
+					//mainScreen();
 				break;
 			}
 		}
@@ -870,7 +603,7 @@ public class Main extends JFrame {
 				break;
 				
 				case 6:
-					mainScreen();
+					//mainScreen();
 				break;
 				
 				case 5:
@@ -1714,7 +1447,7 @@ System.out.println("Choose a party event:");
 					System.out.println();
 					break;
 				case 4:
-					mainScreen();
+					//mainScreen();
 			}
 		}
 	}
@@ -1857,7 +1590,7 @@ System.out.println("Choose a party event:");
 
 					break;
 				case 5:
-					mainScreen();
+					//mainScreen();
 			}
 		}
 	}
@@ -1894,7 +1627,7 @@ System.out.println("Choose a party event:");
 					contractSession.viewCurrentContract();
 					break;
 				case 4:
-					mainScreen();
+					//mainScreen();
 			}
 		}
 	}

@@ -164,8 +164,7 @@ public class Showing extends Event{
 			
 			// Checks if the seat is already reserved.
 			if(whitelist.containsKey(seatNum)) {
-				System.out.println(seatNum);
-				System.out.println("Seat " + seatNum + " is already reserved.");
+				//System.out.println(seatNum);
 				return false;
 			}
 			
@@ -184,7 +183,7 @@ public class Showing extends Event{
 			whitelist.put(seatNum,customer.toLowerCase());
 		}
 		else {
-			System.out.println("Not a valid seat number.");
+			//System.out.println("Not a valid seat number.");
 			return false;
 		}
 		

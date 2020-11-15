@@ -105,7 +105,7 @@ public class Dining extends Event{
 		if(tableNum >= 1 || tableNum <= 20){
 			
 			if(whitelist.containsKey(num)) {
-				System.out.println("Table " + num + " is already reserved.");
+				//System.out.println("Table " + num + " is already reserved.");
 				return false;
 			}
 			
@@ -120,7 +120,7 @@ public class Dining extends Event{
 			whitelist.put(Integer.toString(tableNum),customer.toLowerCase());
 		}
 		else {
-			System.out.println("Not a valid table number.");
+			//System.out.println("Not a valid table number.");
 			return false;
 		}
 		

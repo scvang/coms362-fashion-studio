@@ -273,9 +273,11 @@ public class Studio {
 	 */
 	public void displayEvents() {
 		int count = 1;
+		System.out.println("Registered Events:");
 		for(Event e : event) {
-			System.out.println(count++ + ") " + e.getEvent());
+			System.out.println(count++ + ": " + e.getEvent());
 		}
+		System.out.println("");
 	}
 	
 	/**
