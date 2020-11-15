@@ -28,30 +28,8 @@ public class Main extends JFrame {
 		String address = "401 Somewhere Ave";
 		String phone = "555-555-5555";
 		double balance = 500000;
-		
 
 		studio = new Studio(company,address,phone, balance);
-		
-		// Test picture.
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Picture frame = new Picture();
-//					frame.setVisible(true);
-//					
-//					// This creates a test model.
-//					String description =
-//							"<html>"
-//							+ "Model Name: Jennifer <br/> Agent: Jack Smith <br/> Phone Number: 555-555-5555"
-//							+ "</html>";
-//					
-//					frame.add(new JLabel(description,new ImageIcon("testmodel.jpg"),JLabel.RIGHT));
-//					frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 
 		mainScreen();
 	}
@@ -577,9 +555,9 @@ public class Main extends JFrame {
 			"Select an option ('q' to exit): \n" +
 			"1) Check list of models \n" +
 			"2) Change apparel \n" +
-			"3) Update contact information \n" +
-			"4) Update salary \n" +
-			"5) Add model \n" +
+			"3) Upload photo \n" +
+			"4) Add model \n" +
+			"5) Display model information \n" +
 			"6) Go back \n"
 			);
 			
@@ -587,8 +565,11 @@ public class Main extends JFrame {
 			if(choice.equals("q") || choice.equals("'q'")) break;
 			else in.nextLine(); // Clear the buffer.
 			
+			int eid = 0;
+			String agent = "";
 			String name = "";
-			double salary = 0;
+			String jobTitle = "";
+			String phoneNum = "";
 			
 			switch(Integer.parseInt(choice)){
 				case 1:
@@ -607,52 +588,58 @@ public class Main extends JFrame {
 				break;
 				
 				case 3:
-					System.out.println("Enter model name:");
+					System.out.println("Enter the model's name:");
 					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
-						System.out.println("Model was not found, try again.");
-						break;
+					if(studio.getModel(name) != null) {
+						System.out.println("Enter image path:");
+						String img = in.nextLine();
+						
+						studio.getModel(name).setImage(img);
+					}
+					else {
+						System.out.println("Model wasn't found.");
 					}
 					
-					System.out.println("Enter contact information:");
-					String phoneNum = in.nextLine();
-					
-					studio.getModel(name).setPhoneNum(phoneNum);
-					
+					System.out.println("Information updated.");
 				break;
 				
 				case 4:
+					System.out.println("Enter agent name:");
+					agent = in.nextLine();
 					System.out.println("Enter model name:");
 					name = in.nextLine();
+					System.out.println("Enter phone number:");
+					phoneNum = in.nextLine();
+					studio.createModel(eid,agent,name,"Fashion Model",phoneNum,new PayStubInfo(0, 0, 0, 0)); // Probably need to change this.
+				break;
+				
+				case 5:
+					System.out.println("Enter the model's name:");
+					name = in.nextLine();
 					
-					if(!studio.doesModelExist(name)) {
-						System.out.println("Model was not found, try again.");
-						break;
+					if(studio.getModel(name) != null) {
+						String description = "Model Name: " + studio.getModel(name).getName() + "<br/>" + 
+								"Agent: " + studio.getModel(name).getAgent() + "<br/>" +
+								"Phone: " + studio.getModel(name).getPhoneNum() + "<br/>" +
+								"Salary: " + studio.getModel(name).getPayStubInfo().getSalary() + "<br/>" +
+								"Head: " + studio.getModel(name).getHeadPiece().getItemName() + ", Brand: " + studio.getModel(name).getHeadPiece().getBrandName() + ", Color: " + studio.getModel(name).getHeadPiece().getColor() + "<br/>" +
+								"Top: " + studio.getModel(name).getTopPiece().getItemName() + ", Brand: " + studio.getModel(name).getTopPiece().getBrandName() + ", Color: " + studio.getModel(name).getTopPiece().getColor() + "<br/>" +
+								"Bottoms: " + studio.getModel(name).getBotPiece().getItemName() + ", Brand: " + studio.getModel(name).getBotPiece().getBrandName() + ", Color: " + studio.getModel(name).getBotPiece().getColor() + "<br/>" +
+								"Leggings: " + studio.getModel(name).getLegsPiece().getItemName() + ", Brand: " + studio.getModel(name).getLegsPiece().getBrandName() + ", Color: " + studio.getModel(name).getLegsPiece().getColor() + "<br/>" +
+								"Shoes: " + studio.getModel(name).getShoes().getItemName() + ", Brand: " + studio.getModel(name).getShoes().getBrandName() + ", Color: " + studio.getModel(name).getShoes().getColor() + "<br/>" +
+								"Accessory: " + studio.getModel(name).getAcc().getItemName() + ", Brand: " + studio.getModel(name).getAcc().getBrandName() + ", Color: " + studio.getModel(name).getAcc().getColor() + "<br/>";
+						studio.getModel(name).setDescription(description);
+						studio.getModel(name).displayInfo();
+					}
+					else {
+						System.out.println("Model wasn't found.");
 					}
 					
-					System.out.println("Enter salary:");
-					salary = in.nextDouble();
-					PayStubInfo p = new PayStubInfo(salary,0,0,0);
-					studio.getModel(name).setPayStubInfo(p);;
 				break;
 				
 				case 6:
 					mainScreen();
-				break;
-				
-				case 5:
-					System.out.println("Enter EID: ");
-					int eid = in.nextInt(); in.nextLine();
-					System.out.println("Enter agent name:");
-					String agent = in.nextLine();
-					System.out.println("Enter model name:");
-					String model = in.nextLine();
-					System.out.println("Enter phone number:");
-					String number = in.nextLine();
-					System.out.println("Enter salary:");
-					salary = in.nextDouble();
-					studio.createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
 				break;
 			}
 		}

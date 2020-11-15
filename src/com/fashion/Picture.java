@@ -13,7 +13,7 @@ public class Picture extends JFrame {
 
 	private JPanel contentPane;
 	
-	public static void display(String imgPath, String description) {
+	public static void display(String path, String description) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -23,7 +23,7 @@ public class Picture extends JFrame {
 					// This creates a test model.
 					String text ="<html>" + description + "</html>";
 					
-					frame.add(new JLabel(text,new ImageIcon(imgPath),JLabel.RIGHT));
+					frame.add(new JLabel(text,new ImageIcon(path),JLabel.RIGHT));
 					frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
 				} catch (Exception e) {
 					e.printStackTrace();

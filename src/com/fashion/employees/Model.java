@@ -1,5 +1,6 @@
 package com.fashion.employees;
 
+import com.fashion.Profile;
 import com.fashion.apparel.Apparel;
 import com.fashion.pay.PayStubInfo;
 
@@ -21,6 +22,8 @@ public class Model extends Employee{
 	private Apparel shoes;
 	private Apparel acc;
 	
+	private Profile profile = new Profile();
+	
 	
 	/**
 	 * Constructor for the model.
@@ -39,6 +42,16 @@ public class Model extends Employee{
 		this.legs = new Apparel();
 		this.shoes = new Apparel();
 		this.acc = new Apparel();
+	}
+	public void setDescription(String desc) {
+		profile.setDescription(desc);
+	}
+	public void setImage(String path) {
+		profile.setImage(path);
+	}
+	
+	public void displayInfo() {
+		profile.displayInfo();
 	}
 	
 	public Apparel getHeadPiece() {
