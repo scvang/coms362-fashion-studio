@@ -1009,7 +1009,7 @@ class ViewFood implements Command {
 	
 }
 
-class StoreCLothes implements Command {
+class StoreClothes implements Command {
 
 	@Override
 	public String getDescription() {
