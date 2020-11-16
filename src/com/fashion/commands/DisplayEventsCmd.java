@@ -2,6 +2,7 @@ package com.fashion.commands;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class DisplayEventsCmd implements Command {
 	private Studio studio;
@@ -18,7 +19,7 @@ public class DisplayEventsCmd implements Command {
 	@Override
 	public void execute() {
 		studio.displayEvents();
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

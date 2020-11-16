@@ -3,10 +3,13 @@ package com.fashion.commands;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.InventoryScreen;
 
 public class StoreClothingCmd implements Command {
 	private Studio studio;
@@ -22,6 +25,32 @@ public class StoreClothingCmd implements Command {
 	@Override
 	public void execute() {
 		int id = 0;
+		
+		// Establish a connection to the database to query data.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT id FROM clothing ORDER BY id DESC LIMIT 1");
+	      if(rs.next()) id = rs.getInt("id");
+	      
+	      // close the connection.
+	      st.close();
+	    }
+	    catch (Exception e){
+	      System.err.println(e.getMessage()); 
+	    }
+		++id;
+				
 		String itemName;
 		String brandName;
 		String color;
@@ -30,8 +59,6 @@ public class StoreClothingCmd implements Command {
 		int quantity;
 		
 		Scanner in = new Scanner(System.in);
-		System.out.println("Enter the id:");
-		id = in.nextInt();in.nextLine();
 		System.out.println("Enter the item name:");
 		itemName = in.nextLine();
 		System.out.println("Enter the brand name:");
@@ -76,6 +103,6 @@ public class StoreClothingCmd implements Command {
 	    }
 		System.out.println("Item was added into the database.");
 		
-		Main.InventoryScreen();
+		new InventoryScreen(studio).execute();
 	}
 }

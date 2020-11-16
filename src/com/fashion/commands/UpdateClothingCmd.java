@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.InventoryScreen;
 
 public class UpdateClothingCmd implements Command{
 	private Studio studio;
@@ -70,7 +71,7 @@ public class UpdateClothingCmd implements Command{
 	    }
 		System.out.println("Item was updated in the database.");
 		
-		Main.InventoryScreen();
+		new InventoryScreen(studio).execute();
 		
 	}
 

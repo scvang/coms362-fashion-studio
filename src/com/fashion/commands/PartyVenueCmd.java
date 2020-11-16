@@ -10,6 +10,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.events.Party;
+import com.fashion.screens.EventScreen;
 
 public class PartyVenueCmd implements Command {
 	private Studio studio;
@@ -37,7 +38,7 @@ public class PartyVenueCmd implements Command {
 		}
 		if(list.isEmpty()) {
 			System.out.println("There are no parties!");
-			Main.EventScreen();
+			new EventScreen(studio).execute();
 		}
 		Scanner in3 = new Scanner(System.in);
 		int i = in3.nextInt();
@@ -83,7 +84,7 @@ public class PartyVenueCmd implements Command {
 		cmd.addCommand(new ReserveBadgeCmd(studio,eventName));
 		cmd.addCommand(new CheckBadgeCmd(studio,eventName));
 		cmd.addCommand(new RefundBadgeCmd(studio,eventName));
-		cmd.addCommand(new EventScreenCmd());
+		cmd.addCommand(new EventScreen(studio));
 		
 		cmd.displayCommands();
 	}

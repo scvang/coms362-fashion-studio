@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class CreateEventCmd implements Command {
 	public Studio studio;
@@ -63,7 +64,7 @@ public class CreateEventCmd implements Command {
 	      System.err.println(e.getMessage()); 
 	    }
 		
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

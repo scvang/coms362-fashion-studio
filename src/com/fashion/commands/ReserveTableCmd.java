@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class ReserveTableCmd implements Command {
 	private Studio studio;
@@ -27,7 +28,7 @@ public class ReserveTableCmd implements Command {
 		Scanner in = new Scanner(System.in);
 		if(studio.isDiningFull(studio.getEvent(eventName))) {
 			System.out.println("There are no available tables.");
-			Main.EventScreen();
+			new EventScreen(studio).execute();
 		}
 		System.out.println("Enter your customer name: ");
 		String customerName = in.nextLine();
@@ -74,7 +75,7 @@ public class ReserveTableCmd implements Command {
 			System.out.println("Table reservation failed.");
 		}
 		
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

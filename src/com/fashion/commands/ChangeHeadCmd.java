@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.apparel.Apparel;
+import com.fashion.screens.ModelScreen;
 
 public class ChangeHeadCmd implements Command {
 	private Studio studio;
@@ -24,7 +25,7 @@ public class ChangeHeadCmd implements Command {
 	public void execute() {
 		Apparel item = makeApparel();
 		studio.changeHead(modelName,item);
-		Main.ModelScreen();
+		new ModelScreen(studio).execute();
 	}
 	
 	private static Apparel makeApparel() {

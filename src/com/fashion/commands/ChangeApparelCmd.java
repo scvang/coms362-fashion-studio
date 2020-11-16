@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.ModelScreen;
 
 public class ChangeApparelCmd implements Command {
 	private Studio studio;
@@ -24,7 +25,7 @@ public class ChangeApparelCmd implements Command {
 		String name = in.nextLine();
 		if(!studio.doesModelExist(name)) {
 			System.out.println("Model was not found, try again.");
-			Main.ModelScreen();
+			new ModelScreen(studio).execute();
 		}
 		
 		CommandDisplay cmd = new CommandDisplay();
@@ -34,7 +35,7 @@ public class ChangeApparelCmd implements Command {
 		cmd.addCommand(new ChangeLegsCmd(studio,name));
 		cmd.addCommand(new ChangeShoesCmd(studio,name));
 		cmd.addCommand(new ChangeAccCmd(studio,name));
-		cmd.addCommand(new ModelScreenCmd());
+		cmd.addCommand(new ModelScreen(studio));
 		cmd.displayCommands();
 	}
 

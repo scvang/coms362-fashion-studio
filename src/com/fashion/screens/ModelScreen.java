@@ -64,7 +64,7 @@ public class ModelScreen implements Command {
 		cmd.addCommand(new UploadPhotoCmd(studio));
 		cmd.addCommand(new AddModelCmd(studio));
 		cmd.addCommand(new DisplayModelInfoCmd(studio));
-		cmd.addCommand(new MainScreenCmd());
+		cmd.addCommand(new MainScreen(studio));
 		cmd.displayCommands();
 	}
 

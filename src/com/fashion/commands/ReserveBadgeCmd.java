@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class ReserveBadgeCmd implements Command {
 	private Studio studio;
@@ -27,7 +28,7 @@ public class ReserveBadgeCmd implements Command {
 		Scanner in = new Scanner(System.in);
 		if(studio.isPartyFull(studio.getEvent(eventName))) {
 			System.out.println("The venue is full.");
-			Main.EventScreen();
+			new EventScreen(studio).execute();
 		}
 		
 		System.out.println("Enter your customer name: ");
@@ -64,7 +65,7 @@ public class ReserveBadgeCmd implements Command {
 	      System.err.println(e.getMessage()); 
 	    }
 		System.out.println("Reservation was added into the database.");
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

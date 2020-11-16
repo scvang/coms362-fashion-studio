@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class DisplayAttendeesCmd implements Command {
 	private Studio studio;
@@ -27,7 +28,7 @@ public class DisplayAttendeesCmd implements Command {
 			System.out.println(s);
 		}
 		System.out.println("There are: " + studio.getNumOfAttendees(studio.getEvent(eventName)) + " number of attendees.");
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.apparel.Apparel;
+import com.fashion.screens.ModelScreen;
 
 public class ChangeBotCmd implements Command {
 	private Studio studio;
@@ -24,7 +25,7 @@ public class ChangeBotCmd implements Command {
 	public void execute() {
 		Apparel item = makeApparel();
 		studio.changeBot(modelName,item);
-		Main.ModelScreen();
+		new ModelScreen(studio).execute();
 	}
 	
 	private static Apparel makeApparel() {

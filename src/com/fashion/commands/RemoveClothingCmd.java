@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.InventoryScreen;
 
 public class RemoveClothingCmd implements Command {
 	private Studio studio;
@@ -58,6 +59,6 @@ public class RemoveClothingCmd implements Command {
 		      System.err.println(e.getMessage()); 
 		    }
 		
-		Main.InventoryScreen();
+		new InventoryScreen(studio).execute();
 	}
 }

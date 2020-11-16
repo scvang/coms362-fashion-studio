@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class RefundSeatCmd implements Command {
 	private Studio studio;
@@ -58,7 +59,7 @@ public class RefundSeatCmd implements Command {
 			System.out.println("Could not find reservaton.");
 		}
 		
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

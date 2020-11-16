@@ -67,7 +67,7 @@ public class EventScreen implements Command {
 		cmd.addCommand(new PartyVenueCmd(studio));
 		cmd.addCommand(new CreateEventCmd(studio));
 		cmd.addCommand(new DisplayEventsCmd(studio));
-		cmd.addCommand(new MainScreenCmd());
+		cmd.addCommand(new MainScreen(studio));
 		cmd.displayCommands();
 	}
 }

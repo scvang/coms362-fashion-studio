@@ -2,6 +2,7 @@ package com.fashion.commands;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.*;
 
 public class ViewClothingCmd implements Command{
 	private Studio studio;
@@ -17,6 +18,6 @@ public class ViewClothingCmd implements Command{
 	@Override
 	public void execute() {
 		studio.displayClothingInventory();
-		Main.InventoryScreen();
+		new InventoryScreen(studio).execute();
 	}
 }

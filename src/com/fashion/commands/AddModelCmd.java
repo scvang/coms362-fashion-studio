@@ -10,6 +10,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.pay.PayStubInfo;
+import com.fashion.screens.ModelScreen;
 
 public class AddModelCmd implements Command {
 	private Studio studio;
@@ -86,7 +87,7 @@ public class AddModelCmd implements Command {
 		    catch (Exception e){
 		      System.err.println(e.getMessage()); 
 		    }
-		Main.ModelScreen();
+		new ModelScreen(studio).execute();
 	}
 
 }

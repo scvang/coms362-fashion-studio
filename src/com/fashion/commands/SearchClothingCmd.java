@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.apparel.Apparel;
+import com.fashion.screens.InventoryScreen;
 
 public class SearchClothingCmd implements Command {
 	private Studio studio;
@@ -41,7 +42,7 @@ public class SearchClothingCmd implements Command {
 		if(list == null) {
 			System.out.println("Search results:");
 			System.out.println("No items were found.");
-			Main.Screen();
+			new InventoryScreen(studio).execute();;
 		}
 		System.out.println("Search results:");
 		
@@ -56,7 +57,7 @@ public class SearchClothingCmd implements Command {
 				);
 		}
 		
-		Main.InventoryScreen();
+		new InventoryScreen(studio).execute();
 	}
 
 }

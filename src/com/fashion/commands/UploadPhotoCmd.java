@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.ModelScreen;
 
 public class UploadPhotoCmd implements Command {
 	private Studio studio;
@@ -57,7 +58,7 @@ public class UploadPhotoCmd implements Command {
 		else {
 			System.out.println("Model wasn't found.");
 		}
-		Main.ModelScreen();
+		new ModelScreen(studio).execute();
 
 	}
 

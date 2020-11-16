@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fashion.Main;
 import com.fashion.Studio;
+import com.fashion.screens.EventScreen;
 
 public class ReserveSeatCmd implements Command {
 	private Studio studio;
@@ -27,7 +28,7 @@ public class ReserveSeatCmd implements Command {
 		Scanner in = new Scanner(System.in);
 		if(studio.isShowingFull(studio.getEvent(eventName))) {
 			System.out.println("No available seats.");
-			Main.Screen();
+			new EventScreen(studio).execute();
 		}
 		System.out.println("Enter your customer name: ");
 		String customerName = in.nextLine();
@@ -73,7 +74,7 @@ public class ReserveSeatCmd implements Command {
 			System.out.println("Seat Reservation failed.");
 		}
 		
-		Main.EventScreen();
+		new EventScreen(studio).execute();
 	}
 
 }

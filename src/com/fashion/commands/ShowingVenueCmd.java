@@ -10,6 +10,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.events.Showing;
+import com.fashion.screens.EventScreen;
 
 public class ShowingVenueCmd implements Command {
 	private Studio studio;
@@ -37,7 +38,7 @@ public class ShowingVenueCmd implements Command {
 		}
 		if(showingList.isEmpty()) {
 			System.out.println("There are no showings!");
-			Main.EventScreen();
+			new EventScreen(studio).execute();
 		}
 		Scanner in = new Scanner(System.in);
 		int i = in.nextInt(); in.nextLine();
@@ -83,7 +84,7 @@ public class ShowingVenueCmd implements Command {
 		cmd.addCommand(new ReserveSeatCmd(studio,eventName));
 		cmd.addCommand(new CheckSeatCmd(studio,eventName));
 		cmd.addCommand(new RefundSeatCmd(studio,eventName));
-		cmd.addCommand(new EventScreenCmd());
+		cmd.addCommand(new EventScreen(studio));
 		
 		cmd.displayCommands();
 	}

@@ -10,6 +10,7 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 import com.fashion.events.Dining;
+import com.fashion.screens.EventScreen;
 
 public class DiningVenueCmd implements Command {
 	private Studio studio;
@@ -37,7 +38,7 @@ public class DiningVenueCmd implements Command {
 		}
 		if(list.isEmpty()) {
 			System.out.println("There are no dinings!");
-			Main.EventScreen();
+			new EventScreen(studio).execute();
 		}
 		Scanner in = new Scanner(System.in);
 		int i = in.nextInt();
@@ -82,7 +83,7 @@ public class DiningVenueCmd implements Command {
 		cmd.addCommand(new ReserveTableCmd(studio,eventName));
 		cmd.addCommand(new CheckTableCmd(studio,eventName));
 		cmd.addCommand(new RefundTableCmd(studio,eventName));
-		cmd.addCommand(new EventScreenCmd());
+		cmd.addCommand(new EventScreen(studio));
 		
 		cmd.displayCommands();
 	}

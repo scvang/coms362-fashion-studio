@@ -74,7 +74,7 @@ public class InventoryScreen implements Command {
 		cmd.addCommand(new UpdateClothingCmd(studio));
 		cmd.addCommand(new SearchClothingCmd(studio));
 		cmd.addCommand(new RemoveClothingCmd(studio));
-		cmd.addCommand(new MainScreenCmd());
+		cmd.addCommand(new MainScreen(studio));
 		cmd.displayCommands();
 	}
 }
