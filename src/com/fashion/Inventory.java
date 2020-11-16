@@ -16,42 +16,13 @@ import com.fashion.apparel.Apparel;
  */
 public class Inventory {
 	private ArrayList<Apparel> clothingStock;
-	private ArrayList<Food> foodStock;
-	private ArrayList<MakeUp> makeupStock;
 	
 	public Inventory() {
 		clothingStock = new ArrayList<>();
-		foodStock = new ArrayList<>();
-		makeupStock = new ArrayList<>();
 	}
 	
 	public void storeClothing(Apparel a) {
 		clothingStock.add(a);
-	}
-	
-	public void storeFood(Food f) {
-		int count = 0;
-		for(int i = 0; i < foodStock.size(); ++i) {
-			if(f.getItemName().equals((foodStock.get(i)).getItemName())) {
-				count = foodStock.get(i).getQuantity();
-				++count;
-				foodStock.get(i).setQuantity(count);
-				return;
-			}
-		}
-		foodStock.add(f);
-	}
-	public void storeMakeup(MakeUp m) {
-		int count = 0;
-		for(int i = 0; i < foodStock.size(); ++i) {
-			if(m.sameItem(makeupStock.get(i))) {
-				count = makeupStock.get(i).getQuantity();
-				++count;
-				makeupStock.get(i).setQuantity(count);
-				return;
-			}
-		}
-		makeupStock.add(m);
 	}
 	
 	public void displayClothingInventory() {
@@ -59,59 +30,37 @@ public class Inventory {
 			System.out.println(
 					"Item name: " + a.getItemName() + "\n" +
 					"Brand name: " + a.getBrandName() + "\n" +
-					"Size: " + a.getSize() + "\n" +
 					"Color: " + a.getColor() + "\n" +
+					"Size: " + a.getSize() + "\n" +
 					"Price: " + a.getPrice() + "\n" +
 					"Quantity: " + a.getQuantity() + "\n"
 					);
 		}
 	}
-
-//	/**
-//	 * Displays all the apparel from the backend
-//	 */
-//	public void displayApparel(){
-//		try {
-//			ResultSet rs = mySQLController.runPullCommand("SELECT * FROM `inventory`");
-//
-//			if(rs != null) {
-//				System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
-//						+ rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
-//						rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
-//						+ rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
-//				System.out.println();
-//
-//				while (rs.next()) {
-//					System.out.println("$" + rs.getInt("price") + " " + rs.getString("brandName") + " "
-//							+ rs.getString("itemName") + "\nDescription: " + rs.getString("color") + " " +
-//							rs.getString("category") + "\nS: " + rs.getInt("quantitySmall") + " M: "
-//							+ rs.getInt("quantityMedium") + " L: " + rs.getInt("quantityLarge"));
-//					System.out.println();
-//				}
-//			}
-//
-//		} catch (SQLException throwables) {
-//			System.out.println("Error displaying apparel on our side");
-//		}
-//	}
 	
-	public void displayFoodInventory() {
-		for(Food f : foodStock) {
-			System.out.println("Item name: " + f.getItemName() + " " + "Quantity: " + f.getQuantity());
-		}
-	}
-	public void displayMakeupInventory() {
-		for(MakeUp m : makeupStock) {
-			System.out.println("Item name: " + m.getItemName() + ", Brand name:" + m.getBrandName() + ", Weight: " + m.getWeight() + ", Color: " + m.getColor() + ", Quantity: " + m.getQuantity());
-		}
-	}
-	
-	public Apparel search(Apparel a) {
+	public ArrayList<Apparel> search(Apparel apparel) {
+		
+		ArrayList<Apparel> list = new ArrayList<>();
+		
+		// Iterate through clothing stock list.
 		for(int i = 0; i < clothingStock.size(); ++i) {
-			if(a.sameItem(clothingStock.get(i))) {
-				return clothingStock.get(i);
+			if(apparel.getItemName().equals(clothingStock.get(i).getItemName())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
 			}
+			if(apparel.getBrandName().equals(clothingStock.get(i).getBrandName())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getColor().equals(clothingStock.get(i).getColor())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getSize().equals(clothingStock.get(i).getSize())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			if(apparel.getPrice() == (clothingStock.get(i).getPrice())) {
+				if(!list.contains(clothingStock.get(i))) list.add(clothingStock.get(i));
+			}
+			
 		}
-		return null;
+		return list;
 	}
 }

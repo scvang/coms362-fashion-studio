@@ -1,5 +1,6 @@
 package com.fashion.employees;
 
+import com.fashion.Profile;
 import com.fashion.apparel.Apparel;
 import com.fashion.pay.PayStubInfo;
 
@@ -21,6 +22,8 @@ public class Model extends Employee{
 	private Apparel shoes;
 	private Apparel acc;
 	
+	private Profile profile = new Profile();
+	
 	
 	/**
 	 * Constructor for the model.
@@ -33,12 +36,22 @@ public class Model extends Employee{
 		super(eid,name,jobTitle,phone,payStubInfo);
 		this.agent = agent;
 		
-		this.head = new Apparel(0,"none","none","none");
-		this.top = new Apparel(0,"none","none","none");
-		this.bot = new Apparel(0,"none","none","none");
-		this.legs = new Apparel(0,"none","none","none");
-		this.shoes = new Apparel(0,"none","none","none");
-		this.acc = new Apparel(0,"none","none","none");
+		this.head = new Apparel();
+		this.top = new Apparel();
+		this.bot = new Apparel();
+		this.legs = new Apparel();
+		this.shoes = new Apparel();
+		this.acc = new Apparel();
+	}
+	public void setDescription(String desc) {
+		profile.setDescription(desc);
+	}
+	public void setImage(String path) {
+		profile.setImage(path);
+	}
+	
+	public void displayInfo() {
+		profile.displayInfo();
 	}
 	
 	public Apparel getHeadPiece() {

@@ -70,6 +70,9 @@ public class Studio {
 	public Inventory getInventory(){
 		return this.inventory;
 	}
+	public void resetEventList() {
+		this.event = new ArrayList<>();
+	}
 	public void resetInventory() {
 		this.inventory = new Inventory();
 	}
@@ -185,18 +188,6 @@ public class Studio {
 	
 	/**
 	 * @author Sebastian Vang
-	 * @param name
-	 * @param brand
-	 * @param color
-	 * @param id
-	 * @param stock
-	 */
-	public void addApparel(int id,String name, String brand, String color, int stock) {
-		apparel.add(new Apparel(id,name,brand,color));
-	}
-	
-	/**
-	 * @author Sebastian Vang
 	 * Lists the apparel.
 	 */
 	public void getApparel() {
@@ -222,17 +213,17 @@ public class Studio {
 		switch(type) {
 		case "showing":
 			createShowingEvent(eventName,date,time);
-			System.out.println("Showing event successfully created.");
+			//System.out.println("Showing event successfully created.");
 		break;
 		
 		case "party":
 			createPartyEvent(eventName,date,time);
-			System.out.println("Dining event successfully created.");
+			//System.out.println("Dining event successfully created.");
 		break;
 		
 		case "dining":
 			createDiningEvent(eventName,date,time);
-			System.out.println("Dining event successfully created.");
+			//System.out.println("Dining event successfully created.");
 		break;
 		
 		default:
@@ -282,9 +273,11 @@ public class Studio {
 	 */
 	public void displayEvents() {
 		int count = 1;
+		System.out.println("Registered Events:");
 		for(Event e : event) {
-			System.out.println(count++ + ") " + e.getEvent());
+			System.out.println(count++ + ": " + e.getEvent());
 		}
+		System.out.println("");
 	}
 	
 	/**
@@ -419,8 +412,9 @@ public class Studio {
 	 * @param date
 	 * @param time
 	 */
-	public void reserveBadge(Event e, String name, String date, String time) {
-		if(((Party)e).reserveBadge(name, date, time)) System.out.println("Success.");
+	public boolean reserveBadge(Event e, String name, String date, String time) {
+		Party p = (Party) e;
+		return p.reserveBadge(name, date, time);
 	}
 	
 	/**
@@ -455,6 +449,11 @@ public class Studio {
 		Party p = (Party)e;
 		if(p.getAttendees() == p.getCapacity()) return true;
 		return false;
+	}
+	
+	public ArrayList<String> getAttendeesList(Event e){
+		Party p = (Party)e;
+		return p.getAttendeesList();
 	}
 	
 	/**
@@ -717,6 +716,10 @@ public class Studio {
 		for(Model m : model) {
 			if(m.getName().equals(modelName)) m.changeAcc(item);
 		}
+	}
+	public boolean removeBadgeReservation(String name, Event e) {
+		Party p = (Party)e;
+		return p.removeBadgeReservation(name);
 	}
 }
 

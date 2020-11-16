@@ -1,6 +1,9 @@
 package com.fashion.events;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Sebastian Vang
@@ -21,12 +24,41 @@ public class Party extends Event {
 		this.capacity = 200;
 	}
 	
+	public ArrayList<String> getAttendeesList(){
+		ArrayList<String> nameList = new ArrayList<>();
+		
+		Iterator iter = whitelist.entrySet().iterator();
+		while(iter.hasNext()) {
+			Map.Entry map = (Map.Entry) iter.next();
+			String name = (String) map.getKey();
+			nameList.add(name);
+		}
+		return nameList;
+	}
+	
+	public boolean removeBadgeReservation(String name) {
+		if(whitelist.containsKey(name)) {
+			whitelist.remove(name);
+			--attendees;
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean reserveBadge(String customer, String date, String time) {
+		
+		// Check if customer already exists.
+		if(whitelist.containsKey(customer)) return false;
+		
+		// Create a new badge object.
 		Badge b = new Badge(customer,date,time);
 		
-		// Add to whitelist.
+		// Add customer to whitelist.
 		if(attendees != capacity) {
 			whitelist.put(customer,b);
+		}
+		else {
+			return false;
 		}
 		
 		++attendees;
