@@ -66,7 +66,7 @@ public class DiningVenueCmd implements Command {
 	    	  String nameD = rs.getString("name");
 	    	  String dateD = rs.getString("date");
 	    	  String timeD = rs.getString("time");
-	    	  String tableD = rs.getString("table");
+	    	  String tableD = rs.getString("tableNum");
 	    	  
 	    	  if(studio.reserveTable(studio.getEvent(eventNameD),tableD,nameD,dateD,timeD));
 	      }

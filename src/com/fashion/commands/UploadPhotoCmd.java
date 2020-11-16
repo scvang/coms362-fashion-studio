@@ -8,31 +8,30 @@ import java.util.Scanner;
 import com.fashion.Main;
 import com.fashion.Studio;
 
-public class RefundTableCmd implements Command {
+public class UploadPhotoCmd implements Command {
 	private Studio studio;
-	private String eventName;
-	public RefundTableCmd(Studio s, String e) {
+	public UploadPhotoCmd(Studio s) {
 		this.studio = s;
-		this.eventName = e;
 	}
 
 	@Override
 	public String getDescription() {
-
-		return "Refund Table";
+		return "Upload Photo";
 	}
 
 	@Override
 	public void execute() {
 		Scanner in = new Scanner(System.in);
-		System.out.println("Enter the customer name:");
+		System.out.println("Enter the model's name:");
 		String name = in.nextLine();
-		if(studio.hasTableReservation(name,studio.getEvent(eventName))) {
-			System.out.println("Reservation found.");
-			studio.removeTableReservation(name,studio.getEvent(eventName));
-			System.out.println("Reservation removed.");
+		
+		if(studio.getModel(name) != null) {
+			System.out.println("Enter image path:");
+			String img = in.nextLine();
 			
-			// Remove the entry from database.
+			studio.getModel(name).setImage(img);
+			System.out.println("Photo updated.");
+			
 			try{
 			      // Step 1: "Load" the JDBC driver
 					Class.forName("com.mysql.cj.jdbc.Driver");
@@ -43,9 +42,10 @@ public class RefundTableCmd implements Command {
 			      //System.out.println("Connected.");
 			      
 			      // create a prepared statement from the connection
-			      PreparedStatement ps = conn.prepareStatement("DELETE FROM party WHERE event = ? AND name = ?");
-			      ps.setString(1, eventName);
-			      ps.setString(2, name);
+			      PreparedStatement ps = conn.prepareStatement("UPDATE models SET image = ? WHERE name = ?");
+			      
+			      ps.setString(1,img);
+			      ps.setString(2,name);
 			      
 			      ps.execute();
 			      conn.close();
@@ -55,9 +55,10 @@ public class RefundTableCmd implements Command {
 			    }
 		}
 		else {
-			System.out.println("Could not find reservaton.");
+			System.out.println("Model wasn't found.");
 		}
-		Main.EventScreen();
+		Main.ModelScreen();
+
 	}
 
 }

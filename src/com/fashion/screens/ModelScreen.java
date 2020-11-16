@@ -5,34 +5,24 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import com.fashion.Main;
 import com.fashion.Studio;
-import com.fashion.apparel.Apparel;
 import com.fashion.commands.*;
+import com.fashion.pay.PayStubInfo;
 
-public class InventoryScreen implements Command {
+public class ModelScreen implements Command {
 	private Studio studio;
-	public InventoryScreen(Studio s) {
+	public ModelScreen(Studio s) {
 		this.studio = s;
 	}
-
 	@Override
 	public String getDescription() {
-		return "Inventory Screen";
-	}
 
+		return "Model Screen";
+	}
 	@Override
 	public void execute() {
 		
-		int id = 0;
-		String itemName = "";
-		String brandName = "";
-		String color = "";
-		String size = "";
-		double price = 0;
-		int quantity = 0;
-		
-		// This retrieves a clothing list from the database.
+		// This retrieves a model list from the database.
 		// Establish a connection to the database to query data.
 		try{
 	      // Step 1: "Load" the JDBC driver
@@ -47,19 +37,19 @@ public class InventoryScreen implements Command {
 	      Statement st = conn.createStatement();
 	      
 	      // query the data
-	      ResultSet rs = st.executeQuery("SELECT * FROM clothing");
+	      ResultSet rs = st.executeQuery("SELECT * FROM models");
 	      
 	      studio.resetInventory();
 	      while(rs.next()) {
-	    	  id = rs.getInt("id");
-	    	  itemName = rs.getString("itemName");
-	    	  brandName = rs.getString("brandName");
-	    	  color = rs.getString("color");
-	    	  size = rs.getString("size");
-	    	  price = rs.getInt("price");
-	    	  quantity = rs.getInt("quantity");
+	    	  int eid = rs.getInt("eid");
+	    	  String agent = rs.getString("agent");
+	    	  String name = rs.getString("name");
+	    	  String jobTitle = rs.getString("jobTitle");
+	    	  String phoneNum  = rs.getString("phoneNum");
+	    	  String image  = rs.getString("image");
 	    	  
-	    	  studio.storeClothingItem(new Apparel(id,itemName,brandName,color,size,price,quantity));
+	    	  studio.createModel(eid,agent,name,"Fashion Model",phoneNum,new PayStubInfo(0, 0, 0, 0));
+	    	  studio.getModel(name).setImage(image);
 	      }
 	      // close the connection.
 	      st.close();
@@ -69,12 +59,13 @@ public class InventoryScreen implements Command {
 	    }
 		
 		CommandDisplay cmd = new CommandDisplay();
-		cmd.addCommand(new ViewClothingCmd(studio));
-		cmd.addCommand(new StoreClothingCmd(studio));
-		cmd.addCommand(new UpdateClothingCmd(studio));
-		cmd.addCommand(new SearchClothingCmd(studio));
-		cmd.addCommand(new RemoveClothingCmd(studio));
+		cmd.addCommand(new ListModelsCmd(studio));
+		cmd.addCommand(new ChangeApparelCmd(studio));
+		cmd.addCommand(new UploadPhotoCmd(studio));
+		cmd.addCommand(new AddModelCmd(studio));
+		cmd.addCommand(new DisplayModelInfoCmd(studio));
 		cmd.addCommand(new MainScreenCmd());
 		cmd.displayCommands();
 	}
+
 }

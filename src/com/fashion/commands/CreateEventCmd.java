@@ -63,7 +63,7 @@ public class CreateEventCmd implements Command {
 	      System.err.println(e.getMessage()); 
 	    }
 		
-		Main.eventScreen();
+		Main.EventScreen();
 	}
 
 }

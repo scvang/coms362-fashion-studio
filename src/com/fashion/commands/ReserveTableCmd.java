@@ -27,7 +27,7 @@ public class ReserveTableCmd implements Command {
 		Scanner in = new Scanner(System.in);
 		if(studio.isDiningFull(studio.getEvent(eventName))) {
 			System.out.println("There are no available tables.");
-			Main.eventScreen();
+			Main.EventScreen();
 		}
 		System.out.println("Enter your customer name: ");
 		String customerName = in.nextLine();

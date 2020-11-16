@@ -31,36 +31,35 @@ public class EventScreen implements Command {
 		String time;
 		
 		try{
-		      // Step 1: "Load" the JDBC driver
-				Class.forName("com.mysql.cj.jdbc.Driver");
-
-		      // Step 2: Establish the connection to the database 
-		      String url = "jdbc:mysql://localhost/fashion_studio"; 
-		      Connection conn = DriverManager.getConnection(url,"root","");
-		      //System.out.println("Connected.");
-		      
-		      // create a Statement from the connection
-		      Statement st = conn.createStatement();
-		      
-		      // query the data
-		      ResultSet rs = st.executeQuery("SELECT * FROM events");
-		      
-		      // Clear the event list before fetching to avoid duplicating.
-		      studio.resetEventList();
-		      while(rs.next()) {
-		    	  type = rs.getString("type");
-		    	  name = rs.getString("name");
-		    	  date = rs.getString("date");
-		    	  time = rs.getString("time");
-		    	  
-		    	  studio.createEvent(type,name,date,time);
-		      }
-		      // close the connection.
-		      st.close();
-		    }
+			// Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT * FROM events");
+	      
+	      // Clear the event list before fetching to avoid duplicating.
+	      studio.resetEventList();
+	      while(rs.next()) {
+	    	  type = rs.getString("type");
+	    	  name = rs.getString("name");
+	    	  date = rs.getString("date");
+	    	  time = rs.getString("time");
+	    	  
+	    	  studio.createEvent(type,name,date,time);
+	      }
+	      // close the connection.
+	      st.close();
+	    }
 		catch (Exception e){
 		      System.err.println(e.getMessage()); 
-		    }
+		      }
 		
 		CommandDisplay cmd = new CommandDisplay();
 		cmd.addCommand(new ShowingVenueCmd(studio));
@@ -69,7 +68,6 @@ public class EventScreen implements Command {
 		cmd.addCommand(new CreateEventCmd(studio));
 		cmd.addCommand(new DisplayEventsCmd(studio));
 		cmd.addCommand(new MainScreenCmd());
-		
 		cmd.displayCommands();
 	}
 }

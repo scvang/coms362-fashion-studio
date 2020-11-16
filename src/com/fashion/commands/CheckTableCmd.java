@@ -36,7 +36,7 @@ public class CheckTableCmd implements Command {
 			System.out.println("No reservation found for " + name);
 		}
 		
-		Main.eventScreen();
+		Main.EventScreen();
 	}
 
 }

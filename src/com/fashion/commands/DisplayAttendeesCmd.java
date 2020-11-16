@@ -27,7 +27,7 @@ public class DisplayAttendeesCmd implements Command {
 			System.out.println(s);
 		}
 		System.out.println("There are: " + studio.getNumOfAttendees(studio.getEvent(eventName)) + " number of attendees.");
-		Main.eventScreen();
+		Main.EventScreen();
 	}
 
 }

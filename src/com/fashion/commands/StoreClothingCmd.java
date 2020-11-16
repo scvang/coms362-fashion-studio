@@ -46,9 +46,8 @@ public class StoreClothingCmd implements Command {
 		quantity = in.nextInt(); in.nextLine();
 		
 		studio.resetInventory();
-		//studio.storeClothingItem(new Apparel(itemName,brandName,color));
 		
-		 // Establish a connection to the database test.
+		 // Establish a connection to the database.
 		try{
 	      // Step 1: "Load" the JDBC driver
 			Class.forName("com.mysql.cj.jdbc.Driver");

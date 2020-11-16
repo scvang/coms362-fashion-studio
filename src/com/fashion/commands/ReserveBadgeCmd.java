@@ -27,7 +27,7 @@ public class ReserveBadgeCmd implements Command {
 		Scanner in = new Scanner(System.in);
 		if(studio.isPartyFull(studio.getEvent(eventName))) {
 			System.out.println("The venue is full.");
-			Main.eventScreen();
+			Main.EventScreen();
 		}
 		
 		System.out.println("Enter your customer name: ");
