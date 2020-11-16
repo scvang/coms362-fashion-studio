@@ -18,6 +18,7 @@ import com.fashion.events.Dining;
 import com.fashion.events.Event;
 import com.fashion.events.Party;
 import com.fashion.events.Showing;
+import com.fashion.negotiations.ContractSession;
 import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.shopping.ShoppingSession;
@@ -1528,7 +1529,8 @@ class ListAdvertisementOptions implements Command {
 }
 
 class ListContractOptions implements Command {
-
+	static ContractSession contractSession = new ContractSession();
+	
 	@Override
 	public String getDescription() {
 		return "List Contract Commands";
@@ -1536,8 +1538,52 @@ class ListContractOptions implements Command {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+
+	}
+	
+	public static ContractSession getConSes() {
+		return contractSession;
+	}
+}
+
+class BeginContract implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Begin contract negotiation";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().negotiate();
+	}
+	
+}
+
+class ViewOld implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View old contracts";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().viewOldContracts();
+	}
+	
+}
+
+class ViewCurrent implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View current contract";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().viewCurrentContract();
 	}
 	
 }
