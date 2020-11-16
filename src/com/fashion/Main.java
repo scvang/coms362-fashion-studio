@@ -163,6 +163,12 @@ public class Main extends JFrame {
 		cd.addSubShopCommands(new GoCart());
 		cd.addSubShopCommands(new ProcessRefund());
 		cd.addSubShopCommands(new ViewRefund());
+		cd.addCommand(new ListInventoryOptions());
+		cd.addCommand(new ListModelOptions());
+		cd.addCommand(new ListAdvertisementOptions());
+		cd.addCommand(new ListPromotionOptions());
+		cd.addCommand(new ListContractOptions());
+		cd.addCommand(new ListBusinessOptions());
 		cd.displaycommands();
 		
 		//mainScreen();

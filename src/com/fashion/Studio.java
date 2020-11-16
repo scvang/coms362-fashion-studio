@@ -67,6 +67,18 @@ public class Studio {
 		payStubHistory = new ArrayList<>();
 		inventory = new Inventory();
 	}
+	public Studio () {
+		employees = new ArrayList<>();
+		
+		model = new ArrayList<>(); 
+		apparel = new ArrayList<>();
+		event = new ArrayList<>();
+		ad = new ArrayList<>();
+
+		payStubHistory = new ArrayList<>();
+		inventory = new Inventory();
+	}
+	
 	public Inventory getInventory(){
 		return this.inventory;
 	}

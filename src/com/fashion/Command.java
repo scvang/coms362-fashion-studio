@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -46,6 +48,7 @@ public interface Command {
  **/
 
 class ListEmployeeOptions implements Command {
+	EmployeeSession employeeSession1 = new EmployeeSession();
 
 	public ListEmployeeOptions() {
 
@@ -60,15 +63,19 @@ class ListEmployeeOptions implements Command {
 	public String getDescription() {
 		return "List Employee Commands";
 	}
+	
+	public EmployeeSession getSes() {
+		return employeeSession1;
+	}
 }
 
 class ViewEmployees implements Command {
+	ListEmployeeOptions LEO = new ListEmployeeOptions();
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession1 = new EmployeeSession();
-		employeeSession1.viewEmployees();
-		employeeSession1.displayHeadshot();
+		LEO.getSes().viewEmployees();
+		LEO.getSes().displayHeadshot();
 	}
 
 	@Override
@@ -169,6 +176,7 @@ class Management implements Command {
 
 class HireEmployee implements Command {
 	Management M = new Management();
+	ListEmployeeOptions LEO = new ListEmployeeOptions();
 
 	@Override
 	public String getDescription() {
@@ -177,9 +185,8 @@ class HireEmployee implements Command {
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession = new EmployeeSession();
-		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
-			employeeSession.hireEmployee();
+		if(LEO.getSes().getAccessRights(M.getUsername(), M.getPassword())){
+			LEO.getSes().hireEmployee();
 		}
 	}
 	
@@ -187,6 +194,7 @@ class HireEmployee implements Command {
 
 class FireEmployee implements Command {
 	Management M = new Management();
+	ListEmployeeOptions LEO = new ListEmployeeOptions();
 
 	@Override
 	public String getDescription() {
@@ -195,18 +203,18 @@ class FireEmployee implements Command {
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession = new EmployeeSession();
-		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
-			employeeSession.fireEmployee();
+		if(LEO.getSes().getAccessRights(M.getUsername(), M.getPassword())){
+			LEO.getSes().fireEmployee();
 		}
 	}
 	
 }
 
 class ListEventOptions implements Command {
-
+	Event E;
+	
 	public ListEventOptions() {
-
+		E = new Event();
 	}
 
 	@Override
@@ -218,10 +226,14 @@ class ListEventOptions implements Command {
 	public String getDescription() {
 		return "List Event Commands";
 	}
+	
+	public Event getEvent() {
+		return E;
+	}
 }
 
 class ShowingEventCommands implements Command {
-	Event E = new Event();
+	ListEventOptions LEO = new ListEventOptions();
 	String eventName;
 
 	public ShowingEventCommands() {
@@ -237,14 +249,14 @@ class ShowingEventCommands implements Command {
 	public void execute() {
 		System.out.println("Choose a showing event:");
 		Scanner in3 = new Scanner(System.in);
-
+		eventName = in3.next();
 		int count = 1;
 		ArrayList<Showing> showingList = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Showing) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
+		for (int i = 0; i < LEO.getEvent().getEventList().size(); ++i) {
+			if (LEO.getEvent().getEventList().get(i) instanceof Showing) {
+				System.out.println(count + ") " + LEO.getEvent().getEventList().get(i).getEvent());
 				++count;
-				showingList.add((Showing) E.getEventList().get(i));
+				showingList.add((Showing) LEO.getEvent().getEventList().get(i));
 			}
 		}
 		if (showingList.isEmpty()) {
@@ -254,7 +266,10 @@ class ShowingEventCommands implements Command {
 		eventName = showingList.get(i - 1).getEvent();
 
 		in3.close();
-
+	}
+	
+	public Event getEvent() {
+		return LEO.getEvent();
 	}
 
 	public String getName() {
@@ -274,7 +289,7 @@ class DisplaySeat implements Command {
 
 	@Override
 	public void execute() {
-		E.displaySeats(E.getEvent(SEC.getName()));
+		SEC.getEvent().displaySeats(SEC.getEvent().getEvent(SEC.getName()));
 
 	}
 
@@ -433,11 +448,14 @@ class DiningEventCommands implements Command {
 	public String getName() {
 		return eventName;
 	}
+	
+	public Event getEvent() {
+		return E;
+	}
 
 }
 
 class DisplayTable implements Command {
-	Event E = new Event();
 	DiningEventCommands DEC = new DiningEventCommands();
 
 	@Override
@@ -447,7 +465,7 @@ class DisplayTable implements Command {
 
 	@Override
 	public void execute() {
-		E.displayTables(E.getEvent(DEC.getName()));
+		DEC.getEvent().displayTables(DEC.getEvent().getEvent(DEC.getName()));
 	}
 
 }
@@ -720,7 +738,7 @@ class ListShoppingOptions implements Command {
 	ShoppingSession shoppingSession = new ShoppingSession();
 	
 	public ListShoppingOptions() {
-		shoppingSession.initSessionId();
+
 	}
 	
 	@Override
@@ -730,7 +748,7 @@ class ListShoppingOptions implements Command {
 
 	@Override
 	public void execute() {
-
+		shoppingSession.initSessionId();
 	}
 	
 	public ShoppingSession getShop() {
@@ -957,6 +975,328 @@ class ViewRefund implements Command {
 	public void execute() {
 		LSO.getShop().viewLastRefund();
 		System.out.println();
+	}
+	
+}
+
+class ListInventoryOptions implements Command {
+	static Studio studio = new Studio();
+	
+	@Override
+	public String getDescription() {
+		return "List Inventory Commands";
+	}
+	
+	public static Studio getStud() {
+		return studio;
+	}
+
+	@Override
+	public void execute() {
+		int id = 0;
+		String size = "";
+		int price = 0;
+		String itemName = "";
+		String brandName = "";
+		String color = ""; 
+		int quantity = 0;
+		
+		// This retrieves a clothing list from the database.
+		// Establish a connection to the database to query data.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT * FROM inventory2");
+	      
+	      studio.resetInventory();
+	      while(rs.next()) {
+	    	  id = rs.getInt("id");
+	    	  size = rs.getString("size");
+	    	  price = rs.getInt("price");
+	    	  itemName = rs.getString("itemName");
+	    	  brandName = rs.getString("brandName");
+	    	  color = rs.getString("color");
+	    	  quantity = rs.getInt("quantity");
+	    	  
+	    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
+	      }
+	      // close the connection.
+	      st.close();
+	    } catch (Exception e){
+		      System.err.println(e.getMessage()); 
+		    }
+	}
+}
+
+class ViewClothes implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View clothing listing";
+	}
+
+	@Override
+	public void execute() {
+		ListInventoryOptions.getStud().displayClothingInventory();
+	}
+	
+}
+
+class ViewMakeup implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View makeup listing";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ViewFood implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View food listing";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class StoreCLothes implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store clothing item";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		int id = 0;
+		String size = "";
+		int price = 0;
+		String itemName = "";
+		String brandName = "";
+		String color = ""; 
+		int quantity = 0;
+		
+		System.out.println("Enter the id:");
+		id = in.nextInt(); in.nextLine();
+		System.out.println("Enter the size:");
+		size = in.nextLine();
+		System.out.println("Enter the price:");
+		price = in.nextInt(); in.nextLine();
+		System.out.println("Enter the item name:");
+		itemName = in.nextLine();
+		System.out.println("Enter the brand name:");
+		brandName = in.nextLine();
+		System.out.println("Enter the color:");
+		color = in.nextLine();
+		System.out.println("Enter the quantity:");
+		quantity = in.nextInt(); in.nextLine();
+		
+		ListInventoryOptions.getStud().resetInventory();
+		//studio.storeClothingItem(new Apparel(itemName,brandName,color));
+		
+		 // Establish a connection to the database test.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a prepared statement from the connection
+	      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+	      
+	      ps.setInt(1,id);
+	      ps.setString(2, size);
+	      ps.setInt(3, price);
+	      ps.setString(4,itemName);
+	      ps.setString(5,brandName);
+	      ps.setString(6, color);
+	      ps.setInt(7, quantity);
+	      
+	      ps.execute();
+	      conn.close();
+	    }
+	    catch (Exception e){
+	      System.err.println(e.getMessage()); 
+	    }
+		System.out.println("Item was added into the database.");
+		in.close();
+	}
+	
+}
+
+class StoreMakeup implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store makeup item";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class StoreFood implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store food item";
+	}
+	
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class SearchItem implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Search clothing item";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter the price:");
+		int p = in.nextInt(); in.nextLine();
+		
+		System.out.println("Enter size");
+		String s = in.nextLine();
+		
+		System.out.println("Enter item name:");
+		String n = in.nextLine();
+		
+		System.out.println("Enter brand name:");
+		String b = in.nextLine();
+		
+		System.out.println("Enter color:");
+		String c = in.nextLine();
+		
+		Apparel apparel = ListInventoryOptions.getStud().getInventory().search(new Apparel(0,s,p,n,b,c,0));
+		
+		if(apparel == null) {
+			System.out.println("Search results:");
+			System.out.println("Item was not found.");
+		}
+		System.out.println("Search results:");
+		System.out.println(
+				"Item name: " + apparel.getItemName() + "\n" +
+				"Brand name: " + apparel.getBrandName() + "\n" +
+				"Size: " + apparel.getSize() + "\n" +
+				"Color: " + apparel.getColor() + "\n" +
+				"Price: " + apparel.getPrice() + "\n" +
+				"Quantity: " + apparel.getQuantity() + "\n"
+				);
+		in.close();
+	}
+	
+}
+class ListModelOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Model Commands";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ListPromotionOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Promotion Commands";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ListAdvertisementOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Advertisement Commands";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ListContractOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Contract Commands";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ListBusinessOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Business Commands";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
