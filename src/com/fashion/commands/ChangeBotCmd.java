@@ -29,9 +29,9 @@ public class ChangeBotCmd implements Command {
 	}
 	
 	private static Apparel makeApparel() {
-		System.out.println("Enter the item id:");
+
 		Scanner in = new Scanner(System.in);
-		int id = in.nextInt(); in.nextLine();
+
 		
 		System.out.println("Enter the item name:");
 		String name = in.nextLine();
@@ -45,13 +45,7 @@ public class ChangeBotCmd implements Command {
 		System.out.println("Enter the size:");
 		String size = in.nextLine();
 		
-		System.out.println("Enter the price:");
-		double price = in.nextDouble(); in.nextLine();
-		
-		System.out.println("Enter the quantity:");
-		int quantity = in.nextInt(); in.nextLine();
-		
-		Apparel item = new Apparel(id,name, brand, color,size,price,quantity);
+		Apparel item = new Apparel(0,name, brand, color,size,0,0);
 		
 		return item;
 	}

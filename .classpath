@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Sen/eclipse-workspace/itextpdf-5.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sen/eclipse-workspace/mysql-connector-java-8.0.22.jar"/>
+	<classpathentry kind="lib" path="C:/Users/varun/eclipse-workspace/itextpdf-5.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/varun/eclipse-workspace/mysql-connector-java-8.0.22.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

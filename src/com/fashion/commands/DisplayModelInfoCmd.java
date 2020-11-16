@@ -29,13 +29,39 @@ public class DisplayModelInfoCmd implements Command {
 			String description = "Model Name: " + studio.getModel(name).getName() + "<br/>" + 
 					"Agent: " + studio.getModel(name).getAgent() + "<br/>" +
 					"Phone: " + studio.getModel(name).getPhoneNum() + "<br/>" +
-					"Salary: " + studio.getModel(name).getPayStubInfo().getSalary() + "<br/>" +
-					"Head: " + studio.getModel(name).getHeadPiece().getItemName() + ", Brand: " + studio.getModel(name).getHeadPiece().getBrandName() + ", Color: " + studio.getModel(name).getHeadPiece().getColor() + "<br/>" +
-					"Top: " + studio.getModel(name).getTopPiece().getItemName() + ", Brand: " + studio.getModel(name).getTopPiece().getBrandName() + ", Color: " + studio.getModel(name).getTopPiece().getColor() + "<br/>" +
-					"Bottoms: " + studio.getModel(name).getBotPiece().getItemName() + ", Brand: " + studio.getModel(name).getBotPiece().getBrandName() + ", Color: " + studio.getModel(name).getBotPiece().getColor() + "<br/>" +
-					"Leggings: " + studio.getModel(name).getLegsPiece().getItemName() + ", Brand: " + studio.getModel(name).getLegsPiece().getBrandName() + ", Color: " + studio.getModel(name).getLegsPiece().getColor() + "<br/>" +
-					"Shoes: " + studio.getModel(name).getShoes().getItemName() + ", Brand: " + studio.getModel(name).getShoes().getBrandName() + ", Color: " + studio.getModel(name).getShoes().getColor() + "<br/>" +
-					"Accessory: " + studio.getModel(name).getAcc().getItemName() + ", Brand: " + studio.getModel(name).getAcc().getBrandName() + ", Color: " + studio.getModel(name).getAcc().getColor() + "<br/>";
+					"Salary: " + studio.getModel(name).getPayStubInfo().getSalary() + "<br/><br/>" +
+					
+					"Headwear: " + studio.getModel(name).getHeadPiece().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getHeadPiece().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getHeadPiece().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getHeadPiece().getSize() + "<br/><br/>" +
+					
+					"Top: " + studio.getModel(name).getTopPiece().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getTopPiece().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getTopPiece().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getTopPiece().getSize() + "<br/><br/>" +
+					
+					"Bottoms: " + studio.getModel(name).getBotPiece().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getBotPiece().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getBotPiece().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getBotPiece().getSize() + "<br/><br/>" +
+					
+					"Leggings: " + studio.getModel(name).getLegsPiece().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getLegsPiece().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getLegsPiece().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getLegsPiece().getSize() + "<br/><br/>" +
+					
+					"Shoes: " + studio.getModel(name).getShoes().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getShoes().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getShoes().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getShoes().getSize() + "<br/><br/>" +
+					
+					"Accessory: " + studio.getModel(name).getAcc().getItemName() + "<br/>" +
+					"Brand: " + studio.getModel(name).getAcc().getBrandName() + "<br/>" +
+					"Color: " + studio.getModel(name).getAcc().getColor() + "<br/>" +
+					"Size: " + studio.getModel(name).getAcc().getSize() + "<br/><br/>";
+			
+			
 			studio.getModel(name).setDescription(description);
 			studio.getModel(name).displayInfo();
 		}

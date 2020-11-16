@@ -23,6 +23,7 @@ public class PromotionScreen implements Command{
 		cmd.addCommand(new DisplayFutureEventsCmd(studio));
 		cmd.addCommand(new CheckAvailablePromotionsCmd(studio));
 		cmd.addCommand(new ReservePromotionSpotCmd(studio));
+		cmd.addCommand(new MainScreen(studio));
 		
 		cmd.displayCommands();
 	}
