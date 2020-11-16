@@ -1292,10 +1292,8 @@ class ListPromotionOptions implements Command {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
-	}
 	
+	}	
 }
 
 class UpEvents implements Command {
@@ -1522,10 +1520,59 @@ class ListAdvertisementOptions implements Command {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+
+	}	
+}
+
+class ViewAds implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View Current Ads";
 	}
-	
+
+	@Override
+	public void execute() {
+		ListInventoryOptions.getStud().getAd();
+	}	
+}
+
+class CreateAd implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Create New Ad";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("What is the event ID?: ");
+		int eid = in.nextInt();
+		System.out.println("What type of advertisement do you need? (paper or video)");
+		String adType = in.next();
+		System.out.println("What is the name of the event?: ");
+		String eventName = in.next() + in.next();
+		System.out.println("Where is the location of the event?: ");
+		String loc = in.next();
+		System.out.println("What is the time of the event?: ");
+		String time = in.next();
+		System.out.println("What is the the number we should contact?: ");
+		String contactInfo = in.next();
+		//Advertisement advert = new Advertisement(eid, eventName, loc, time, contactInfo);
+		if(adType.equals("paper")) {
+			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			System.out.println("Advertisement Created!");
+		} else if(adType.equals("video")) {
+			//advert.createAdVideo();
+			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			System.out.println("Advertisement Created!");
+		} else {
+			System.out.print("We don't currently support that type of advertisement at this time.");
+		}
+		in.close();
+	}	
 }
 
 class ListContractOptions implements Command {
@@ -1556,8 +1603,7 @@ class BeginContract implements Command {
 	@Override
 	public void execute() {
 		ListContractOptions.getConSes().negotiate();
-	}
-	
+	}	
 }
 
 class ViewOld implements Command {
@@ -1570,8 +1616,7 @@ class ViewOld implements Command {
 	@Override
 	public void execute() {
 		ListContractOptions.getConSes().viewOldContracts();
-	}
-	
+	}	
 }
 
 class ViewCurrent implements Command {
@@ -1584,8 +1629,7 @@ class ViewCurrent implements Command {
 	@Override
 	public void execute() {
 		ListContractOptions.getConSes().viewCurrentContract();
-	}
-	
+	}	
 }
 
 class ListBusinessOptions implements Command {
@@ -1597,7 +1641,6 @@ class ListBusinessOptions implements Command {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
 		
 	}
 }
@@ -1612,8 +1655,7 @@ class ViewRecords implements Command {
 	@Override
 	public void execute() {
 		HumanResources.getServices();
-	}
-	
+	}	
 }
 
 class HireBusiness implements Command {
@@ -1647,7 +1689,6 @@ class HireBusiness implements Command {
 		
 		in.close();
 	}
-	
 }
 
 class ConfirmBusiness implements Command {
@@ -1659,8 +1700,24 @@ class ConfirmBusiness implements Command {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		Scanner in = new Scanner(System.in);
 		
+		for (int i = 0; i < HumanResources.servicesUsed.size(); i++) {
+			if (HumanResources.servicesUsed.get(i).hasBeenContacted() == false) {
+				HumanResources.getServiceRequests();
+				System.out.println("Would you like to contact them now? ('y' or 'n')\n");
+				String yorn = in.next();
+				in.nextLine();
+				if (yorn.equals("y")) {
+					HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));
+					System.out.println("Service confirmed!\n");
+				} else {
+					System.out.println("Please be sure to contact them at a different date.\n");
+				}
+			} else {
+				HumanResources.getServiceRequests();
+			}
+		}
+		in.close();
 	}
-	
 }
