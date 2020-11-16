@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,6 +18,8 @@ import com.fashion.events.Dining;
 import com.fashion.events.Event;
 import com.fashion.events.Party;
 import com.fashion.events.Showing;
+import com.fashion.negotiations.ContractSession;
+import com.fashion.pay.Card;
 import com.fashion.pay.PayStubInfo;
 import com.fashion.shopping.ShoppingSession;
 
@@ -25,27 +29,10 @@ public interface Command {
 	public void execute();
 }
 
-/**
- * class ListChoices implements Command {
- * 
- * public ListChoices() {
- * 
- * }
- * 
- * @Override public void execute() { Scanner in = new Scanner(System.in); String
- *           choice = ""; while (!choice.equals("q")) {
- *           System.out.println("Select an option ('q' to exit): \n" + "1)
- *           Employees \n" + "2) Inventory \n" + "3) Models \n" + "4) Events \n"
- *           + "5) Advertisements \n" + "6) Promotions \n" + "7) Shop \n" + "8)
- *           Negotiate Contract\n" + "9) Manage Businesses\n");
- * 
- *           choice = in.next(); } in.close(); }
- * 
- * @Override public String getDescription() { return "Display Initial Choices";
- *           } }
- **/
-
 class ListEmployeeOptions implements Command {
+	static EmployeeSession employeeSession1 = new EmployeeSession();
+	static 	HumanResources HR = new HumanResources();
+	static 	Management M = new Management();
 
 	public ListEmployeeOptions() {
 
@@ -60,15 +47,26 @@ class ListEmployeeOptions implements Command {
 	public String getDescription() {
 		return "List Employee Commands";
 	}
+	
+	public static EmployeeSession getSes() {
+		return employeeSession1;
+	}
+	
+	public static HumanResources getHR() {
+		return HR;
+	}
+	
+	public static Management getManage() {
+		return M;
+	}
 }
 
 class ViewEmployees implements Command {
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession1 = new EmployeeSession();
-		employeeSession1.viewEmployees();
-		employeeSession1.displayHeadshot();
+		ListEmployeeOptions.getSes().viewEmployees();
+		ListEmployeeOptions.getSes().displayHeadshot();
 	}
 
 	@Override
@@ -78,7 +76,6 @@ class ViewEmployees implements Command {
 }
 
 class PayEmployee implements Command {
-	HumanResources HR = new HumanResources();
 
 	/**
 	 * @author Chad Morrow
@@ -97,7 +94,7 @@ class PayEmployee implements Command {
 			}
 		}
 		in2.close();
-		PayStubInfo payStubInfo = HR.getEmployee(eid).getPayStubInfo();
+		PayStubInfo payStubInfo = ListEmployeeOptions.getHR().getEmployee(eid).getPayStubInfo();
 
 		System.out.println("Did this employee recieve a bonus? (y/n) ('q' to exit)");
 		String yesno = in2.next();
@@ -116,8 +113,8 @@ class PayEmployee implements Command {
 		}
 		payStubInfo.setBonus(bonus);
 
-		if (HR.payEmployee(eid, payStubInfo)) {
-			System.out.println(HR.getEmployee(eid).getName() + " was paid!");
+		if (ListEmployeeOptions.getHR().payEmployee(eid, payStubInfo)) {
+			System.out.println(ListEmployeeOptions.getHR().getEmployee(eid).getName() + " was paid!");
 		} else {
 			System.out.println("Error paying employee, try again later");
 		}
@@ -168,7 +165,6 @@ class Management implements Command {
 }
 
 class HireEmployee implements Command {
-	Management M = new Management();
 
 	@Override
 	public String getDescription() {
@@ -177,16 +173,13 @@ class HireEmployee implements Command {
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession = new EmployeeSession();
-		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
-			employeeSession.hireEmployee();
+		if(ListEmployeeOptions.getSes().getAccessRights(ListEmployeeOptions.getManage().getUsername(), ListEmployeeOptions.getManage().getPassword())){
+			ListEmployeeOptions.getSes().hireEmployee();
 		}
 	}
-	
 }
 
 class FireEmployee implements Command {
-	Management M = new Management();
 
 	@Override
 	public String getDescription() {
@@ -195,16 +188,17 @@ class FireEmployee implements Command {
 
 	@Override
 	public void execute() {
-		EmployeeSession employeeSession = new EmployeeSession();
-		if(employeeSession.getAccessRights(M.getUsername(), M.getPassword())){
-			employeeSession.fireEmployee();
+		if(ListEmployeeOptions.getSes().getAccessRights(ListEmployeeOptions.getManage().getUsername(), ListEmployeeOptions.getManage().getPassword())){
+			ListEmployeeOptions.getSes().fireEmployee();
 		}
 	}
 	
 }
 
 class ListEventOptions implements Command {
-
+	static Event E = new Event();
+	static String eventName = new String();
+	
 	public ListEventOptions() {
 
 	}
@@ -218,11 +212,21 @@ class ListEventOptions implements Command {
 	public String getDescription() {
 		return "List Event Commands";
 	}
+	
+	public static Event getEvent() {
+		return E;
+	}
+	
+	public static String getName() {
+		return eventName;
+	}
+	
+	public static String setName(String name) {
+		return eventName = name;
+	}
 }
 
 class ShowingEventCommands implements Command {
-	Event E = new Event();
-	String eventName;
 
 	public ShowingEventCommands() {
 
@@ -237,35 +241,27 @@ class ShowingEventCommands implements Command {
 	public void execute() {
 		System.out.println("Choose a showing event:");
 		Scanner in3 = new Scanner(System.in);
-
+		ListEventOptions.setName(in3.next());
 		int count = 1;
 		ArrayList<Showing> showingList = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Showing) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
+			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Showing) {
+				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
 				++count;
-				showingList.add((Showing) E.getEventList().get(i));
+				showingList.add((Showing) ListEventOptions.getEvent().getEventList().get(i));
 			}
 		}
 		if (showingList.isEmpty()) {
 			System.out.println("There are no showings!");
 		}
 		int i = in3.nextInt();
-		eventName = showingList.get(i - 1).getEvent();
+		ListEventOptions.setName(showingList.get(i - 1).getEvent());
 
 		in3.close();
-
 	}
-
-	public String getName() {
-		return eventName;
-	}
-
 }
 
 class DisplaySeat implements Command {
-	Event E = new Event();
-	ShowingEventCommands SEC = new ShowingEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -274,15 +270,13 @@ class DisplaySeat implements Command {
 
 	@Override
 	public void execute() {
-		E.displaySeats(E.getEvent(SEC.getName()));
+		ListEventOptions.getEvent().displaySeats(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
 
 	}
 
 }
 
 class ReserveSeat implements Command {
-	Event E = new Event();
-	ShowingEventCommands SEC = new ShowingEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -291,7 +285,7 @@ class ReserveSeat implements Command {
 
 	@Override
 	public void execute() {
-		if (E.isShowingFull(E.getEvent(SEC.getName()))) {
+		if (ListEventOptions.getEvent().isShowingFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println("No available seats.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -306,8 +300,8 @@ class ReserveSeat implements Command {
 
 		in.close();
 
-		if (E.reserveSeat(E.getEvent(SEC.getName()), seat, customerName, date, time)) {
-			E.chargeCard(E.getEvent(SEC.getName()), customerName);
+		if (ListEventOptions.getEvent().reserveSeat(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), seat, customerName, date, time)) {
+			ListEventOptions.getEvent().chargeCard(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), customerName);
 
 			// update the database
 			// Establish a connection to the database test.
@@ -342,8 +336,6 @@ class ReserveSeat implements Command {
 }
 
 class CheckSeat implements Command {
-	Event E = new Event();
-	ShowingEventCommands SEC = new ShowingEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -355,11 +347,11 @@ class CheckSeat implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (E.hasSeatReservation(name, E.getEvent(SEC.getName()))) {
-			System.out.println("Name: " + E.getSeat(name, E.getEvent(SEC.getName())).getCustomerName() + "\n" + "Date: "
-					+ E.getSeat(name, E.getEvent(SEC.getName())).getDate() + "\n" + "Time: "
-					+ E.getSeat(name, E.getEvent(SEC.getName())).getTime() + "\n" + "Seat: "
-					+ E.getSeat(name, E.getEvent(SEC.getName())).getSeatNum() + "\n");
+		if (ListEventOptions.getEvent().hasSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+			System.out.println("Name: " + ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getCustomerName() + "\n" + "Date: "
+					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
+					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Seat: "
+					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getSeatNum() + "\n");
 		} else {
 			System.out.println("No reservation found for " + name);
 		}
@@ -369,8 +361,6 @@ class CheckSeat implements Command {
 }
 
 class Refund implements Command {
-	Event E = new Event();
-	ShowingEventCommands SEC = new ShowingEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -383,9 +373,9 @@ class Refund implements Command {
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
 
-		if (E.hasSeatReservation(name, E.getEvent(SEC.getName()))) {
+		if (ListEventOptions.getEvent().hasSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println("Reservation found.");
-			E.removeSeatReservation(name, E.getEvent(SEC.getName()));
+			ListEventOptions.getEvent().removeSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
 			System.out.println("Reservation removed.");
 		} else {
 			System.out.println("Could not find reservaton.");
@@ -396,8 +386,6 @@ class Refund implements Command {
 }
 
 class DiningEventCommands implements Command {
-	Event E = new Event();
-	String eventName;
 
 	public DiningEventCommands() {
 
@@ -409,11 +397,11 @@ class DiningEventCommands implements Command {
 
 		int count = 1;
 		ArrayList<Dining> list = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Dining) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
+			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Dining) {
+				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
 				++count;
-				list.add((Dining) E.getEventList().get(i));
+				list.add((Dining) ListEventOptions.getEvent().getEventList().get(i));
 			}
 		}
 		if (list.isEmpty()) {
@@ -421,7 +409,7 @@ class DiningEventCommands implements Command {
 		}
 		Scanner in = new Scanner(System.in);
 		int i = in.nextInt();
-		eventName = list.get(i - 1).getEvent();
+		ListEventOptions.setName(list.get(i - 1).getEvent());
 		in.close();
 	}
 
@@ -429,16 +417,9 @@ class DiningEventCommands implements Command {
 	public String getDescription() {
 		return "List Dining Event Commands";
 	}
-
-	public String getName() {
-		return eventName;
-	}
-
 }
 
 class DisplayTable implements Command {
-	Event E = new Event();
-	DiningEventCommands DEC = new DiningEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -447,14 +428,12 @@ class DisplayTable implements Command {
 
 	@Override
 	public void execute() {
-		E.displayTables(E.getEvent(DEC.getName()));
+		ListEventOptions.getEvent().displayTables(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
 	}
 
 }
 
 class ReserveTable implements Command {
-	Event E = new Event();
-	DiningEventCommands DEC = new DiningEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -463,7 +442,7 @@ class ReserveTable implements Command {
 
 	@Override
 	public void execute() {
-		if (E.isDiningFull(E.getEvent(DEC.getName()))) {
+		if (ListEventOptions.getEvent().isDiningFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println("There are no available tables.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -476,8 +455,8 @@ class ReserveTable implements Command {
 		System.out.println("Enter your desired time (hh:mm am/pm): ");
 		String time = in.nextLine();
 
-		if (E.reserveTable(E.getEvent(DEC.getName()), table, customerName, date, time)) {
-			E.chargeCard(E.getEvent(DEC.getName()), customerName);
+		if (ListEventOptions.getEvent().reserveTable(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), table, customerName, date, time)) {
+			ListEventOptions.getEvent().chargeCard(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), customerName);
 		} else {
 			System.out.println("Table reservation failed.");
 		}
@@ -487,8 +466,6 @@ class ReserveTable implements Command {
 }
 
 class CheckTable implements Command {
-	Event E = new Event();
-	DiningEventCommands DEC = new DiningEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -500,11 +477,11 @@ class CheckTable implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (E.hasTableReservation(name, E.getEvent(DEC.getName()))) {
-			System.out.println("Name: " + E.getTable(name, E.getEvent(DEC.getName())).getCustomerName() + "\n"
-					+ "Date: " + E.getTable(name, E.getEvent(DEC.getName())).getDate() + "\n" + "Time: "
-					+ E.getTable(name, E.getEvent(DEC.getName())).getTime() + "\n" + "Table: "
-					+ E.getTable(name, E.getEvent(DEC.getName())).getTableNum() + "\n");
+		if (ListEventOptions.getEvent().hasTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+			System.out.println("Name: " + ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getCustomerName() + "\n"
+					+ "Date: " + ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
+					+ ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Table: "
+					+ ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTableNum() + "\n");
 		} else {
 			System.out.println("No reservation found for " + name);
 		}
@@ -513,8 +490,6 @@ class CheckTable implements Command {
 }
 
 class RefundTable implements Command {
-	Event E = new Event();
-	DiningEventCommands DEC = new DiningEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -526,9 +501,9 @@ class RefundTable implements Command {
 		System.out.println("Enter the customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (E.hasTableReservation(name, E.getEvent(DEC.getName()))) {
+		if (ListEventOptions.getEvent().hasTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println("Reservation found.");
-			E.removeTableReservation(name, E.getEvent(DEC.getName()));
+			ListEventOptions.getEvent().removeTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
 			System.out.println("Reservation removed.");
 		} else {
 			System.out.println("Could not find reservaton.");
@@ -539,8 +514,6 @@ class RefundTable implements Command {
 }
 
 class PartyEventCommands implements Command {
-	Event E = new Event();
-	String eventName;
 
 	public PartyEventCommands() {
 
@@ -552,11 +525,11 @@ class PartyEventCommands implements Command {
 
 		int count = 1;
 		ArrayList<Party> list = new ArrayList<>();
-		for (int i = 0; i < E.getEventList().size(); ++i) {
-			if (E.getEventList().get(i) instanceof Party) {
-				System.out.println(count + ") " + E.getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
+			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Party) {
+				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
 				++count;
-				list.add((Party) E.getEventList().get(i));
+				list.add((Party) ListEventOptions.getEvent().getEventList().get(i));
 			}
 		}
 		if (list.isEmpty()) {
@@ -564,7 +537,7 @@ class PartyEventCommands implements Command {
 		}
 		Scanner in3 = new Scanner(System.in);
 		int i = in3.nextInt();
-		eventName = list.get(i - 1).getEvent();
+		ListEventOptions.setName(list.get(i - 1).getEvent());
 		in3.close();
 	}
 
@@ -572,15 +545,9 @@ class PartyEventCommands implements Command {
 	public String getDescription() {
 		return "List Party Event Commands";
 	}
-
-	public String getName() {
-		return eventName;
-	}
 }
 
 class DisplayAttendees implements Command {
-	Event E = new Event();
-	PartyEventCommands PEC = new PartyEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -589,14 +556,12 @@ class DisplayAttendees implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println("There are: " + E.getNumOfAttendees(E.getEvent(PEC.getName())) + " number of attendees.");
+		System.out.println("There are: " + ListEventOptions.getEvent().getNumOfAttendees(ListEventOptions.getEvent().getEvent(ListEventOptions.getName())) + " number of attendees.");
 	}
 
 }
 
 class ReserveBadge implements Command {
-	Event E = new Event();
-	PartyEventCommands PEC = new PartyEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -605,7 +570,7 @@ class ReserveBadge implements Command {
 
 	@Override
 	public void execute() {
-		if(E.isPartyFull(E.getEvent(PEC.getName()))) {
+		if(ListEventOptions.getEvent().isPartyFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println("The venue is full.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -616,14 +581,12 @@ class ReserveBadge implements Command {
 		System.out.println("Enter your desired time (hh:mm am/pm): ");
 		String time = in.nextLine();
 		
-		E.reserveBadge(E.getEvent(PEC.getName()),customerName,date,time);
+		ListEventOptions.getEvent().reserveBadge(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()),customerName,date,time);
 		in.close();
 	}
 }
 
 class CheckBadge implements Command {
-	Event E = new Event();
-	PartyEventCommands PEC = new PartyEventCommands();
 
 	@Override
 	public String getDescription() {
@@ -635,11 +598,11 @@ class CheckBadge implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if(E.hasBadgeReservation(name,E.getEvent(PEC.getName()))) {
+		if(ListEventOptions.getEvent().hasBadgeReservation(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
 			System.out.println(
-					"Name: " + E.getBadge(name,E.getEvent(PEC.getName())).getName() + "\n" +
-					"Date: " + E.getBadge(name,E.getEvent(PEC.getName())).getDate() + "\n" + 
-					"Time: " + E.getBadge(name,E.getEvent(PEC.getName())).getTime() + "\n"
+					"Name: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getName() + "\n" +
+					"Date: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + 
+					"Time: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n"
 					);
 		}
 		else {
@@ -665,11 +628,6 @@ class RefundBadge implements Command {
 }
 
 class CreateNewEvent implements Command {
-	private Event E;
-
-	public CreateNewEvent() {
-		E = new Event();
-	}
 
 	@Override
 	public void execute() {
@@ -686,7 +644,7 @@ class CreateNewEvent implements Command {
 		System.out.println("What time (hh:mm am/pm)? ");
 		String time = in.nextLine();
 
-		E.createEvent(type, name, date, time);
+		ListEventOptions.getEvent().createEvent(type, name, date, time);
 		in.close();
 	}
 
@@ -698,15 +656,10 @@ class CreateNewEvent implements Command {
 }
 
 class DisplayEvents implements Command {
-	private Event E;
-
-	public DisplayEvents() {
-		E = new Event();
-	}
 
 	@Override
 	public void execute() {
-		E.displayEvents();
+		ListEventOptions.getEvent().displayEvents();
 	}
 
 	@Override
@@ -717,10 +670,11 @@ class DisplayEvents implements Command {
 }
 
 class ListShoppingOptions implements Command {
-	ShoppingSession shoppingSession = new ShoppingSession();
+	static ShoppingSession shoppingSession = new ShoppingSession();
+	static String itemName = new String();
 	
 	public ListShoppingOptions() {
-		shoppingSession.initSessionId();
+
 	}
 	
 	@Override
@@ -733,14 +687,25 @@ class ListShoppingOptions implements Command {
 
 	}
 	
-	public ShoppingSession getShop() {
+	public static void initalizeShop() {
+		shoppingSession.initSessionId();
+	}
+	
+	public static ShoppingSession getShop() {
+		ListShoppingOptions.initalizeShop();
 		return shoppingSession;
 	}
 	
+	public static String getName() {
+		return itemName;
+	}
+	
+	public static String setName(String name) {
+		return itemName = name;
+	}
 }
 
 class ApparelInfo implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
 	
 	@Override
 	public String getDescription() {
@@ -750,19 +715,13 @@ class ApparelInfo implements Command {
 	@Override
 	public void execute() {
 		System.out.println();
-		LSO.getShop().displayApparel();
+		ListShoppingOptions.getShop().displayApparel();
 		System.out.println();
 	}
 	
 }
 
 class ShowApparel implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
-	String itemName;
-	
-	public ShowApparel() {
-		
-	}
 
 	@Override
 	public String getDescription() {
@@ -774,27 +733,17 @@ class ShowApparel implements Command {
 		System.out.println();
 		Scanner in2 = new Scanner (System.in);
 		System.out.println("What apparel item would you like to view? ('q' to exit): ");
-		itemName = in2.nextLine().trim();
-		if(itemName.equals("q")) {
+		ListShoppingOptions.setName(in2.nextLine().trim());
+		if(ListShoppingOptions.getName().equals("q")) {
 			System.out.println();
 		}
-		LSO.getShop().apparelImage(itemName);
+		ListShoppingOptions.getShop().apparelImage(ListShoppingOptions.getName());
 		System.out.println();
 		in2.close();
-	}
-	
-	public String getItemName() {
-		return itemName;
-	}
-	
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
 	}
 }
 
 class AddCart implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
-	ShowApparel SA = new ShowApparel();
 
 	@Override
 	public String getDescription() {
@@ -807,8 +756,8 @@ class AddCart implements Command {
 		Scanner in3 = new Scanner (System.in);
 
 		System.out.println("What item would you like to add to your cart? ('q' to exit): ");
-		SA.setItemName(in3.nextLine().trim());
-		if(SA.getItemName().equals("q")) {
+		ListShoppingOptions.setName(in3.nextLine().trim());
+		if(ListShoppingOptions.getName().equals("q")) {
 			System.out.println();
 		}
 
@@ -817,7 +766,7 @@ class AddCart implements Command {
 		if(size.equals("q")) {
 			System.out.println();
 		}
-		LSO.getShop().getCart().addItem(new Apparel(size, SA.getItemName()));
+		ListShoppingOptions.getShop().getCart().addItem(new Apparel(size, ListShoppingOptions.getName()));
 		System.out.println();	
 		in3.close();
 	}
@@ -825,8 +774,6 @@ class AddCart implements Command {
 }
 
 class GoCart implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
-	ShowApparel SA = new ShowApparel();
 
 	@Override
 	public String getDescription() {
@@ -835,19 +782,19 @@ class GoCart implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println(LSO.getShop().getCart().toString());
+		System.out.println(ListShoppingOptions.getShop().getCart().toString());
 		System.out.println();
 
 		Scanner in4 = new Scanner (System.in);
 
-		if(!LSO.getShop().getCart().getItems().isEmpty()) {
+		if(!ListShoppingOptions.getShop().getCart().getItems().isEmpty()) {
 			System.out.println("Edit Cart? (y/n): ");
 
 			String response = in4.nextLine().trim();
 			if (response.equals("y")) {
 				System.out.println("What item would you like to remove from your cart? ('q' to exit): ");
-				SA.setItemName(in4.nextLine().trim());
-				if(SA.getItemName().equals("q")) {
+				ListShoppingOptions.setName(in4.nextLine().trim());
+				if(ListShoppingOptions.getName().equals("q")) {
 					System.out.println();
 				}
 
@@ -856,9 +803,9 @@ class GoCart implements Command {
 				if(size.equals("q")) {
 					System.out.println();
 				}
-				LSO.getShop().getCart().removeItem(new Apparel(size, SA.getItemName()));
+				ListShoppingOptions.getShop().getCart().removeItem(new Apparel(size, ListShoppingOptions.getName()));
 
-				if(LSO.getShop().getCart().getItems().size() == 0)
+				if(ListShoppingOptions.getShop().getCart().getItems().size() == 0)
 					System.out.println();
 			} else if (response.equals("n")) {
 				System.out.println();
@@ -869,34 +816,34 @@ class GoCart implements Command {
 			if (response.equals("y")) {
 				System.out.println("Card Number: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().getCard().setCardNum(response);
+				ListShoppingOptions.getShop().getCard().setCardNum(response);
 
 				System.out.println("Card Exp Month: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().getCard().setEndMonth(response);
+				ListShoppingOptions.getShop().getCard().setEndMonth(response);
 
 				System.out.println("Card Exp Year: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().getCard().setEndYear(response);
+				ListShoppingOptions.getShop().getCard().setEndYear(response);
 
 				System.out.println("Card Security Code: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().getCard().setCode(response);
+				ListShoppingOptions.getShop().getCard().setCode(response);
 
 				System.out.println("Shipping Address: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().setShippingAddress(response);
+				ListShoppingOptions.getShop().setShippingAddress(response);
 
 				System.out.println("Billing Address: ");
 				response = in4.nextLine().trim();
-				LSO.getShop().getCard().setBillingAddress(response);
-				LSO.getShop().setBillingAddress(response);
+				ListShoppingOptions.getShop().getCard().setBillingAddress(response);
+				ListShoppingOptions.getShop().setBillingAddress(response);
 
 				System.out.println("Purchase? (y/n): ");
 				response = in4.nextLine().trim();
 				if (response.equals("y")) {
-					LSO.getShop().updateInventory();
-					LSO.getShop().getCart().clearCart();
+					ListShoppingOptions.getShop().updateInventory();
+					ListShoppingOptions.getShop().getCart().clearCart();
 					System.out.println();
 				} else if (response.equals("n")) {
 					System.out.println();
@@ -911,7 +858,6 @@ class GoCart implements Command {
 }
 
 class ProcessRefund implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
 	
 	@Override
 	public String getDescription() {
@@ -920,13 +866,13 @@ class ProcessRefund implements Command {
 
 	@Override
 	public void execute() {
-		if(LSO.getShop().displayRefundOrders()){
+		if(ListShoppingOptions.getShop().displayRefundOrders()){
 			Scanner in5 = new Scanner (System.in);
 
 			System.out.println("What would you like to return? (enter id number): ");
 			String responseRefund = in5.nextLine().trim();
 			int refundShoppingSession = Integer.parseInt(responseRefund);
-			LSO.getShop().getRefundCart().addItem(refundShoppingSession);
+			ListShoppingOptions.getShop().getRefundCart().addItem(refundShoppingSession);
 			System.out.println();
 
 			System.out.println("Please select an image for verification: ");
@@ -936,7 +882,7 @@ class ProcessRefund implements Command {
 			File image = jfc.getSelectedFile();
 			System.out.println(image.getName());
 
-			LSO.getShop().pushRefund(image, refundShoppingSession);
+			ListShoppingOptions.getShop().pushRefund(image, refundShoppingSession);
 			in5.close();
 		} else {
 			System.out.println("No eligible items to return :(\n");
@@ -946,7 +892,6 @@ class ProcessRefund implements Command {
 }
 
 class ViewRefund implements Command {
-	ListShoppingOptions LSO = new ListShoppingOptions();
 
 	@Override
 	public String getDescription() {
@@ -955,8 +900,824 @@ class ViewRefund implements Command {
 
 	@Override
 	public void execute() {
-		LSO.getShop().viewLastRefund();
+		ListShoppingOptions.getShop().viewLastRefund();
 		System.out.println();
 	}
 	
+}
+
+class ListInventoryOptions implements Command {
+	static Studio studio = new Studio();
+	
+	@Override
+	public String getDescription() {
+		return "List Inventory Commands";
+	}
+	
+	public static Studio getStud() {
+		return studio;
+	}
+
+	@Override
+	public void execute() {
+		int id = 0;
+		String size = "";
+		int price = 0;
+		String itemName = "";
+		String brandName = "";
+		String color = ""; 
+		int quantity = 0;
+		
+		// This retrieves a clothing list from the database.
+		// Establish a connection to the database to query data.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a Statement from the connection
+	      Statement st = conn.createStatement();
+	      
+	      // query the data
+	      ResultSet rs = st.executeQuery("SELECT * FROM inventory2");
+	      
+	      studio.resetInventory();
+	      while(rs.next()) {
+	    	  id = rs.getInt("id");
+	    	  size = rs.getString("size");
+	    	  price = rs.getInt("price");
+	    	  itemName = rs.getString("itemName");
+	    	  brandName = rs.getString("brandName");
+	    	  color = rs.getString("color");
+	    	  quantity = rs.getInt("quantity");
+	    	  
+	    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
+	      }
+	      // close the connection.
+	      st.close();
+	    } catch (Exception e){
+		      System.err.println(e.getMessage()); 
+		    }
+	}
+}
+
+class ViewClothes implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View clothing listing";
+	}
+
+	@Override
+	public void execute() {
+		ListInventoryOptions.getStud().displayClothingInventory();
+	}
+	
+}
+
+class ViewMakeup implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View makeup listing";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class ViewFood implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View food listing";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class StoreClothes implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store clothing item";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		int id = 0;
+		String size = "";
+		int price = 0;
+		String itemName = "";
+		String brandName = "";
+		String color = ""; 
+		int quantity = 0;
+		
+		System.out.println("Enter the id:");
+		id = in.nextInt(); in.nextLine();
+		System.out.println("Enter the size:");
+		size = in.nextLine();
+		System.out.println("Enter the price:");
+		price = in.nextInt(); in.nextLine();
+		System.out.println("Enter the item name:");
+		itemName = in.nextLine();
+		System.out.println("Enter the brand name:");
+		brandName = in.nextLine();
+		System.out.println("Enter the color:");
+		color = in.nextLine();
+		System.out.println("Enter the quantity:");
+		quantity = in.nextInt(); in.nextLine();
+		
+		ListInventoryOptions.getStud().resetInventory();
+		//studio.storeClothingItem(new Apparel(itemName,brandName,color));
+		
+		 // Establish a connection to the database test.
+		try{
+	      // Step 1: "Load" the JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+	      // Step 2: Establish the connection to the database 
+	      String url = "jdbc:mysql://localhost/fashion_studio"; 
+	      Connection conn = DriverManager.getConnection(url,"root","");
+	      //System.out.println("Connected.");
+	      
+	      // create a prepared statement from the connection
+	      PreparedStatement ps = conn.prepareStatement("INSERT INTO inventory2 (id,size,price,itemName,brandName,color,quantity) " + "VALUES (?,?,?,?,?,?,?)");
+	      
+	      ps.setInt(1,id);
+	      ps.setString(2, size);
+	      ps.setInt(3, price);
+	      ps.setString(4,itemName);
+	      ps.setString(5,brandName);
+	      ps.setString(6, color);
+	      ps.setInt(7, quantity);
+	      
+	      ps.execute();
+	      conn.close();
+	    }
+	    catch (Exception e){
+	      System.err.println(e.getMessage()); 
+	    }
+		System.out.println("Item was added into the database.");
+		in.close();
+	}
+	
+}
+
+class StoreMakeup implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store makeup item";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class StoreFood implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Store food item";
+	}
+	
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+class SearchItem implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Search clothing item";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter the price:");
+		int p = in.nextInt(); in.nextLine();
+		
+		System.out.println("Enter size");
+		String s = in.nextLine();
+		
+		System.out.println("Enter item name:");
+		String n = in.nextLine();
+		
+		System.out.println("Enter brand name:");
+		String b = in.nextLine();
+		
+		System.out.println("Enter color:");
+		String c = in.nextLine();
+		
+		Apparel apparel = ListInventoryOptions.getStud().getInventory().search(new Apparel(0,s,p,n,b,c,0));
+		
+		if(apparel == null) {
+			System.out.println("Search results:");
+			System.out.println("Item was not found.");
+		}
+		System.out.println("Search results:");
+		System.out.println(
+				"Item name: " + apparel.getItemName() + "\n" +
+				"Brand name: " + apparel.getBrandName() + "\n" +
+				"Size: " + apparel.getSize() + "\n" +
+				"Color: " + apparel.getColor() + "\n" +
+				"Price: " + apparel.getPrice() + "\n" +
+				"Quantity: " + apparel.getQuantity() + "\n"
+				);
+		in.close();
+	}
+	
+}
+class ListModelOptions implements Command {
+	
+
+	@Override
+	public String getDescription() {
+		return "List Model Commands";
+	}
+
+	@Override
+	public void execute() {
+	
+	}
+}
+
+class ListModels implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Check list of models";
+	}
+
+	@Override
+	public void execute() {
+		ListEmployeeOptions.getHR().displayModels();
+	}
+	
+}
+
+class ChangeApparel implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Change apparel";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("Which model do you want to change?");
+		String name = in.next();
+		if(!ListEmployeeOptions.getHR().doesModelExist(name)) {
+			System.out.println("Model was not found, try again.");
+		}
+		//changeApparelScreen(name);
+		in.close();
+	}
+	
+}
+
+class UpdateContact implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Update contact information";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("Enter model name:");
+		String name = in.nextLine();
+		
+		if(!ListEmployeeOptions.getHR().doesModelExist(name)) {
+			System.out.println("Model was not found, try again.");
+		}
+		
+		System.out.println("Enter contact information:");
+		String phoneNum = in.nextLine();
+		
+		ListEmployeeOptions.getHR().getModel(name).setPhoneNum(phoneNum);
+		in.close();
+	}	
+}
+
+class UpdatePay implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Update salary";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("Enter model name:");
+		String name = in.nextLine();
+		
+		if(!ListEmployeeOptions.getHR().doesModelExist(name)) {
+			System.out.println("Model was not found, try again.");
+		}
+		
+		System.out.println("Enter salary:");
+		double salary = in.nextDouble();
+		PayStubInfo p = new PayStubInfo(salary,0,0,0);
+		ListEmployeeOptions.getHR().getModel(name).setPayStubInfo(p);;
+		in.close();
+	}
+	
+}
+
+class AddModel implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Add model";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("Enter EID: ");
+		int eid = in.nextInt(); in.nextLine();
+		System.out.println("Enter agent name:");
+		String agent = in.nextLine();
+		System.out.println("Enter model name:");
+		String model = in.nextLine();
+		System.out.println("Enter phone number:");
+		String number = in.nextLine();
+		System.out.println("Enter salary:");
+		double salary = in.nextDouble();
+		ListEmployeeOptions.getHR().createModel(eid,agent,model,"Fashion Model",number,new PayStubInfo(salary, 0, 0, 0)); // Probably need to change this.
+		in.close();
+	}
+	
+}
+
+class ListPromotionOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Promotion Commands";
+	}
+
+	@Override
+	public void execute() {
+	
+	}	
+}
+
+class UpEvents implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Display upcoming events";
+	}
+
+	@Override
+	public void execute() {
+		ListEventOptions.getEvent().displayEvents();
+		System.out.println();
+		System.out.println();	
+	}	
+}
+
+class CheckAvail implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Check available promotions";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in2 = new Scanner (System.in);
+		System.out.println("Enter the event you'd like to view open promotion spots ('q' to exit): ");
+		String eventName = in2.nextLine().trim();
+
+		while(ListEventOptions.getEvent().getEvent(eventName) == null){
+			System.out.println("Sorry! we could not find your event, please re-enter a new event ('q' to exit): ");
+			eventName = in2.nextLine().trim();
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(1)){
+			System.out.println("1:  Open");
+		} else {
+			System.out.println("1:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(2)){
+			System.out.println("2:  Open");
+		} else {
+			System.out.println("2:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(3)){
+			System.out.println("3:  Open");
+		} else {
+			System.out.println("3:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(4)){
+			System.out.println("4:  Open");
+		} else {
+			System.out.println("4:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(5)){
+			System.out.println("5:  Open");
+		} else {
+			System.out.println("5:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(6)){
+			System.out.println("6:  Open");
+		} else {
+			System.out.println("6:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(7)){
+			System.out.println("7:  Open");
+		} else {
+			System.out.println("7:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(8)){
+			System.out.println("8:  Open");
+		} else {
+			System.out.println("8:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(9)){
+			System.out.println("9:  Open");
+		} else {
+			System.out.println("9:  Taken");
+		}
+
+		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(10)){
+			System.out.println("10: Open");
+		} else {
+			System.out.println("10: Taken");
+		}
+
+		in2.close();
+		System.out.println();
+		System.out.println();
+	}
+}
+
+class ReservePromo implements Command {
+	public String getDescription() {
+		return "Reserve a promotion spot";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in3 = new Scanner (System.in);
+		System.out.println("Enter the event  ('q' to exit): ");
+		String eventNameReserve = in3.nextLine();
+
+		while(ListEventOptions.getEvent().getEvent(eventNameReserve) == null) {
+			System.out.println("Sorry! we could not find your event, please re-enter a new event  ('q' to exit): ");
+			eventNameReserve = in3.nextLine().trim();
+		}
+
+		System.out.println("Enter your business name ('q' to exit): ");
+		String businessName = in3.nextLine();
+
+		System.out.println("What would you like it to say? ('q' to exit): ");
+		String text = in3.nextLine();
+
+		System.out.println("Enter your desired promotion location ('q' to exit): ");
+		int location = 0;
+		while(location == 0){
+			String temp = in3.next();
+
+			try {
+				location = Integer.parseInt(temp);
+			} catch (NumberFormatException e) {
+				System.out.println("Please enter a location (1-10). Open spots are viewable from " +
+						"the promotion start screen ('q' to exit)");
+			}
+		}
+
+		System.out.println("What is your offer ('q' to exit): ");
+		double dollarAmount = 0.0;
+		while(dollarAmount == 0.0){
+			String temp = in3.next();
+
+			try {
+				dollarAmount = Double.parseDouble(temp);
+			} catch (NumberFormatException e) {
+				System.out.println("Please enter a valid dollar amount ('q' to exit).");
+			}
+		}
+
+		System.out.println("What is your card number ('q' to exit): ");
+		String cardNum = "";
+		while(cardNum.isEmpty()) {
+			String temp = in3.next();
+
+			if (temp.length() < 16) {
+				System.out.println("Please enter a valid card number ('q' to exit).");
+			}
+			cardNum = temp;
+		}
+
+		System.out.println("What is your card month ('q' to exit): ");
+		String cardMonth = "";
+		while(cardMonth.isEmpty()){
+			String temp = in3.next();
+
+			if(temp.length() < 2) {
+				System.out.println("Please enter a valid card month ('q' to exit).");
+			} else  {
+				try {
+					cardMonth = temp;
+				} catch (NumberFormatException e) {
+					System.out.println("Please enter a valid card month ('q' to exit).");
+				}
+			}
+		}
+
+		System.out.println("What is your card year ('q' to exit): ");
+		String cardYear = "";
+		while(cardYear.isEmpty()){
+			String temp = in3.next();
+
+			if(temp.length() < 2) {
+				System.out.println("Please enter a valid card year ('q' to exit).");
+			} else  {
+				try {
+					cardYear = temp;
+				} catch (NumberFormatException e) {
+					System.out.println("Please enter a valid card year ('q' to exit).");
+				}
+			}
+		}
+
+		System.out.println("What is your card code ('q' to exit): ");
+		String cardCode = "";
+		while(cardCode.isEmpty()){
+			String temp = in3.next();
+
+			if(temp.length() != 3) {
+				System.out.println("Please enter a valid card code ('q' to exit).");
+			} else  {
+				try {
+					cardCode = temp;
+				} catch (NumberFormatException e) {
+					System.out.println("Please enter a valid card code ('q' to exit).");
+				}
+			}
+		}
+
+		in3.close();
+		if(ListEventOptions.getEvent().getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
+			System.out.println("Promotion added!");
+		}
+
+		System.out.println();
+		System.out.println();
+	}
+}
+
+class ListAdvertisementOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Advertisement Commands";
+	}
+
+	@Override
+	public void execute() {
+
+	}	
+}
+
+class ViewAds implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View Current Ads";
+	}
+
+	@Override
+	public void execute() {
+		ListInventoryOptions.getStud().getAd();
+	}	
+}
+
+class CreateAd implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Create New Ad";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("What is the event ID?: ");
+		int eid = in.nextInt();
+		System.out.println("What type of advertisement do you need? (paper or video)");
+		String adType = in.next();
+		System.out.println("What is the name of the event?: ");
+		String eventName = in.next() + in.next();
+		System.out.println("Where is the location of the event?: ");
+		String loc = in.next();
+		System.out.println("What is the time of the event?: ");
+		String time = in.next();
+		System.out.println("What is the the number we should contact?: ");
+		String contactInfo = in.next();
+		//Advertisement advert = new Advertisement(eid, eventName, loc, time, contactInfo);
+		if(adType.equals("paper")) {
+			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			System.out.println("Advertisement Created!");
+		} else if(adType.equals("video")) {
+			//advert.createAdVideo();
+			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			System.out.println("Advertisement Created!");
+		} else {
+			System.out.print("We don't currently support that type of advertisement at this time.");
+		}
+		in.close();
+	}	
+}
+
+class ListContractOptions implements Command {
+	static ContractSession contractSession = new ContractSession();
+	
+	@Override
+	public String getDescription() {
+		return "List Contract Commands";
+	}
+
+	@Override
+	public void execute() {
+
+	}
+	
+	public static ContractSession getConSes() {
+		return contractSession;
+	}
+}
+
+class BeginContract implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Begin contract negotiation";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().negotiate();
+	}	
+}
+
+class ViewOld implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View old contracts";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().viewOldContracts();
+	}	
+}
+
+class ViewCurrent implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View current contract";
+	}
+
+	@Override
+	public void execute() {
+		ListContractOptions.getConSes().viewCurrentContract();
+	}	
+}
+
+class ListBusinessOptions implements Command {
+
+	@Override
+	public String getDescription() {
+		return "List Business Commands";
+	}
+
+	@Override
+	public void execute() {
+		
+	}
+}
+
+class ViewRecords implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View Business Records";
+	}
+
+	@Override
+	public void execute() {
+		HumanResources.getServices();
+	}	
+}
+
+class HireBusiness implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Hire a Business";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("What is the service ID?");
+		int sid = in.nextInt();
+		in.nextLine();
+		System.out.println("What is the name of the Business?");
+		String name = in.nextLine();
+		System.out.println("What is the address?");
+		String loc = in.nextLine();
+		System.out.println("What is the service requested?");
+		String service = in.nextLine();
+		System.out.println("Who do we contact?");
+		String repName = in.nextLine();
+		System.out.println("Please provice their phone number.");
+		String contactInfo = in.nextLine();
+		System.out.println("How much are they charging?");
+		double salary = in.nextDouble();
+		in.nextLine();
+		HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
+		
+		in.close();
+	}
+}
+
+class ConfirmBusiness implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Confirm a Business";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		for (int i = 0; i < HumanResources.servicesUsed.size(); i++) {
+			if (HumanResources.servicesUsed.get(i).hasBeenContacted() == false) {
+				HumanResources.getServiceRequests();
+				System.out.println("Would you like to contact them now? ('y' or 'n')\n");
+				String yorn = in.next();
+				in.nextLine();
+				if (yorn.equals("y")) {
+					HumanResources.servicesUsed.get(i).contactBusiness(HumanResources.servicesUsed.get(i));
+					System.out.println("Service confirmed!\n");
+				} else {
+					System.out.println("Please be sure to contact them at a different date.\n");
+				}
+			} else {
+				HumanResources.getServiceRequests();
+			}
+		}
+		in.close();
+	}
 }

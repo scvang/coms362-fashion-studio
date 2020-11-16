@@ -13,6 +13,12 @@ public class CommandDisplay {
 	private ArrayList<Command> subDiningEventCommands = new ArrayList<>();
 	private ArrayList<Command> subPartyEventCommands = new ArrayList<>();
 	private ArrayList<Command> subShopCommands = new ArrayList<>();
+	private ArrayList<Command> subInventCommands = new ArrayList<>();
+	private ArrayList<Command> subModCommands = new ArrayList<>();
+	private ArrayList<Command> subAdCommands = new ArrayList<>();
+	private ArrayList<Command> subPromoCommands = new ArrayList<>();
+	private ArrayList<Command> subContractCommands = new ArrayList<>();
+	private ArrayList<Command> subBusCommands = new ArrayList<>();
 
 	public CommandDisplay() {
 	}
@@ -47,6 +53,30 @@ public class CommandDisplay {
 	
 	public void addSubShopCommands(Command c) {
 		subShopCommands.add(c);
+	}
+	
+	public void addSubInventCommands(Command c) {
+		subInventCommands.add(c);
+	}
+	
+	public void addSubModCommands(Command c) {
+		subModCommands.add(c);
+	}
+	
+	public void addSubAdCommands(Command c) {
+		subAdCommands.add(c);
+	}
+	
+	public void addSubPromoCommands(Command c) {
+		subPromoCommands.add(c);
+	}
+	
+	public void addSubContractCommands(Command c) {
+		subContractCommands.add(c);
+	}
+	
+	public void subBusinessCommands(Command c) {
+		subBusCommands.add(c);
 	}
 
 	public void displaycommands() {
@@ -104,6 +134,42 @@ public class CommandDisplay {
 				}
 				int shopNext = in.nextInt();
 				subShopCommands.get(shopNext - 1).execute();
+			} else if(commandList.get(next - 1).getDescription().equals("List Inventory Commands")) {
+				for (int i = 0; i < subInventCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subInventCommands.get(i).getDescription());
+				}
+				int inventNext = in.nextInt();
+				subShopCommands.get(inventNext - 1).execute();
+			}else if(commandList.get(next - 1).getDescription().equals("List Model Commands")) {
+				for (int i = 0; i < subModCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subModCommands.get(i).getDescription());
+				}
+				int modNext = in.nextInt();
+				subModCommands.get(modNext - 1).execute();
+			} else if(commandList.get(next - 1).getDescription().equals("List Advertisment Commands")) {
+				for (int i = 0; i < subAdCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subAdCommands.get(i).getDescription());
+				}
+				int adNext = in.nextInt();
+				subAdCommands.get(adNext - 1).execute();
+			} else if(commandList.get(next - 1).getDescription().equals("List Promotion Commands")) {
+				for (int i = 0; i < subPromoCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subPromoCommands.get(i).getDescription());
+				}
+				int promoNext = in.nextInt();
+				subPromoCommands.get(promoNext - 1).execute();
+			} else if(commandList.get(next - 1).getDescription().equals("List Contract Commands")) {
+				for (int i = 0; i < subContractCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subContractCommands.get(i).getDescription());
+				}
+				int conNext = in.nextInt();
+				subContractCommands.get(conNext - 1).execute();
+			} else if(commandList.get(next - 1).getDescription().equals("List Business Commands")) {
+				for (int i = 0; i < subBusCommands.size(); i++) {
+					System.out.println(i + 1 + ": " + subBusCommands.get(i).getDescription());
+				}
+				int busNext = in.nextInt();
+				subBusCommands.get(busNext - 1).execute();
 			}
 		in.close();
 		}
