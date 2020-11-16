@@ -1600,5 +1600,67 @@ class ListBusinessOptions implements Command {
 		// TODO Auto-generated method stub
 		
 	}
+}
+
+class ViewRecords implements Command {
+
+	@Override
+	public String getDescription() {
+		return "View Business Records";
+	}
+
+	@Override
+	public void execute() {
+		HumanResources.getServices();
+	}
+	
+}
+
+class HireBusiness implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Hire a Business";
+	}
+
+	@Override
+	public void execute() {
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("What is the service ID?");
+		int sid = in.nextInt();
+		in.nextLine();
+		System.out.println("What is the name of the Business?");
+		String name = in.nextLine();
+		System.out.println("What is the address?");
+		String loc = in.nextLine();
+		System.out.println("What is the service requested?");
+		String service = in.nextLine();
+		System.out.println("Who do we contact?");
+		String repName = in.nextLine();
+		System.out.println("Please provice their phone number.");
+		String contactInfo = in.nextLine();
+		System.out.println("How much are they charging?");
+		double salary = in.nextDouble();
+		in.nextLine();
+		HumanResources.hireBusiness(sid, name, loc, service, repName, contactInfo, salary);
+		
+		in.close();
+	}
+	
+}
+
+class ConfirmBusiness implements Command {
+
+	@Override
+	public String getDescription() {
+		return "Confirm a Business";
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
