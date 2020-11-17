@@ -30,7 +30,7 @@ public interface Command {
 }
 
 class ListEmployeeOptions implements Command {
-	static EmployeeSession employeeSession1 = new EmployeeSession();
+	static EmployeeSession employeeSession = new EmployeeSession();
 	static 	HumanResources HR = new HumanResources();
 	static 	Management M = new Management();
 
@@ -49,7 +49,7 @@ class ListEmployeeOptions implements Command {
 	}
 	
 	public static EmployeeSession getSes() {
-		return employeeSession1;
+		return employeeSession;
 	}
 	
 	public static HumanResources getHR() {
@@ -150,7 +150,24 @@ class Management implements Command {
 		username = in3.next();
 		System.out.println("Password: ");
 		password = in3.next();
-		
+
+		if(ListEmployeeOptions.employeeSession.getAccessRights(username, password)){
+			System.out.println(
+					"Select an action: \n" +
+							"1) Hire employee \n" +
+							"2) Fire employee"
+			);
+
+			switch(Integer.parseInt(in3.next())){
+				case 1:
+					ListEmployeeOptions.employeeSession.hireEmployee();
+					break;
+				case 2:
+					ListEmployeeOptions.employeeSession.fireEmployee();
+					break;
+			}
+		}
+
 		in3.close();
 	}
 	

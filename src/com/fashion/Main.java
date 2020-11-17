@@ -517,6 +517,7 @@ public static void employeeScreen() {
 				String username = in3.next();
 				System.out.println("Password: ");
 				String password = in3.next();
+
 				if(employeeSession.getAccessRights(username, password)){
 					System.out.println(
 							"Select an action: \n" +
