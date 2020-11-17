@@ -33,6 +33,7 @@ class ListEmployeeOptions implements Command {
 	static EmployeeSession employeeSession = new EmployeeSession();
 	static 	HumanResources HR = new HumanResources();
 	static 	Management M = new Management();
+	static Studio studio = new Studio();
 
 	public ListEmployeeOptions() {
 
@@ -57,6 +58,10 @@ class ListEmployeeOptions implements Command {
 	
 	public static Management getManage() {
 		return M;
+	}
+	
+	public static Studio getStud() {
+		return studio;
 	}
 }
 
@@ -212,7 +217,6 @@ class FireEmployee implements Command {
 }
 
 class ListEventOptions implements Command {
-	static Event E = new Event();
 	static String eventName = new String();
 	
 	public ListEventOptions() {
@@ -229,9 +233,6 @@ class ListEventOptions implements Command {
 		return "List Event Commands";
 	}
 	
-	public static Event getEvent() {
-		return E;
-	}
 	
 	public static String getName() {
 		return eventName;
@@ -260,11 +261,11 @@ class ShowingEventCommands implements Command {
 		ListEventOptions.setName(in3.next());
 		int count = 1;
 		ArrayList<Showing> showingList = new ArrayList<>();
-		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
-			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Showing) {
-				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEmployeeOptions.getStud().getEventList().size(); ++i) {
+			if (ListEmployeeOptions.getStud().getEventList().get(i) instanceof Showing) {
+				System.out.println(count + ") " + ListEmployeeOptions.getStud().getEventList().get(i).getEvent());
 				++count;
-				showingList.add((Showing) ListEventOptions.getEvent().getEventList().get(i));
+				showingList.add((Showing)ListEmployeeOptions.getStud().getEventList().get(i));
 			}
 		}
 		if (showingList.isEmpty()) {
@@ -286,7 +287,7 @@ class DisplaySeat implements Command {
 
 	@Override
 	public void execute() {
-		ListEventOptions.getEvent().displaySeats(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
+		ListEmployeeOptions.getStud().displaySeats(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()));
 
 	}
 
@@ -301,7 +302,7 @@ class ReserveSeat implements Command {
 
 	@Override
 	public void execute() {
-		if (ListEventOptions.getEvent().isShowingFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if (ListEmployeeOptions.getStud().isShowingFull(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println("No available seats.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -316,8 +317,8 @@ class ReserveSeat implements Command {
 
 		in.close();
 
-		if (ListEventOptions.getEvent().reserveSeat(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), seat, customerName, date, time)) {
-			ListEventOptions.getEvent().chargeCard(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), customerName);
+		if (ListEmployeeOptions.getStud().reserveSeat(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()), seat, customerName, date, time)) {
+			ListEmployeeOptions.getStud().chargeCard(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()), customerName);
 
 			// update the database
 			// Establish a connection to the database test.
@@ -363,11 +364,11 @@ class CheckSeat implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (ListEventOptions.getEvent().hasSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
-			System.out.println("Name: " + ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getCustomerName() + "\n" + "Date: "
-					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
-					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Seat: "
-					+ ListEventOptions.getEvent().getSeat(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getSeatNum() + "\n");
+		if (ListEmployeeOptions.getStud().hasSeatReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
+			System.out.println("Name: " + ListEmployeeOptions.getStud().getSeat(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getCustomerName() + "\n" + "Date: "
+					+ ListEmployeeOptions.getStud().getSeat(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
+					+ ListEmployeeOptions.getStud().getSeat(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Seat: "
+					+ ListEmployeeOptions.getStud().getSeat(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getSeatNum() + "\n");
 		} else {
 			System.out.println("No reservation found for " + name);
 		}
@@ -389,9 +390,9 @@ class Refund implements Command {
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
 
-		if (ListEventOptions.getEvent().hasSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if (ListEmployeeOptions.getStud().hasSeatReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println("Reservation found.");
-			ListEventOptions.getEvent().removeSeatReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
+			ListEmployeeOptions.getStud().removeSeatReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()));
 			System.out.println("Reservation removed.");
 		} else {
 			System.out.println("Could not find reservaton.");
@@ -413,11 +414,11 @@ class DiningEventCommands implements Command {
 
 		int count = 1;
 		ArrayList<Dining> list = new ArrayList<>();
-		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
-			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Dining) {
-				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEmployeeOptions.getStud().getEventList().size(); ++i) {
+			if (ListEmployeeOptions.getStud().getEventList().get(i) instanceof Dining) {
+				System.out.println(count + ") " + ListEmployeeOptions.getStud().getEventList().get(i).getEvent());
 				++count;
-				list.add((Dining) ListEventOptions.getEvent().getEventList().get(i));
+				list.add((Dining) ListEmployeeOptions.getStud().getEventList().get(i));
 			}
 		}
 		if (list.isEmpty()) {
@@ -444,7 +445,7 @@ class DisplayTable implements Command {
 
 	@Override
 	public void execute() {
-		ListEventOptions.getEvent().displayTables(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
+		ListEmployeeOptions.getStud().displayTables(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()));
 	}
 
 }
@@ -458,7 +459,7 @@ class ReserveTable implements Command {
 
 	@Override
 	public void execute() {
-		if (ListEventOptions.getEvent().isDiningFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if (ListEmployeeOptions.getStud().isDiningFull(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println("There are no available tables.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -471,8 +472,8 @@ class ReserveTable implements Command {
 		System.out.println("Enter your desired time (hh:mm am/pm): ");
 		String time = in.nextLine();
 
-		if (ListEventOptions.getEvent().reserveTable(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), table, customerName, date, time)) {
-			ListEventOptions.getEvent().chargeCard(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()), customerName);
+		if (ListEmployeeOptions.getStud().reserveTable(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()), table, customerName, date, time)) {
+			ListEmployeeOptions.getStud().chargeCard(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()), customerName);
 		} else {
 			System.out.println("Table reservation failed.");
 		}
@@ -493,11 +494,11 @@ class CheckTable implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (ListEventOptions.getEvent().hasTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
-			System.out.println("Name: " + ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getCustomerName() + "\n"
-					+ "Date: " + ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
-					+ ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Table: "
-					+ ListEventOptions.getEvent().getTable(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTableNum() + "\n");
+		if (ListEmployeeOptions.getStud().hasTableReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
+			System.out.println("Name: " + ListEmployeeOptions.getStud().getTable(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getCustomerName() + "\n"
+					+ "Date: " + ListEmployeeOptions.getStud().getTable(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getDate() + "\n" + "Time: "
+					+ ListEmployeeOptions.getStud().getTable(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getTime() + "\n" + "Table: "
+					+ ListEmployeeOptions.getStud().getTable(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getTableNum() + "\n");
 		} else {
 			System.out.println("No reservation found for " + name);
 		}
@@ -517,9 +518,9 @@ class RefundTable implements Command {
 		System.out.println("Enter the customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if (ListEventOptions.getEvent().hasTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if (ListEmployeeOptions.getStud().hasTableReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println("Reservation found.");
-			ListEventOptions.getEvent().removeTableReservation(name, ListEventOptions.getEvent().getEvent(ListEventOptions.getName()));
+			ListEmployeeOptions.getStud().removeTableReservation(name, ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()));
 			System.out.println("Reservation removed.");
 		} else {
 			System.out.println("Could not find reservaton.");
@@ -541,11 +542,11 @@ class PartyEventCommands implements Command {
 
 		int count = 1;
 		ArrayList<Party> list = new ArrayList<>();
-		for (int i = 0; i < ListEventOptions.getEvent().getEventList().size(); ++i) {
-			if (ListEventOptions.getEvent().getEventList().get(i) instanceof Party) {
-				System.out.println(count + ") " + ListEventOptions.getEvent().getEventList().get(i).getEvent());
+		for (int i = 0; i < ListEmployeeOptions.getStud().getEventList().size(); ++i) {
+			if (ListEmployeeOptions.getStud().getEventList().get(i) instanceof Party) {
+				System.out.println(count + ") " + ListEmployeeOptions.getStud().getEventList().get(i).getEvent());
 				++count;
-				list.add((Party) ListEventOptions.getEvent().getEventList().get(i));
+				list.add((Party)ListEmployeeOptions.getStud().getEventList().get(i));
 			}
 		}
 		if (list.isEmpty()) {
@@ -572,7 +573,7 @@ class DisplayAttendees implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println("There are: " + ListEventOptions.getEvent().getNumOfAttendees(ListEventOptions.getEvent().getEvent(ListEventOptions.getName())) + " number of attendees.");
+		System.out.println("There are: " + ListEmployeeOptions.getStud().getNumOfAttendees(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())) + " number of attendees.");
 	}
 
 }
@@ -586,7 +587,7 @@ class ReserveBadge implements Command {
 
 	@Override
 	public void execute() {
-		if(ListEventOptions.getEvent().isPartyFull(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if(ListEmployeeOptions.getStud().isPartyFull(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println("The venue is full.");
 		}
 		Scanner in = new Scanner(System.in);
@@ -597,7 +598,7 @@ class ReserveBadge implements Command {
 		System.out.println("Enter your desired time (hh:mm am/pm): ");
 		String time = in.nextLine();
 		
-		ListEventOptions.getEvent().reserveBadge(ListEventOptions.getEvent().getEvent(ListEventOptions.getName()),customerName,date,time);
+		ListEmployeeOptions.getStud().reserveBadge(ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()),customerName,date,time);
 		in.close();
 	}
 }
@@ -614,11 +615,11 @@ class CheckBadge implements Command {
 		System.out.println("Enter your customer name:");
 		Scanner in = new Scanner(System.in);
 		String name = in.nextLine();
-		if(ListEventOptions.getEvent().hasBadgeReservation(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName()))) {
+		if(ListEmployeeOptions.getStud().hasBadgeReservation(name,ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName()))) {
 			System.out.println(
-					"Name: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getName() + "\n" +
-					"Date: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getDate() + "\n" + 
-					"Time: " + ListEventOptions.getEvent().getBadge(name,ListEventOptions.getEvent().getEvent(ListEventOptions.getName())).getTime() + "\n"
+					"Name: " + ListEmployeeOptions.getStud().getBadge(name,ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getName() + "\n" +
+					"Date: " + ListEmployeeOptions.getStud().getBadge(name,ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getDate() + "\n" + 
+					"Time: " + ListEmployeeOptions.getStud().getBadge(name,ListEmployeeOptions.getStud().getEvent(ListEventOptions.getName())).getTime() + "\n"
 					);
 		}
 		else {
@@ -660,7 +661,7 @@ class CreateNewEvent implements Command {
 		System.out.println("What time (hh:mm am/pm)? ");
 		String time = in.nextLine();
 
-		ListEventOptions.getEvent().createEvent(type, name, date, time);
+		ListEmployeeOptions.getStud().createEvent(type, name, date, time);
 		in.close();
 	}
 
@@ -675,7 +676,7 @@ class DisplayEvents implements Command {
 
 	@Override
 	public void execute() {
-		ListEventOptions.getEvent().displayEvents();
+		ListEmployeeOptions.getStud().displayEvents();
 	}
 
 	@Override
@@ -923,15 +924,10 @@ class ViewRefund implements Command {
 }
 
 class ListInventoryOptions implements Command {
-	static Studio studio = new Studio();
 	
 	@Override
 	public String getDescription() {
 		return "List Inventory Commands";
-	}
-	
-	public static Studio getStud() {
-		return studio;
 	}
 
 	@Override
@@ -961,7 +957,7 @@ class ListInventoryOptions implements Command {
 	      // query the data
 	      ResultSet rs = st.executeQuery("SELECT * FROM inventory2");
 	      
-	      studio.resetInventory();
+	      ListEmployeeOptions.getStud().resetInventory();
 	      while(rs.next()) {
 	    	  id = rs.getInt("id");
 	    	  size = rs.getString("size");
@@ -971,7 +967,7 @@ class ListInventoryOptions implements Command {
 	    	  color = rs.getString("color");
 	    	  quantity = rs.getInt("quantity");
 	    	  
-	    	  studio.storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
+	    	  ListEmployeeOptions.getStud().storeClothingItem(new Apparel(id,size,price,itemName,brandName,color,quantity));
 	      }
 	      // close the connection.
 	      st.close();
@@ -990,7 +986,7 @@ class ViewClothes implements Command {
 
 	@Override
 	public void execute() {
-		ListInventoryOptions.getStud().displayClothingInventory();
+		ListEmployeeOptions.getStud().displayClothingInventory();
 	}
 	
 }
@@ -1058,7 +1054,7 @@ class StoreClothes implements Command {
 		System.out.println("Enter the quantity:");
 		quantity = in.nextInt(); in.nextLine();
 		
-		ListInventoryOptions.getStud().resetInventory();
+		ListEmployeeOptions.getStud().resetInventory();
 		//studio.storeClothingItem(new Apparel(itemName,brandName,color));
 		
 		 // Establish a connection to the database test.
@@ -1150,7 +1146,7 @@ class SearchItem implements Command {
 		System.out.println("Enter color:");
 		String c = in.nextLine();
 		
-		Apparel apparel = ListInventoryOptions.getStud().getInventory().search(new Apparel(0,s,p,n,b,c,0));
+		Apparel apparel = ListEmployeeOptions.getStud().getInventory().search(new Apparel(0,s,p,n,b,c,0));
 		
 		if(apparel == null) {
 			System.out.println("Search results:");
@@ -1321,7 +1317,7 @@ class UpEvents implements Command {
 
 	@Override
 	public void execute() {
-		ListEventOptions.getEvent().displayEvents();
+		ListEmployeeOptions.getStud().displayEvents();
 		System.out.println();
 		System.out.println();	
 	}	
@@ -1340,66 +1336,66 @@ class CheckAvail implements Command {
 		System.out.println("Enter the event you'd like to view open promotion spots ('q' to exit): ");
 		String eventName = in2.nextLine().trim();
 
-		while(ListEventOptions.getEvent().getEvent(eventName) == null){
+		while(ListEmployeeOptions.getStud().getEvent(eventName) == null){
 			System.out.println("Sorry! we could not find your event, please re-enter a new event ('q' to exit): ");
 			eventName = in2.nextLine().trim();
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(1)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(1)){
 			System.out.println("1:  Open");
 		} else {
 			System.out.println("1:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(2)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(2)){
 			System.out.println("2:  Open");
 		} else {
 			System.out.println("2:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(3)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(3)){
 			System.out.println("3:  Open");
 		} else {
 			System.out.println("3:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(4)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(4)){
 			System.out.println("4:  Open");
 		} else {
 			System.out.println("4:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(5)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(5)){
 			System.out.println("5:  Open");
 		} else {
 			System.out.println("5:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(6)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(6)){
 			System.out.println("6:  Open");
 		} else {
 			System.out.println("6:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(7)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(7)){
 			System.out.println("7:  Open");
 		} else {
 			System.out.println("7:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(8)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(8)){
 			System.out.println("8:  Open");
 		} else {
 			System.out.println("8:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(9)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(9)){
 			System.out.println("9:  Open");
 		} else {
 			System.out.println("9:  Taken");
 		}
 
-		if(ListEventOptions.getEvent().getEvent(eventName).isPromotionSpotOpen(10)){
+		if(ListEmployeeOptions.getStud().getEvent(eventName).isPromotionSpotOpen(10)){
 			System.out.println("10: Open");
 		} else {
 			System.out.println("10: Taken");
@@ -1422,7 +1418,7 @@ class ReservePromo implements Command {
 		System.out.println("Enter the event  ('q' to exit): ");
 		String eventNameReserve = in3.nextLine();
 
-		while(ListEventOptions.getEvent().getEvent(eventNameReserve) == null) {
+		while(ListEmployeeOptions.getStud().getEvent(eventNameReserve) == null) {
 			System.out.println("Sorry! we could not find your event, please re-enter a new event  ('q' to exit): ");
 			eventNameReserve = in3.nextLine().trim();
 		}
@@ -1518,7 +1514,7 @@ class ReservePromo implements Command {
 		}
 
 		in3.close();
-		if(ListEventOptions.getEvent().getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
+		if(ListEmployeeOptions.getStud().getEvent(eventNameReserve).addPromotion(businessName, text, location, dollarAmount, new Card(cardNum, cardMonth, cardYear, cardCode, null))) {
 			System.out.println("Promotion added!");
 		}
 
@@ -1549,7 +1545,7 @@ class ViewAds implements Command {
 
 	@Override
 	public void execute() {
-		ListInventoryOptions.getStud().getAd();
+		ListEmployeeOptions.getStud().getAd();
 	}	
 }
 
@@ -1578,11 +1574,11 @@ class CreateAd implements Command {
 		String contactInfo = in.next();
 		//Advertisement advert = new Advertisement(eid, eventName, loc, time, contactInfo);
 		if(adType.equals("paper")) {
-			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			ListEmployeeOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
 			System.out.println("Advertisement Created!");
 		} else if(adType.equals("video")) {
 			//advert.createAdVideo();
-			ListInventoryOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
+			ListEmployeeOptions.getStud().addAd(eid, eventName, loc, time, contactInfo);
 			System.out.println("Advertisement Created!");
 		} else {
 			System.out.print("We don't currently support that type of advertisement at this time.");
