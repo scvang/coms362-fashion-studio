@@ -73,20 +73,6 @@ class ViewEmployees implements Command {
 		return "View Current Employees";
 	}
 }
-class GoBack implements Command {
-
-	@Override
-	public String getDescription() {
-		return "Go Back";
-	}
-
-	@Override
-	public void execute() {
-		ListEmployeeOptions LEO = new ListEmployeeOptions();
-		LEO.execute();
-	}
-	
-}
 
 class PayEmployee implements Command {
 
