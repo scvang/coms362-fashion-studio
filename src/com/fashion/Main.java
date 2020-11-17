@@ -136,6 +136,7 @@ public class Main extends JFrame {
 		cd.addSubEmp(new ViewEmployees());
 		cd.addSubEmp(new PayEmployee());
 		cd.addSubEmp(new Management());
+		cd.addSubEmp(new GoBack());
 		cd.addManageCommands(new HireEmployee());
 		cd.addManageCommands(new FireEmployee());
 		cd.addCommand(new ListEventOptions());
